@@ -62,6 +62,6 @@ export default class CirclesGame extends Canvas {
       this.xPos=canvas.width;
     if(this.yPos <0)
       this.yPos=canvas.height;
-    ctx.fillText(`FPS: ${Math.round(1000 / timeSinceLastAnimation)}` , 10, canvas.height -30);
+    ctx.fillText(`FPS: ${Math.round(1000 / timeSinceLastAnimation)}` , 5, canvas.height -5);
   }
 }

@@ -1,3 +1,8 @@
+Project created to teach how to program in Javascript on both web and Mobile.
+
+[Hosted here](https://nickzinn.github.io/circles/)
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

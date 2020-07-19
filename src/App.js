@@ -40,7 +40,8 @@ function App() {
 
   const classes = useStyles();
 
-  function handleRestart() {
+  function handleRestart(e) {
+    e.e.stopPropagation();
     canvasRef.current.action("restart"); 
   }
 
@@ -53,7 +54,7 @@ function App() {
       <MenuIcon />
     </IconButton>
     <Typography variant="h6" color="primary"  className={classes.title}>
-      Cirlces
+      Circles
     </Typography>
     <Typography variant="h6" color="primary"  className={classes.score}>
       Score: {score}
