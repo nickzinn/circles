@@ -1,10 +1,11 @@
-import { GameCanvas } from "../gamelib/GameCanvas";
+import { GameController } from "../gamelib/GameController";
 import { Point } from "../gamelib/types/Point";
 import Scene from "../gamelib/Scene";
 import { Sprite, xySpeed } from "../gamelib/types/Sprite";
 import { Size } from "../gamelib/types/Size";
 import { DefaultSprite } from "../gamelib/behaviors/DefaultSprite";
 import { RotatedImageBehavior } from "../gamelib/behaviors/RotatedImageBehavior";
+import { GameInitializer } from "../gamelib/GameInitializer";
 
 
 
@@ -39,7 +40,7 @@ function createWall(position:Point, size:Size, isVertical:boolean):Sprite{
     return wall;
 }
 
-export class BouncingBall extends  GameCanvas{
+export class BouncingBall implements GameInitializer{
     //add button bar to top of screen as overlay.
     //add pause button
     //add restart button.
@@ -55,11 +56,11 @@ export class BouncingBall extends  GameCanvas{
     }
 
 
-	init():void {
-		const scene = new Scene(this);
-        this.scene = scene;
+	init(controller:GameController):void {
+		const scene = new Scene(controller);
+        controller.scene = scene;
 
-        const image = this.imagePreloader.getImageFromCache('ball');
+        const image = controller.imagePreloader.getImageFromCache('ball');
         const radius = image.width/2;
         scene.handleMouseClick = function(x:number, y:number){
             const sprites = scene.getSpritesAtPoint({x,y});

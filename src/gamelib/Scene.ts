@@ -1,4 +1,4 @@
-import { GameCanvas } from "./GameCanvas";
+import { GameController } from "./GameController";
 import { DefaultSprite } from "./behaviors/DefaultSprite";
 import { Point, pointAsInt } from "./types/Point";
 import { Sprite, xySpeed } from "./types/Sprite";
@@ -16,7 +16,7 @@ function remove(array:any[], key:any){
 export default class Scene extends DefaultSprite{
 
     viewPort:Point = {x:0, y:0};
-    gameCanvas:GameCanvas;
+    controller:GameController;
     debug: boolean = false;
     private collisionListeners:Sprite[] = [];
 	private sprites:Sprite[] = [];
@@ -25,9 +25,9 @@ export default class Scene extends DefaultSprite{
 	sceneSpeed:number = 1.0;
     modelSize:Size;
     
-    constructor(gameCanvas:GameCanvas, modelSize:Size={width:0.0, height:0.0}){
+    constructor(controller:GameController, modelSize:Size={width:0.0, height:0.0}){
         super();
-        this.gameCanvas = gameCanvas;
+        this.controller = controller;
         this.modelSize = modelSize;
     }
     handleKeyPressed(key: string): void {
