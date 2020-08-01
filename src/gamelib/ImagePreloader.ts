@@ -26,9 +26,11 @@ export class ImagePreloader{
     
         image.onload = () => { 
             const newImage = this.makeTransparent(image);
-            this.imageCache.set(key, newImage);
-            if(++this.loadsCompleted === this.nLoads && this.loadCallback){
-                this.loadCallback();
+            newImage.onload = () => {
+                this.imageCache.set(key, newImage);
+                if(++this.loadsCompleted === this.nLoads && this.loadCallback){
+                    this.loadCallback();
+                }
             }
         };
     }
