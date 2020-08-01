@@ -200,6 +200,7 @@ export default class Scene extends DefaultSprite{
 			}else{
 				this.totalTime +=timeSinceLastAnimation;
 			}
+			ctx.fillStyle = "red"
 			ctx.fillText(`FPS: ${Math.round(1000 / (this.totalTime/ ++this.count))} Alive Sprites: ${this.sprites.length} On Screen Sprites: ${displayedSprites}` , 10, this.size.height -10);
 		}
 	}
@@ -207,4 +208,6 @@ export default class Scene extends DefaultSprite{
 	addSprites(sprites:Sprite[] ) {
 		sprites.forEach( (s) => this.addSprite(s) )
 	}
+
+	paintBackground?(ctx: CanvasRenderingContext2D):void;
 }

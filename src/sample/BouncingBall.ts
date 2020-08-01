@@ -4,8 +4,9 @@ import Scene from "../gamelib/Scene";
 import { Sprite, xySpeed } from "../gamelib/types/Sprite";
 import { Size } from "../gamelib/types/Size";
 import { DefaultSprite } from "../gamelib/behaviors/DefaultSprite";
-import { RotatedImageBehavior } from "../gamelib/behaviors/RotatedImageBehavior";
 import { GameInitializer } from "../gamelib/GameInitializer";
+import { SpriteSheet } from "../gamelib/behaviors/SpriteSheet";
+import { SpriteSheetBehavior } from "../gamelib/behaviors/SpriteSheetBehavior";
 
 
 
@@ -15,7 +16,7 @@ function createWall(position:Point, size:Size, isVertical:boolean):Sprite{
         size,
         isAlive:true,
         paint: function(location:Point, ctx: CanvasRenderingContext2D, timeSinceLastAnimation: number): void{
-            ctx.fillStyle =  "red";
+            ctx.fillStyle =  "	rgb(211,211,211)";
             ctx.fillRect(position.x, position.y, size.width, size.height);
         },
         handleCollision(otherSprite:Sprite):void{
@@ -41,17 +42,12 @@ function createWall(position:Point, size:Size, isVertical:boolean):Sprite{
 }
 
 export class BouncingBall implements GameInitializer{
-    //add button bar to top of screen as overlay.
-    //add pause button
-    //add restart button.
     //add about button.
-    //handle resize event
-    //use better/smaller color for wall.
     //find better and smaller ball image
 
     preloadImagesKeyPathMap():Map<string,string>{
         const map = new Map();
-        map.set('ball', "/circles/assets/ball3.png");
+        map.set('ball', "/circles/assets/ball-sheet2.png");
         return map;
     }
 
@@ -61,7 +57,8 @@ export class BouncingBall implements GameInitializer{
         controller.scene = scene;
 
         const image = controller.imagePreloader.getImageFromCache('ball');
-        const radius = image.width/2;
+        const spriteSheet = new SpriteSheet(image, 4, 8);
+        const radius = spriteSheet.size.width/2;
         scene.handleMouseClick = function(x:number, y:number){
             const sprites = scene.getSpritesAtPoint({x,y});
             if(sprites.length){
@@ -70,16 +67,22 @@ export class BouncingBall implements GameInitializer{
             }
             const ball = new DefaultSprite({x:x-radius,y:y-radius});
             ball.isAlive = true;
-            ball.speed = Math.random() * 10+100;
+            ball.speed = Math.random() * 300+100;
             ball.angle = Math.random() * Math.PI *2;
             ball.canCollide = true;
-            ball.addBehavior(new RotatedImageBehavior(image));
+            ball.addBehavior(new SpriteSheetBehavior(spriteSheet));
+            ball.size = {width: ball.size.width -2, height: ball.size.height -2}
             scene.addSprite(ball);	
         }
         scene.debug = true;
         scene.wrapAround = false;
+        scene.paintBackground = function(ctx: CanvasRenderingContext2D) {
+                ctx.fillStyle = 'black';
+                ctx.fillRect(0, 0, scene.size.width, scene.size.height);
+        }
+
         const sz = scene.size;
-        const wallSize = 8;
+        const wallSize = 4;
         //create walls
         scene.addSprite( createWall({x:0,y:0},{width:sz.width-wallSize,height:wallSize}, false));
         scene.addSprite( createWall({x:0,y:sz.height-wallSize},{width:sz.width,height:wallSize}, false));

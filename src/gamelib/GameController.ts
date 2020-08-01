@@ -7,11 +7,14 @@ export class GameController{
     debug: boolean = false;
     keysPressed: Map<string, boolean> = new Map();
     imagePreloader:ImagePreloader;
-    private _scene?: Scene;
-
-    gameInitializer:GameInitializer;
     canvas?:HTMLCanvasElement;
-    readyCallback?: () => void;
+    isShutdown:boolean = false;
+    pause:boolean = false;
+
+    private readyCallback?: () => void;
+    private _scene?: Scene;
+    private gameInitializer:GameInitializer;
+
 
     constructor(gameInitializer:GameInitializer){
         this.gameInitializer = gameInitializer;
@@ -24,6 +27,17 @@ export class GameController{
         this.readyCallback = readyCallback;
         this.canvas = canvas;  
         this.imagePreloader.registerCallback( ()=>{  this._handleImagesLoaded()});
+    }
+
+    restart(){
+        const canvas = this.canvas!;
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const size = {width:canvas.width, height:canvas.height};
+        this.gameInitializer.init(this);
+        if(!this.scene)
+            throw Error("Game Initializer must set scene.");
+        this.scene.size = size;
     }
 
     transition(transitionScene: Scene, newScene: Scene) {
@@ -50,11 +64,9 @@ export class GameController{
     }
     
     private _handleImagesLoaded(){
-        const canvas = this.canvas!;
-        const ctx = canvas.getContext('2d')!;
         const that = this;
-        let size = {width:canvas.width, height: canvas.height};
-
+        const canvas = this.canvas!;
+        
         document.addEventListener('keydown', (event) => {
             that.keysPressed.set(event.key, true);
         });
@@ -63,28 +75,38 @@ export class GameController{
         });
 
         canvas.addEventListener('mousedown', function (e) {
-            const rect = canvas.getBoundingClientRect();
-            that.scene.handleMouseClick(e.clientX - rect.left, e.clientY - rect.top)
+            if(!that.pause){
+                const rect = canvas.getBoundingClientRect();
+                that.scene.handleMouseClick(e.clientX - rect.left, e.clientY - rect.top)
+            }
         });
         document.addEventListener("touchmove", function (e) {
-            const rect = canvas.getBoundingClientRect();
-            const touch = e.targetTouches[0];
-            that.scene.handleMouseClick(touch.clientX - rect.left, touch.clientY - rect.top)
+            if(!that.pause){
+                const rect = canvas.getBoundingClientRect();
+                const touch = e.targetTouches[0];
+                that.scene.handleMouseClick(touch.clientX - rect.left, touch.clientY - rect.top)
+            }
         }, false);
 
         let lastTime = 0;
-        this.resizeCanvas();
-        this.gameInitializer.init(this);
+        this.restart();
         
         function loop(time: number) {
+            if(that.isShutdown)
+                return;
             let timeSinceLastAnimation = (!lastTime) ? 0: time - lastTime;
             lastTime = time;
-            if(timeSinceLastAnimation > 100){
+            if(timeSinceLastAnimation > 100 || that.pause){
                 //assume animation thread was paused due to moving off window/browser
                 timeSinceLastAnimation = 0;
             }
+            const ctx = canvas.getContext('2d')!;
+            const size = {width:canvas.width, height: canvas.height};
             if (size.width !== window.innerWidth || size.height !== window.innerHeight) {
-                that.resizeCanvas();
+                // If window size is changed this is called to resize the canvas
+                // It is not called via the resize event as that can fire to often an
+                // debounce makes it feel sluggish so is called from main loop.
+                that.restart();
             }
 
             that.keysPressed.forEach((value, key) => that.scene.handleKeyPressed(key));
@@ -103,24 +125,17 @@ export class GameController{
         this.readyCallback!();
     }
 
-    // If window size is changed this is called to resize the canvas
-    // It is not called via the resize event as that can fire to often an
-    // debounce makes it feel sluggish so is called from main loop.
-    resizeCanvas() {
-        const canvas = this.canvas!;
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        const size = {width:canvas.width, height:canvas.height};
-        if(this.scene)
-            this.scene.size = size;
+
+    paintBackground(ctx: CanvasRenderingContext2D) {
+        if(this.scene.paintBackground)
+            this.scene.paintBackground(ctx);
+        else{
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, this.scene.size.width, this.scene.size.height);
+        }
     }
 
-    protected paintBackground(ctx: CanvasRenderingContext2D) {
-        ctx.fillStyle = 'white';
-        ctx.fillRect(0, 0, this.scene.size.width, this.scene.size.height);
-    }
-
-    protected updateModel(timeSinceLastUpdate: number) {
+    private updateModel(timeSinceLastUpdate: number) {
         this.scene.updateModel(timeSinceLastUpdate);
     }
 }

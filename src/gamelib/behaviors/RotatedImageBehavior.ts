@@ -5,7 +5,8 @@ import { Point } from "../types/Point";
 
 
 export class RotatedImageBehavior implements Behavior{
-    image:HTMLImageElement;
+	readonly image:HTMLImageElement;
+	rotate:boolean = true;
 
 	constructor(image:HTMLImageElement) {
         this.image = image;
@@ -14,19 +15,15 @@ export class RotatedImageBehavior implements Behavior{
         sprite.size = {width: this.image.width, height: this.image.height}
 	}
     paint(sprite:Sprite, location:Point, ctx: CanvasRenderingContext2D, timeSinceLastAnimation: number):void{
-        
-        ctx.drawImage(this.image, location.x, location.y, sprite.size.width, sprite.size.height);
-		// double angle = getAngle();
-		
-		// AffineTransform affineTransform = new AffineTransform();
-		// affineTransform.rotate(angle, x + getSprite().getWidth() / 2.0, y
-		// 		+ getSprite().getHeight() / 2.0);
-		// affineTransform.translate(x, y);
-
-		// g.drawImage(image, affineTransform, null);
+		if(this.rotate){
+			ctx.translate(location.x + sprite.size.width / 2.0, 
+				location.y+ sprite.size.height / 2.0);
+			ctx.rotate(sprite.angle!);
+			ctx.drawImage(this.image, 0 - sprite.size.width / 2.0, 
+				0 - sprite.size.height / 2.0, this.image.width, this.image.height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+		}else{
+			ctx.drawImage(this.image, location.x, location.y, sprite.size.width, sprite.size.height);
+		}
 	}
-	
-
-
-
 }

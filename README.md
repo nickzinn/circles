@@ -1,5 +1,5 @@
 # Circles JavaScript Game Library.
-A simple 2D game library for JavaScript.   Includes a demo space game implemented using the library.
+A simple 2D game library for JavaScript to teach my kids programming.   Includes a demo space game implemented using the library.
 
 ### Game Library Key Concepts
 + GameCanvas, ReactJS Component that writes canvas DOM.  Runs a scene.  Supports transitions between scenes.
