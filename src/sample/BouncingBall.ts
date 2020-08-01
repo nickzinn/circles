@@ -16,7 +16,7 @@ function createWall(position:Point, size:Size, isVertical:boolean):Sprite{
         size,
         isAlive:true,
         paint: function(location:Point, ctx: CanvasRenderingContext2D, timeSinceLastAnimation: number): void{
-            ctx.fillStyle =  "	rgb(211,211,211)";
+            ctx.fillStyle =  "	rgb(50,50,50)";
             ctx.fillRect(position.x, position.y, size.width, size.height);
         },
         handleCollision(otherSprite:Sprite):void{
@@ -42,8 +42,7 @@ function createWall(position:Point, size:Size, isVertical:boolean):Sprite{
 }
 
 export class BouncingBall implements GameInitializer{
-    //add about button.
-    //find better and smaller ball image
+    //add cool font
 
     preloadImagesKeyPathMap():Map<string,string>{
         const map = new Map();
