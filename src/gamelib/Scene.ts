@@ -18,12 +18,13 @@ export default class Scene extends DefaultSprite{
     viewPort:Point = {x:0, y:0};
     controller:GameController;
     debug: boolean = false;
-    private collisionListeners:Sprite[] = [];
-	private sprites:Sprite[] = [];
-	
 	wrapAround:boolean = false;
 	sceneSpeed:number = 1.0;
-    modelSize:Size;
+	modelSize:Size;
+	
+
+	private collisionListeners:Sprite[] = [];
+	private sprites:Sprite[] = [];
     
     constructor(controller:GameController, modelSize:Size={width:0.0, height:0.0}){
         super();
@@ -35,13 +36,15 @@ export default class Scene extends DefaultSprite{
 
     handleMouseClick(x:number, y:number){
     }
-
+	handleTouchMove(x:number, y:number){
+    }
 
 	getSpritesAtPoint(point:Point):Sprite[]{
 		return this.sprites.filter( (s) => pointInRect(point, s) );
 	}
 
 	addSprite(sprite:Sprite) {
+		this._validateSprite(sprite);
 		if(this.debug)
 			console.log("AddSprite: " + sprite);
 
@@ -130,9 +133,16 @@ export default class Scene extends DefaultSprite{
 					else
 						sprite.speed = sprite.speed + sprite.acceleration;
 				}
+
 			}
 			if(sprite.updateModel)
 				sprite.updateModel(timeSinceLastUpdate);
+			try {
+				this._validateSprite(sprite);
+			} catch (error) {
+				console.error("Sprite position not valid.  Killing spite. " + error);
+				sprite.isAlive=false;
+			}
 			if(!sprite.isAlive)
 				this.removeSprite(sprite);
 		}
@@ -210,4 +220,21 @@ export default class Scene extends DefaultSprite{
 	}
 
 	paintBackground?(ctx: CanvasRenderingContext2D):void;
+	
+	_validateSprite(sprite:Sprite){
+		if(sprite.position.x < 0 || sprite.position.y < 0 )
+			throw Error(`Sprite position less 0 (${sprite.position.x}, ${sprite.position.y})`);
+		if(this.modelSize.width !==0){
+			if(sprite.position.x >= this.modelSize.width || sprite.position.y >= this.modelSize.height)
+				throw Error(`Sprite position(${sprite.position.x}, ${sprite.position.y}) > model(${this.modelSize.width},${this.modelSize.height})`);
+		}else if(sprite.position.x >= this.size.width || sprite.position.y >= this.size.height) {
+			throw Error(`Sprite position(${sprite.position.x}, ${sprite.position.y})  > screen(${this.size.width},${this.size.height}) `);
+		}
+		if(sprite.size.width <=0 || sprite.size.height <= 0)
+			throw Error(`Sprite size too small (${sprite.size.width}, ${sprite.size.height})`);
+		if( (sprite.speed !== undefined &&  sprite.angle === undefined) 
+			|| (sprite.speed === undefined &&  sprite.angle !== undefined))
+			throw Error(`Either speed(${sprite.speed}) and angle(${sprite.angle}) are both defined or both undefined.`)
+	}
+
 }

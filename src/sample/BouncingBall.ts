@@ -44,34 +44,23 @@ function createWall(position:Point, size:Size, isVertical:boolean):Sprite{
 export class BouncingBall implements GameInitializer{
     //add cool font
 
-    preloadImagesKeyPathMap():Map<string,string>{
-        const map = new Map();
-        map.set('ball', "/circles/assets/ball-sheet2.png");
-        return map;
-    }
-
+    preloadImages = [{name:'ball', src:'/circles/assets/ball-sheet2.png'}];
 
 	init(controller:GameController):void {
 		const scene = new Scene(controller);
         controller.scene = scene;
-
-        const image = controller.imagePreloader.getImageFromCache('ball');
-        const spriteSheet = new SpriteSheet(image, 4, 8);
-        const radius = spriteSheet.size.width/2;
+        let score =0;
+        controller.publishEvent({type:'score', value:(score)});
         scene.handleMouseClick = function(x:number, y:number){
             const sprites = scene.getSpritesAtPoint({x,y});
             if(sprites.length){
-                sprites.filter( (s) => s.canCollide ).forEach( (s) => scene.removeSprite(s) );
-                return;
+                sprites.filter( (s) => s.canCollide ).forEach( (s) => {
+                    scene.removeSprite(s);
+                    controller.publishEvent({type:'score', value:(score++)});
+                } );
+            }else{ 
+                controller.publishEvent({type:'score', value:(score--)});
             }
-            const ball = new DefaultSprite({x:x-radius,y:y-radius});
-            ball.isAlive = true;
-            ball.speed = Math.random() * 300+100;
-            ball.angle = Math.random() * Math.PI *2;
-            ball.canCollide = true;
-            ball.addBehavior(new SpriteSheetBehavior(spriteSheet));
-            ball.size = {width: ball.size.width -2, height: ball.size.height -2}
-            scene.addSprite(ball);	
         }
         scene.debug = true;
         scene.wrapAround = false;
@@ -88,8 +77,22 @@ export class BouncingBall implements GameInitializer{
         scene.addSprite( createWall({x:0,y:0},{width:wallSize,height:sz.height-wallSize}, true));
         scene.addSprite( createWall({x:sz.width-wallSize,y:0},{width:wallSize,height:sz.height-wallSize}, true));
 
-		// this.scene.addSprite(Wall.newVerticalWall(size.width/3 *2 ,0,size.height/7 *3,2));	
-		// this.scene.addSprite(Wall.newVerticalWall(size.width/3 *2 ,size.height/7*4,size.height/7 *3,2));
+        //add balls
+        const image = controller.imagePreloader.getImageFromCache('ball');
+        const spriteSheet = new SpriteSheet(image, 4, 8);
+        const radius = spriteSheet.size.width/2;
+        const rand =  (min:number, max:number) => Math.random() * (max-min) + min;
+        for(let x=0; x<30;x++){
+            const ball = new DefaultSprite({x: rand(sz.width, radius),y:rand(sz.height, radius)});
+            ball.isAlive = true;
+            ball.speed = Math.random() * 300+100;
+            ball.angle = Math.random() * Math.PI *2;
+            ball.canCollide = true;
+            ball.addBehavior(new SpriteSheetBehavior(spriteSheet));
+            ball.size = {width: ball.size.width -2, height: ball.size.height -2}
+            scene.addSprite(ball);	
+        }
+
 		
 	}
 }

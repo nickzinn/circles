@@ -2,6 +2,16 @@ import Scene from './Scene';
 import { ImagePreloader } from './ImagePreloader';
 import { GameInitializer } from './GameInitializer';
 
+export interface GameEvent{
+    type:string;
+    value:any;
+}
+
+export interface HandleGameEvent{
+    (event:GameEvent):void;
+}
+
+
 export class GameController{
 
     debug: boolean = false;
@@ -14,13 +24,12 @@ export class GameController{
     private readyCallback?: () => void;
     private _scene?: Scene;
     private gameInitializer:GameInitializer;
-
-
+    private gameEventListeners:HandleGameEvent[] = [];
     constructor(gameInitializer:GameInitializer){
         this.gameInitializer = gameInitializer;
        
         this.imagePreloader = new ImagePreloader();
-        gameInitializer.preloadImagesKeyPathMap().forEach( (path, key) => this.imagePreloader.preLoadImage(key,path) );
+        this.imagePreloader.preLoadImages(gameInitializer.preloadImages);
     }
 
     init(canvas:HTMLCanvasElement, readyCallback: () => void) {
@@ -33,11 +42,9 @@ export class GameController{
         const canvas = this.canvas!;
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        const size = {width:canvas.width, height:canvas.height};
         this.gameInitializer.init(this);
         if(!this.scene)
             throw Error("Game Initializer must set scene.");
-        this.scene.size = size;
     }
 
     transition(transitionScene: Scene, newScene: Scene) {
@@ -62,6 +69,14 @@ export class GameController{
     get scene(): Scene {
         return this._scene!;
     }
+
+    publishEvent(event:GameEvent){
+        this.gameEventListeners.forEach( (handler) => handler(event));
+    }
+
+    subscribeEvent(gameEventListener:HandleGameEvent){
+        this.gameEventListeners.push(gameEventListener);
+    }
     
     private _handleImagesLoaded(){
         const that = this;
@@ -75,16 +90,18 @@ export class GameController{
         });
 
         canvas.addEventListener('mousedown', function (e) {
+            e.preventDefault();
             if(!that.pause){
                 const rect = canvas.getBoundingClientRect();
                 that.scene.handleMouseClick(e.clientX - rect.left, e.clientY - rect.top)
             }
         });
         document.addEventListener("touchmove", function (e) {
+            e.preventDefault();
             if(!that.pause){
                 const rect = canvas.getBoundingClientRect();
                 const touch = e.targetTouches[0];
-                that.scene.handleMouseClick(touch.clientX - rect.left, touch.clientY - rect.top)
+                that.scene.handleTouchMove(touch.clientX - rect.left, touch.clientY - rect.top)
             }
         }, false);
 
@@ -125,8 +142,7 @@ export class GameController{
         this.readyCallback!();
     }
 
-
-    paintBackground(ctx: CanvasRenderingContext2D) {
+    private paintBackground(ctx: CanvasRenderingContext2D) {
         if(this.scene.paintBackground)
             this.scene.paintBackground(ctx);
         else{
@@ -134,6 +150,7 @@ export class GameController{
             ctx.fillRect(0, 0, this.scene.size.width, this.scene.size.height);
         }
     }
+
 
     private updateModel(timeSinceLastUpdate: number) {
         this.scene.updateModel(timeSinceLastUpdate);

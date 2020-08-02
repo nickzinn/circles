@@ -17,6 +17,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
+    "typeface-electrolize": "0.0.72",
     "typescript": "^3.9.7"
   },
   "scripts": {

@@ -50,18 +50,22 @@ export default function InfoDialog() {
           <DialogContentText>
           A simple 2D game library for JavaScript to teach my kids programming.   
           A demo space game implemented using the library.
-          Nick Zinn 2020.
+        
           <br></br>
           
           <Link component="button" variant="body2"
           onClick={() => window.open('https://github.com/nickzinn/circles')} >
             Github Repository
           </Link>
+          <br></br><br></br>
+          <Link variant="body2">
+          nickzinn@gmail.com
+          </Link>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary" autoFocus>
-            Close
+            <b>CLOSE</b>
           </Button>
         </DialogActions>
       </Dialog>

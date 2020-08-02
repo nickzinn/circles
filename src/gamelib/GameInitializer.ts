@@ -1,8 +1,9 @@
 import { GameController } from "./GameController";
+import { PreloadImage } from "./ImagePreloader";
 
 export interface GameInitializer{
 
     init(controller:GameController):void;
 
-    preloadImagesKeyPathMap():Map<string,string>;
+    preloadImages:PreloadImage[];
 }

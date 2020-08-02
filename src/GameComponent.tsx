@@ -47,6 +47,10 @@ const GameComponent = withStyles(styles)( class extends React.Component<Props> {
   componentDidMount() { 
     const canvas = this.canvasRef.current;
     this.gameController.init(canvas!, () => this.setState({ imagesLoaded:true }));
+    this.gameController.subscribeEvent( (e) => {
+      if(e.type === 'score')
+        this.setState({score:e.value});
+    })
   }
   handleRestart(e:React.MouseEvent) {
     e.stopPropagation();
