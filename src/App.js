@@ -5,7 +5,7 @@ import {
   Route
 } from "react-router-dom";
 
-import GameComponent from './GameComponent';
+import GameComponent from './gamecontainer/GameComponent';
 import { BouncingBall } from './sample/BouncingBall';
 import { SpaceGame } from './sample/space/SpaceGame';
 import { Home } from './Home';

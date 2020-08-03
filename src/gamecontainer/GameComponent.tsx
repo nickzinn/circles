@@ -1,14 +1,15 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 import './GameComponent.css';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import { PauseCircleOutline, PlayCircleOutline, Refresh, VolumeUp, VolumeOff } from '@material-ui/icons';
-import { GameController} from './gamelib/GameController';
+import { GameController} from '../gamelib/GameController';
 import { CircularProgress, createStyles, Theme, WithStyles, withStyles, Backdrop } from '@material-ui/core';
 import InfoDialog from './InfoDialog';
-import { GameInitializer } from './gamelib/GameInitializer';
+import { GameInitializer } from '../gamelib/GameInitializer';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -21,6 +22,9 @@ const styles = (theme: Theme) => createStyles({
   },
   title: {
     flexGrow: 1,
+  },
+  link:{
+    textDecoration: 'none'
   },
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
@@ -83,8 +87,10 @@ const GameComponent = withStyles(styles)( class extends React.Component<Props> {
       <AppBar position="static" style={{ background: 'transparent', boxShadow: 'none' }}>
         <Toolbar>
           <InfoDialog></InfoDialog>
+          
           <Typography variant="h6" color="primary" className={classes.title}>
-            Circles
+          <Link to="/" className={classes.link}> 
+          <Typography variant="h6" color="primary" className={classes.title}>Circles</Typography>           </Link>
           </Typography>
           <Typography variant="h6" color="primary" className={classes.score}>
             Score: {this.state.score}
