@@ -1,11 +1,12 @@
 import React from 'react';
 import GameComponent from './GameComponent';
-
+import { BouncingBall } from './sample/BouncingBall';
+import { SpaceGame } from './sample/space/SpaceGame';
 
 function App() {
 
   return (
-      <GameComponent></GameComponent>
+      <GameComponent gameInitializer={new SpaceGame()} ></GameComponent>
   );
 
 }

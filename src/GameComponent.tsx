@@ -5,10 +5,10 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import { PauseCircleOutline, PlayCircleOutline, Refresh, VolumeUp, VolumeOff } from '@material-ui/icons';
-import { BouncingBall } from './sample/BouncingBall';
 import { GameController} from './gamelib/GameController';
 import { CircularProgress, createStyles, Theme, WithStyles, withStyles } from '@material-ui/core';
 import InfoDialog from './InfoDialog';
+import { GameInitializer } from './gamelib/GameInitializer';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -25,6 +25,7 @@ const styles = (theme: Theme) => createStyles({
 });
 
 interface Props extends WithStyles<typeof styles> {
+  gameInitializer:GameInitializer;
 }
 
 interface IState{
@@ -42,7 +43,7 @@ const GameComponent = withStyles(styles)( class extends React.Component<Props> {
 
   constructor(props:Props){
     super(props);
-    this.gameController= new GameController(new BouncingBall());
+    this.gameController= new GameController(props.gameInitializer);
     this.gameController.debug = true;
     this.state = { score:0, imagesLoaded:false, pause:false, mute:false};
   }
