@@ -14,13 +14,13 @@ export default function App() {
   return (
     <Router>
         <Switch>
-          <Route path="/space">
+          <Route path="/circles/space">
           <GameComponent gameInitializer={new SpaceGame()} ></GameComponent>
           </Route>
-          <Route path="/ball">
+          <Route path="/circles/ball">
           <GameComponent gameInitializer={new BouncingBall()} ></GameComponent>
           </Route>
-          <Route path="/">
+          <Route path="/circles">
             <Home />
           </Route>
         </Switch>

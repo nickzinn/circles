@@ -54,7 +54,7 @@ export  function Home() {
       </AppBar>
         <Grid container alignItems="center" justify = "center" direction="column" className={classes.container} >
             <Card className={classes.root}>
-                <Link to="/ball" className={classes.link}>
+                <Link to="/circles/ball" className={classes.link}>
                     <CardActionArea>
                         <CardMedia
                             className={classes.media}
@@ -74,7 +74,7 @@ export  function Home() {
             </Card>
 
             <Card className={classes.root}>
-                <Link to="/space" className={classes.link}>
+                <Link to="/circles/space" className={classes.link}>
                     <CardActionArea>
                         <CardMedia
                             className={classes.media}

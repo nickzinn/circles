@@ -87,9 +87,8 @@ const GameComponent = withStyles(styles)( class extends React.Component<Props> {
       <AppBar position="static" style={{ background: 'transparent', boxShadow: 'none' }}>
         <Toolbar>
           <InfoDialog></InfoDialog>
-          
           <Typography variant="h6" color="primary" className={classes.title}>
-          <Link to="/" className={classes.link}> 
+          <Link to="/circles" className={classes.link}> 
           <Typography variant="h6" color="primary" className={classes.title}>Circles</Typography>           </Link>
           </Typography>
           <Typography variant="h6" color="primary" className={classes.score}>
