@@ -63,7 +63,7 @@ export class GameController{
 
     set scene(scene: Scene) {
         if (this.debug)
-            console.log(`SetScene: ${scene.constructor.name}`);
+            console.log(`SetScene: ${scene.name}`);
         scene.debug = this.debug;
         const canvas = this.canvas;
         scene.size = {width:canvas!.width, height:canvas!.height};
@@ -74,6 +74,8 @@ export class GameController{
     }
 
     publishEvent(event:GameEvent){
+        if(this.debug)
+            console.log(`Publish Game Event: {${event.type}, ${event.value}}`);
         this.gameEventListeners.forEach( (handler) => handler(event));
     }
 

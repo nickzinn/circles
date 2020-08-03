@@ -43,8 +43,8 @@ export default class Scene extends DefaultSprite{
 	private collisionListeners:Sprite[] = [];
 	private sprites:Sprite[] = [];
     
-    constructor(controller:GameController, modelSize:Size={width:0.0, height:0.0}){
-        super();
+    constructor(name:string, controller:GameController, modelSize:Size={width:0.0, height:0.0}){
+        super(name);
         this.controller = controller;
         this.modelSize = modelSize;
     }
@@ -73,7 +73,7 @@ export default class Scene extends DefaultSprite{
 	removeSprite(sprite:Sprite) {
 		sprite.handleKill?.();
         if(this.debug)
-            console.log(`Remove sprite (${sprite.position.x}, ${sprite.position.y})`);
+            console.log(`Remove sprite(${sprite.name}) (${sprite.position.x}, ${sprite.position.y})`);
         remove(this.sprites, sprite);
         remove(this.collisionListeners, sprite);
 	}
@@ -155,7 +155,7 @@ export default class Scene extends DefaultSprite{
 			try {
 				this._validateSprite(sprite);
 			} catch (error) {
-				console.log("Sprite position not valid.  Killing spite. " + error);
+				console.log(`Sprite position not valid.  Killing spite (${sprite.name}). ${error}`);
 				sprite.isAlive=false;
 			}
 			if(!sprite.isAlive)
@@ -231,6 +231,11 @@ export default class Scene extends DefaultSprite{
 	}
 
 	addSprites(sprites:Sprite[] ) {
+		if(!sprites || !sprites.length)
+			throw Error(`Attempting to add empty array of sprites in scene (${this.name})`);
+		if(this.debug){
+			console.log(`Bulk adding ${sprites.length} of type (${sprites[0].name})`)
+		}
 		sprites.forEach( (s) => this.addSprite(s) )
 	}
 

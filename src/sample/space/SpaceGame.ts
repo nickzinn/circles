@@ -16,7 +16,7 @@ export class SpaceGame implements GameInitializer{
                     ,{name:'error', src:'/circles/assets/sounds/error.m4a'}];
 
 	init(controller:GameController):void {
-		const scene = new Scene(controller);
+		const scene = new Scene('space game',controller);
         controller.scene = scene;
         let score =0;
         controller.publishEvent({type:'score', value:(score)});
@@ -34,7 +34,7 @@ export class SpaceGame implements GameInitializer{
         const rand =  (minn:number, max:number) => Math.random() * (max-minn) + minn;
         const min =100;
         for(let x=0; x<10;x++){
-            const a = new DefaultSprite({x: rand(sz.width-min, min),y:rand(sz.height-min, min)});
+            const a = new DefaultSprite('asteroid', {x: rand(sz.width-min, min),y:rand(sz.height-min, min)});
             a.isAlive = true;
             a.speed = Math.random() * 200+50;
             a.angle = Math.random() * Math.PI *2;

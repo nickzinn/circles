@@ -4,6 +4,7 @@ import { Size } from "../types/Size";
 import { Behavior } from "../types/Behavior";
 
 export class DefaultSprite implements Sprite{
+    name:string;
     position:Point;
     size:Size;
     isAlive:boolean = true;
@@ -17,7 +18,8 @@ export class DefaultSprite implements Sprite{
 	
 	private behaviors:Behavior[] = [];
 	
-	constructor(position:Point={x:0.0,y:0.0}, size:Size={width:0.0, height:0.0}){
+	constructor(name:string,position:Point={x:0.0,y:0.0}, size:Size={width:0.0, height:0.0}){
+        this.name = name;
         this.position = position;
         this.size = size;
 	}

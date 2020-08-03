@@ -12,6 +12,7 @@ import { SpriteSheetBehavior } from "../gamelib/behaviors/SpriteSheetBehavior";
 
 function createWall(position:Point, size:Size, isVertical:boolean):Sprite{
     const wall = {
+        name:'wall',
         position,
         size,
         isAlive:true,
@@ -48,7 +49,7 @@ export class BouncingBall implements GameInitializer{
                     ,{name:'error', src:'/circles/assets/sounds/error.m4a'}];
 
 	init(controller:GameController):void {
-		const scene = new Scene(controller);
+		const scene = new Scene('bouncing ball',controller);
         controller.scene = scene;
         let score =0;
         controller.publishEvent({type:'score', value:(score)});
@@ -85,7 +86,7 @@ export class BouncingBall implements GameInitializer{
         const radius = spriteSheet.size.width/2;
         const rand =  (min:number, max:number) => Math.random() * (max-min) + min;
         for(let x=0; x<30;x++){
-            const ball = new DefaultSprite({x: rand(sz.width-(radius+wallSize)*2, radius+wallSize),y:rand(sz.height-(radius+wallSize)*2, radius+wallSize)});
+            const ball = new DefaultSprite('ball', {x: rand(sz.width-(radius+wallSize)*2, radius+wallSize),y:rand(sz.height-(radius+wallSize)*2, radius+wallSize)});
             ball.isAlive = true;
             ball.speed = Math.random() * 250+100;
             ball.angle = Math.random() * Math.PI *2;

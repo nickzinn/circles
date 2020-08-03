@@ -7,7 +7,8 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import { Container, AppBar, Toolbar } from "@material-ui/core";
+import { Link  as ReactLink } from '@material-ui/core';
+import {  AppBar, Toolbar,Grid } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -32,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
     },
     link:{
         textDecoration: 'none'
+    },
+    githublink:{
+        marginLeft: theme.spacing(3),
     }
 }));
 
@@ -48,7 +52,7 @@ export  function Home() {
           </Typography>
         </Toolbar>
       </AppBar>
-        <Container className={classes.container}>
+        <Grid container alignItems="center" justify = "center" direction="column" className={classes.container} >
             <Card className={classes.root}>
                 <Link to="/ball" className={classes.link}>
                     <CardActionArea>
@@ -88,7 +92,11 @@ export  function Home() {
                     </CardActionArea>
                 </Link>
             </Card>
-        </Container>
+        </Grid>
+        <ReactLink component="button" variant="body2" className={classes.githublink}
+          onClick={() => window.open('https://github.com/nickzinn/circles')} >
+            Github Repository
+          </ReactLink>
 </React.Fragment>
     );
 }

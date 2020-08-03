@@ -2,6 +2,7 @@ import { Point } from "./Point";
 import { Size } from "./Size";
 
 export interface Sprite{
+    name:string;
     position:Point;
     size:Size;
     isAlive:boolean;
