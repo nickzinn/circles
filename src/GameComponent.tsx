@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import { PauseCircleOutline, PlayCircleOutline, Refresh, VolumeUp, VolumeOff } from '@material-ui/icons';
 import { GameController} from './gamelib/GameController';
-import { CircularProgress, createStyles, Theme, WithStyles, withStyles } from '@material-ui/core';
+import { CircularProgress, createStyles, Theme, WithStyles, withStyles, Backdrop } from '@material-ui/core';
 import InfoDialog from './InfoDialog';
 import { GameInitializer } from './gamelib/GameInitializer';
 
@@ -21,6 +21,10 @@ const styles = (theme: Theme) => createStyles({
   },
   title: {
     flexGrow: 1,
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
   },
 });
 
@@ -96,15 +100,10 @@ const GameComponent = withStyles(styles)( class extends React.Component<Props> {
           </IconButton>
         </Toolbar>
       </AppBar>
-      {!this.state.imagesLoaded &&
-                <React.Fragment>
-                    <Typography variant="h2" gutterBottom>
-                    Loading images...
-                    </Typography>
-                    <CircularProgress />
-                    </React.Fragment>        
-                }
-            <canvas id='Canvas' ref={this.canvasRef} />
+      <Backdrop className={classes.backdrop} open={!this.state.imagesLoaded } >
+          <CircularProgress color="inherit" />
+      </Backdrop>
+      <canvas id='Canvas' ref={this.canvasRef} />
     </React.Fragment>
   );
   }
