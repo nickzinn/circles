@@ -5,7 +5,25 @@ import { Sprite, xySpeed } from "./types/Sprite";
 import { Size } from "./types/Size";
 import { union, Rectangle, intersects, pointInRect } from "./types/Rectangle";
 
-
+function insert<T>(array:T[], value:T, comparator: (a:T, b:T)=>number){
+	let low =0;
+	if(array.length>0){
+		let high=array.length;
+		while(low < high){
+			let mid = Math.floor( (low+high)/2);
+			const c = comparator(array[mid], value);
+			if(c <0){
+				low = mid+1;
+			}else if( c> 0){
+				high = mid;
+			}else{
+				low = mid;
+				break;
+			}
+		}
+	}
+	array.splice(low, 0, value);
+}
 function remove(array:any[], key:any){
     const index = array.indexOf(key, 0);
     if (index > -1) {
@@ -21,7 +39,6 @@ export default class Scene extends DefaultSprite{
 	wrapAround:boolean = false;
 	sceneSpeed:number = 1.0;
 	modelSize:Size;
-	
 
 	private collisionListeners:Sprite[] = [];
 	private sprites:Sprite[] = [];
@@ -45,11 +62,9 @@ export default class Scene extends DefaultSprite{
 
 	addSprite(sprite:Sprite) {
 		this._validateSprite(sprite);
-		if(this.debug)
-			console.log("AddSprite: " + sprite);
-
-		//todo: insert by z-order
-		this.sprites.push(sprite);
+		if(!sprite.zOrder)
+			sprite.zOrder = 0;
+		insert(this.sprites, sprite, (a,b) => a.zOrder! - b.zOrder!);
 		sprite.priorPosition = sprite.position;
 		if (sprite.handleCollision)
 			this.collisionListeners.push(sprite);
@@ -58,7 +73,7 @@ export default class Scene extends DefaultSprite{
 	removeSprite(sprite:Sprite) {
 		sprite.handleKill?.();
         if(this.debug)
-            console.log("RemoveSprite: " + sprite);
+            console.log(`Remove sprite (${sprite.position.x}, ${sprite.position.y})`);
         remove(this.sprites, sprite);
         remove(this.collisionListeners, sprite);
 	}
@@ -140,7 +155,7 @@ export default class Scene extends DefaultSprite{
 			try {
 				this._validateSprite(sprite);
 			} catch (error) {
-				console.error("Sprite position not valid.  Killing spite. " + error);
+				console.log("Sprite position not valid.  Killing spite. " + error);
 				sprite.isAlive=false;
 			}
 			if(!sprite.isAlive)

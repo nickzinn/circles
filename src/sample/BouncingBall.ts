@@ -42,9 +42,10 @@ function createWall(position:Point, size:Size, isVertical:boolean):Sprite{
 }
 
 export class BouncingBall implements GameInitializer{
-    //add cool font
 
-    preloadImages = [{name:'ball', src:'/circles/assets/ball-sheet2.png'}];
+    preloadImages = [{name:'ball', src:'/circles/assets/images/ball-sheet2.png'}];
+    preloadSounds = [{name:'boop', src:'/circles/assets/sounds/boop.m4a'}
+                    ,{name:'error', src:'/circles/assets/sounds/error.m4a'}];
 
 	init(controller:GameController):void {
 		const scene = new Scene(controller);
@@ -57,12 +58,13 @@ export class BouncingBall implements GameInitializer{
                 sprites.filter( (s) => s.canCollide ).forEach( (s) => {
                     scene.removeSprite(s);
                     controller.publishEvent({type:'score', value:(score++)});
+                    controller.soundEffects.play('boop');
                 } );
             }else{ 
                 controller.publishEvent({type:'score', value:(score--)});
+                controller.soundEffects.play('error');
             }
         }
-        scene.debug = true;
         scene.wrapAround = false;
         scene.paintBackground = function(ctx: CanvasRenderingContext2D) {
                 ctx.fillStyle = 'black';
@@ -83,16 +85,15 @@ export class BouncingBall implements GameInitializer{
         const radius = spriteSheet.size.width/2;
         const rand =  (min:number, max:number) => Math.random() * (max-min) + min;
         for(let x=0; x<30;x++){
-            const ball = new DefaultSprite({x: rand(sz.width, radius),y:rand(sz.height, radius)});
+            const ball = new DefaultSprite({x: rand(sz.width-(radius+wallSize)*2, radius+wallSize),y:rand(sz.height-(radius+wallSize)*2, radius+wallSize)});
             ball.isAlive = true;
-            ball.speed = Math.random() * 300+100;
+            ball.speed = Math.random() * 250+100;
             ball.angle = Math.random() * Math.PI *2;
+            ball.zOrder = Math.random() * 10 -5;
             ball.canCollide = true;
             ball.addBehavior(new SpriteSheetBehavior(spriteSheet));
             ball.size = {width: ball.size.width -2, height: ball.size.height -2}
             scene.addSprite(ball);	
         }
-
-		
 	}
 }

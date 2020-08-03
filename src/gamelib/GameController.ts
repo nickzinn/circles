@@ -1,6 +1,7 @@
 import Scene from './Scene';
-import { ImagePreloader } from './ImagePreloader';
+import { ImagePreloader } from './util/ImagePreloader';
 import { GameInitializer } from './GameInitializer';
+import SoundEffects from './util/SoundEffects';
 
 export interface GameEvent{
     type:string;
@@ -17,9 +18,11 @@ export class GameController{
     debug: boolean = false;
     keysPressed: Map<string, boolean> = new Map();
     imagePreloader:ImagePreloader;
+    soundEffects:SoundEffects;
     canvas?:HTMLCanvasElement;
     isShutdown:boolean = false;
     pause:boolean = false;
+    _mute:boolean = false;
 
     private readyCallback?: () => void;
     private _scene?: Scene;
@@ -27,7 +30,7 @@ export class GameController{
     private gameEventListeners:HandleGameEvent[] = [];
     constructor(gameInitializer:GameInitializer){
         this.gameInitializer = gameInitializer;
-       
+        this.soundEffects = new SoundEffects(gameInitializer.preloadSounds || []);
         this.imagePreloader = new ImagePreloader();
         this.imagePreloader.preLoadImages(gameInitializer.preloadImages);
     }
@@ -77,7 +80,13 @@ export class GameController{
     subscribeEvent(gameEventListener:HandleGameEvent){
         this.gameEventListeners.push(gameEventListener);
     }
-    
+    set mute(mute:boolean){
+        this._mute = mute;
+        this.soundEffects.mute = mute;
+    }
+    get mute(){
+        return this._mute;
+    }
     private _handleImagesLoaded(){
         const that = this;
         const canvas = this.canvas!;
@@ -90,18 +99,24 @@ export class GameController{
         });
 
         canvas.addEventListener('mousedown', function (e) {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left, y = e.clientY - rect.top
             e.preventDefault();
+            if(that.debug)
+                console.log(`MouseDown Event: (${x},${y})`);
             if(!that.pause){
-                const rect = canvas.getBoundingClientRect();
-                that.scene.handleMouseClick(e.clientX - rect.left, e.clientY - rect.top)
+                that.scene.handleMouseClick(x,y)
             }
         });
         document.addEventListener("touchmove", function (e) {
+            const rect = canvas.getBoundingClientRect();
+            const touch = e.targetTouches[0];
+            const x = touch.clientX - rect.left, y = touch.clientY - rect.top
             e.preventDefault();
+            if(that.debug)
+                console.log(`TouchMove Event: (${x},${y})`);
             if(!that.pause){
-                const rect = canvas.getBoundingClientRect();
-                const touch = e.targetTouches[0];
-                that.scene.handleTouchMove(touch.clientX - rect.left, touch.clientY - rect.top)
+                that.scene.handleTouchMove(x,y);
             }
         }, false);
 
@@ -149,10 +164,5 @@ export class GameController{
             ctx.fillStyle = 'white';
             ctx.fillRect(0, 0, this.scene.size.width, this.scene.size.height);
         }
-    }
-
-
-    private updateModel(timeSinceLastUpdate: number) {
-        this.scene.updateModel(timeSinceLastUpdate);
     }
 }

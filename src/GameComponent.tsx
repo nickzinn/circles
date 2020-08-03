@@ -4,7 +4,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import { PauseCircleOutline, PlayCircleOutline, Refresh } from '@material-ui/icons';
+import { PauseCircleOutline, PlayCircleOutline, Refresh, VolumeUp, VolumeOff } from '@material-ui/icons';
 import { BouncingBall } from './sample/BouncingBall';
 import { GameController} from './gamelib/GameController';
 import { CircularProgress, createStyles, Theme, WithStyles, withStyles } from '@material-ui/core';
@@ -31,6 +31,7 @@ interface IState{
   score:number;
   imagesLoaded:boolean;
   pause:boolean;
+  mute:boolean;
 }
 
 const GameComponent = withStyles(styles)( class extends React.Component<Props> {
@@ -42,7 +43,8 @@ const GameComponent = withStyles(styles)( class extends React.Component<Props> {
   constructor(props:Props){
     super(props);
     this.gameController= new GameController(new BouncingBall());
-    this.state = { score:0, imagesLoaded:false, pause:false};
+    this.gameController.debug = true;
+    this.state = { score:0, imagesLoaded:false, pause:false, mute:false};
   }
   componentDidMount() { 
     const canvas = this.canvasRef.current;
@@ -60,6 +62,11 @@ const GameComponent = withStyles(styles)( class extends React.Component<Props> {
     e.stopPropagation();
     this.gameController.pause = !this.gameController.pause;
     this.setState({pause: this.gameController.pause});
+  }
+  handleMute(e:React.MouseEvent) {
+    e.stopPropagation();
+    this.gameController.mute = !this.gameController.mute;
+    this.setState({mute: this.gameController.mute});  
   }
   componentWillUnmount(){
     this.gameController.isShutdown = true;
@@ -82,6 +89,9 @@ const GameComponent = withStyles(styles)( class extends React.Component<Props> {
           </IconButton>
           <IconButton edge="start" className={classes.controlButton} onClick={(e) => this.handleRestart(e)} color="primary" aria-label="menu">
             <Refresh />
+          </IconButton>
+          <IconButton edge="start" className={classes.controlButton} onClick={(e) => this.handleMute(e)} color="primary" aria-label="menu">
+              {this.state.mute ? <VolumeOff /> : <VolumeUp />}
           </IconButton>
         </Toolbar>
       </AppBar>

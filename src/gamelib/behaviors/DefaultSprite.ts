@@ -12,7 +12,8 @@ export class DefaultSprite implements Sprite{
     angle:number = 0.0;
     acceleration:number = 0.0;
 	canCollide:boolean = false;
-	isFixedPosition:boolean = false;
+    isFixedPosition:boolean = false;
+    zOrder:number = 0;
 	
 	private behaviors:Behavior[] = [];
 	
