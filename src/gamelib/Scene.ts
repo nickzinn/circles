@@ -4,6 +4,7 @@ import { Point, pointAsInt } from "./types/Point";
 import { Sprite, xySpeed } from "./types/Sprite";
 import { Size } from "./types/Size";
 import { union, Rectangle, intersects, pointInRect } from "./types/Rectangle";
+import { GameInitializer } from "./GameInitializer";
 
 function insert<T>(array:T[], value:T, comparator: (a:T, b:T)=>number){
 	let low =0;
@@ -31,10 +32,10 @@ function remove(array:any[], key:any){
     }
 }
 
-export default class Scene extends DefaultSprite{
+export default class Scene<T extends GameInitializer<T>> extends DefaultSprite{
 
     viewPort:Point = {x:0, y:0};
-    controller:GameController;
+    controller:GameController<T>;
     debug: boolean = false;
 	wrapAround:boolean = false;
 	sceneSpeed:number = 1.0;
@@ -43,7 +44,7 @@ export default class Scene extends DefaultSprite{
 	private collisionListeners:Sprite[] = [];
 	private sprites:Sprite[] = [];
     
-    constructor(name:string, controller:GameController, modelSize:Size={width:0.0, height:0.0}){
+    constructor(name:string, controller:GameController<T>, modelSize:Size={width:0.0, height:0.0}){
         super(name);
         this.controller = controller;
         this.modelSize = modelSize;

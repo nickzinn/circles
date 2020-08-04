@@ -85,10 +85,10 @@ export  function Home() {
                         />
                         <CardContent>
                             <Typography gutterBottom variant="h5" component="h2">
-                                Play Asteroids
+                                Play Space Hunter
       </Typography>
                             <Typography variant="body2" color="textSecondary" component="p">
-                                Shoot all the asteroids.   Use W-A-S-D to move around and space bar to fire.
+                                Shoot all the asteroids.  Use W-A-S-D to move around and space bar to fire.  Watch out for the enemy...
       </Typography>
                         </CardContent>
                     </CardActionArea>

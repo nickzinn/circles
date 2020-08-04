@@ -13,7 +13,7 @@ export interface HandleGameEvent{
 }
 
 
-export class GameController{
+export class GameController<T extends GameInitializer<T>>{
 
     debug: boolean = false;
     keysPressed: Map<string, boolean> = new Map();
@@ -22,13 +22,14 @@ export class GameController{
     canvas?:HTMLCanvasElement;
     isShutdown:boolean = false;
     pause:boolean = false;
-    _mute:boolean = false;
-
+    gameInitializer:T;
+    
+    private _mute:boolean = false;
     private readyCallback?: () => void;
-    private _scene?: Scene;
-    private gameInitializer:GameInitializer;
+    private _scene?: Scene<T>;
+    
     private gameEventListeners:HandleGameEvent[] = [];
-    constructor(gameInitializer:GameInitializer){
+    constructor(gameInitializer:T){
         this.gameInitializer = gameInitializer;
         this.soundEffects = new SoundEffects(gameInitializer.preloadSounds || []);
         this.imagePreloader = new ImagePreloader();
@@ -50,7 +51,7 @@ export class GameController{
             throw Error("Game Initializer must set scene.");
     }
 
-    transition(transitionScene: Scene, newScene: Scene) {
+    transition(transitionScene: Scene<T>, newScene: Scene<T>) {
         const that = this;
         transitionScene.addBehavior({
             handleKill() {
@@ -61,7 +62,7 @@ export class GameController{
             this.scene = transitionScene;
     }
 
-    set scene(scene: Scene) {
+    set scene(scene: Scene<T>) {
         if (this.debug)
             console.log(`SetScene: ${scene.name}`);
         scene.debug = this.debug;
@@ -69,7 +70,7 @@ export class GameController{
         scene.size = {width:canvas!.width, height:canvas!.height};
         this._scene = scene;
     }
-    get scene(): Scene {
+    get scene(): Scene<T> {
         return this._scene!;
     }
 

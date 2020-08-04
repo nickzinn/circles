@@ -42,13 +42,13 @@ function createWall(position:Point, size:Size, isVertical:boolean):Sprite{
     return wall;
 }
 
-export class BouncingBall implements GameInitializer{
+export class BouncingBall implements GameInitializer<BouncingBall>{
 
     preloadImages = [{name:'ball', src:'/circles/assets/images/ball-sheet2.png'}];
     preloadSounds = [{name:'boop', src:'/circles/assets/sounds/boop.m4a'}
                     ,{name:'error', src:'/circles/assets/sounds/error.m4a'}];
 
-	init(controller:GameController):void {
+	init(controller:GameController<BouncingBall>):void {
 		const scene = new Scene('bouncing ball',controller);
         controller.scene = scene;
         let score =0;

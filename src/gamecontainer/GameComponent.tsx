@@ -32,8 +32,8 @@ const styles = (theme: Theme) => createStyles({
   },
 });
 
-interface Props extends WithStyles<typeof styles> {
-  gameInitializer:GameInitializer;
+interface Props<T extends GameInitializer<T>> extends WithStyles<typeof styles> {
+  gameInitializer:T;
 }
 
 interface IState{
@@ -43,15 +43,15 @@ interface IState{
   mute:boolean;
 }
 
-const GameComponent = withStyles(styles)( class extends React.Component<Props> {
+const GameComponent = withStyles(styles)( class <T extends GameInitializer<T>> extends React.Component<Props<T>> {
  
   canvasRef = React.createRef<HTMLCanvasElement>();
-  gameController:GameController;
+  gameController:GameController<T>;
   state:IState;
 
-  constructor(props:Props){
+  constructor(props:Props<T>){
     super(props);
-    this.gameController= new GameController(props.gameInitializer);
+    this.gameController= new GameController<T>(props.gameInitializer);
     this.gameController.debug = true;
     this.state = { score:0, imagesLoaded:false, pause:false, mute:false};
   }
