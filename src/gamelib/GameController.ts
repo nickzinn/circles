@@ -92,15 +92,9 @@ export class GameController{
     private _handleImagesLoaded(){
         const that = this;
         const canvas = this.canvas!;
-        
-        document.addEventListener('keydown', (event) => {
-            that.keysPressed.set(event.key, true);
-        });
-        document.addEventListener('keyup', (event) => {
-            that.keysPressed.delete(event.key);
-        });
-
-        canvas.addEventListener('mousedown', function (e) {
+        const keyDown = (event:KeyboardEvent) => that.keysPressed.set(event.key, true);
+        const keyUp = (event:KeyboardEvent) => that.keysPressed.set(event.key, true);
+        const mouseDown = (e:MouseEvent) => {
             const rect = canvas.getBoundingClientRect();
             const x = e.clientX - rect.left, y = e.clientY - rect.top
             e.preventDefault();
@@ -109,8 +103,8 @@ export class GameController{
             if(!that.pause){
                 that.scene.handleMouseClick(x,y)
             }
-        });
-        document.addEventListener("touchmove", function (e) {
+        };
+        const touchMove = (e:TouchEvent) => {
             const rect = canvas.getBoundingClientRect();
             const touch = e.targetTouches[0];
             const x = touch.clientX - rect.left, y = touch.clientY - rect.top
@@ -120,14 +114,26 @@ export class GameController{
             if(!that.pause){
                 that.scene.handleTouchMove(x,y);
             }
-        }, false);
+        };
+        
+        document.addEventListener('keydown', keyDown);
+        document.addEventListener('keyup',keyUp);
+        canvas.addEventListener('mousedown', mouseDown);
+        canvas.addEventListener("touchmove", touchMove, false);
 
         let lastTime = 0;
         this.restart();
         
         function loop(time: number) {
-            if(that.isShutdown)
+            if(that.isShutdown){
+                if(that.debug)
+                    console.log("shutting down game controller.");
+                document.removeEventListener('keydown', keyDown);
+                document.removeEventListener('keyup',keyUp);
+                canvas.removeEventListener('mousedown', mouseDown);
+                canvas.removeEventListener("touchmove", touchMove, false);
                 return;
+            }
             let timeSinceLastAnimation = (!lastTime) ? 0: time - lastTime;
             lastTime = time;
             if(timeSinceLastAnimation > 100 || that.pause){

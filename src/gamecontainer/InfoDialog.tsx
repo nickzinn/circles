@@ -15,7 +15,7 @@ import { Info } from '@material-ui/icons';
 const useStyles = makeStyles((theme: Theme) =>
 createStyles({
 infoButton: {
-    marginRight: theme.spacing(1),
+
   },
 })
 );

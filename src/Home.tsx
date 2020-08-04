@@ -7,7 +7,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import { Link  as ReactLink } from '@material-ui/core';
+import { Link  as ReactLink, Box } from '@material-ui/core';
 import {  AppBar, Toolbar,Grid } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -16,17 +16,18 @@ const useStyles = makeStyles((theme) => ({
       },
     container:{
         marginTop: theme.spacing(3),
-        marginBottom: theme.spacing(3),
+        marginBottom: theme.spacing(2),
         padding: theme.spacing(2),
         [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
           marginTop: theme.spacing(6),
           marginBottom: theme.spacing(6),
           padding: theme.spacing(3),
         },
+        overflowY:'auto',
     },
     root: {
         maxWidth: 345,
-        marginBottom: theme.spacing(6),
+        marginBottom: theme.spacing(3),
     },
     media: {
         height: 140,
@@ -52,6 +53,7 @@ export  function Home() {
           </Typography>
         </Toolbar>
       </AppBar>
+      <Box component="div" overflow="visible">
         <Grid container alignItems="center" justify = "center" direction="column" className={classes.container} >
             <Card className={classes.root}>
                 <Link to="/circles/ball" className={classes.link}>
@@ -92,11 +94,12 @@ export  function Home() {
                     </CardActionArea>
                 </Link>
             </Card>
-        </Grid>
-        <ReactLink component="button" variant="body2" className={classes.githublink}
+            <ReactLink  component="button" variant="body2" className={classes.githublink}
           onClick={() => window.open('https://github.com/nickzinn/circles')} >
             Github Repository
           </ReactLink>
+        </Grid>
+        </Box>
 </React.Fragment>
     );
 }

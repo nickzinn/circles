@@ -18,7 +18,7 @@ const styles = (theme: Theme) => createStyles({
   controlButton: {
   },
   score: {
-    marginRight: theme.spacing(2),
+    marginRight: theme.spacing(1),
   },
   title: {
     flexGrow: 1,
@@ -91,7 +91,7 @@ const GameComponent = withStyles(styles)( class extends React.Component<Props> {
           <Link to="/circles" className={classes.link}> 
           <Typography variant="h6" color="primary" className={classes.title}>Circles</Typography>           </Link>
           </Typography>
-          <Typography variant="h6" color="primary" className={classes.score}>
+          <Typography variant="body1" color="primary" className={classes.score}>
             Score: {this.state.score}
           </Typography>
           <IconButton edge="start" className={classes.controlButton} onClick={(e) => this.handlePause(e)} color="primary" aria-label="menu">
