@@ -16,5 +16,5 @@ export function createMainGameScene(controller:GameController<SpaceGame>, level:
             ctx.fillRect(0, 0, scene.size.width, scene.size.height);
     }
 
-    generateAsteroids(controller, 30);
+    generateAsteroids(controller, 20);
 }
