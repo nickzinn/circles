@@ -27,7 +27,7 @@ export interface Sprite{
 }
 
 export function xySpeed(sprite:Sprite): Point{
-    if(sprite.speed && sprite.angle)
+    if(sprite.speed !== undefined && sprite.angle !== undefined)
         return {x: sprite.speed * Math.cos(sprite.angle), y: sprite.speed * Math.sin(sprite.angle)};
     else return {x:0,y:0};
 }

@@ -40,10 +40,10 @@ export default class Scene<T extends GameInitializer<T>> extends DefaultSprite{
 	wrapAround:boolean = false;
 	sceneSpeed:number = 1.0;
 	modelSize:Size;
+	sprites:Sprite[] = [];
 
 	private collisionListeners:Sprite[] = [];
-	private sprites:Sprite[] = [];
-    
+	
     constructor(name:string, controller:GameController<T>, modelSize:Size={width:0.0, height:0.0}){
         super(name);
         this.controller = controller;
@@ -60,14 +60,15 @@ export default class Scene<T extends GameInitializer<T>> extends DefaultSprite{
 	getSpritesAtPoint(point:Point):Sprite[]{
 		return this.sprites.filter( (s) => pointInRect(point, s) );
 	}
-
+	
 	addSprite(sprite:Sprite) {
+		this._handleWrap(sprite.position,sprite.size);
 		this._validateSprite(sprite);
 		if(!sprite.zOrder)
 			sprite.zOrder = 0;
 		insert(this.sprites, sprite, (a,b) => a.zOrder! - b.zOrder!);
 		sprite.priorPosition = sprite.position;
-		if (sprite.handleCollision)
+		if (sprite.handleCollision && sprite.canCollide)
 			this.collisionListeners.push(sprite);
 	}
 
@@ -101,46 +102,20 @@ export default class Scene<T extends GameInitializer<T>> extends DefaultSprite{
 				this.removeSprite(sprite);
 				continue;
 			}
-			if (sprite.speed) {
+			let newRect;
+			if (!sprite.isFixedPosition && sprite.speed !== undefined) {
 				const oldRect = {position:pointAsInt(sprite.position), size:sprite.size};
 				const pointSpeed = xySpeed(sprite);
-				let newX = sprite.position.x + pointSpeed.x * dx * this.sceneSpeed;
-				let newY = sprite.position.y + pointSpeed.y * dx * this.sceneSpeed;
-
-				// handle wrap around
-				let wrapped = false;
-				if (this.wrapAround) {
-					let width = this.size.width;
-					let height = this.size.height;
-					if(this.modelSize.width !==0){
-						width= this.modelSize.width;
-						height = this.modelSize.height;
-					}
-					
-					if (newX < 0) {
-						newX = width - sprite.size.width;
-						wrapped = true;
-					} else if (newX + sprite.size.width > width) {
-						newX = 0;
-						wrapped = true;
-					}
-					if (newY < 0) {
-						newY = height - sprite.size.height;
-						wrapped = true;
-					} else if (newY + sprite.size.height > height) {
-						newY = 0;
-						wrapped = true;
-					}
-				}
+				let newPosition = {x:sprite.position.x + pointSpeed.x * dx * this.sceneSpeed,
+								   y:sprite.position.y + pointSpeed.y * dx * this.sceneSpeed};
+				let wrapped = this._handleWrap(newPosition, sprite.size);
 				sprite.priorPosition = oldRect.position;
-				sprite.position = {x:newX, y:newY};
+				sprite.position = newPosition;
 				// check collisions
-				let newRect = {position: pointAsInt(sprite.position), size: sprite.size};
+				newRect = {position: pointAsInt(sprite.position), size: sprite.size};
 				if (!wrapped)
 					newRect = union(oldRect, newRect);
 				
-				if(sprite.canCollide)
-					this._handleCollision(newRect, sprite);
 				if (sprite.acceleration) {
 					if (Math.sign(sprite.acceleration
 							+ sprite.speed) !== Math.sign(sprite
@@ -149,7 +124,12 @@ export default class Scene<T extends GameInitializer<T>> extends DefaultSprite{
 					else
 						sprite.speed = sprite.speed + sprite.acceleration;
 				}
+			}
 
+			if(sprite.canCollide){
+				if(!newRect)
+					newRect = sprite;
+				this._handleCollision(newRect, sprite);
 			}
 			if(sprite.updateModel)
 				sprite.updateModel(timeSinceLastUpdate);
@@ -256,6 +236,33 @@ export default class Scene<T extends GameInitializer<T>> extends DefaultSprite{
 		if( (sprite.speed !== undefined &&  sprite.angle === undefined) 
 			|| (sprite.speed === undefined &&  sprite.angle !== undefined))
 			throw Error(`Either speed(${sprite.speed}) and angle(${sprite.angle}) are both defined or both undefined.`)
+	}
+	_handleWrap(position:Point, size:Size):boolean{
+		// handle wrap around
+		let wrapped = false;
+		if (this.wrapAround) {
+			let width = this.size.width;
+			let height = this.size.height;
+			if(this.modelSize.width !==0){
+				width= this.modelSize.width;
+				height = this.modelSize.height;
+			}
+			if (position.x < 0) {
+				position.x = width - size.width;
+				wrapped = true;
+			} else if (position.x + size.width > width) {
+				position.x = 0;
+				wrapped = true;
+			}
+			if (position.y < 0) {
+				position.y = height - size.height;
+				wrapped = true;
+			} else if (position.y + size.height > height) {
+				position.y = 0;
+				wrapped = true;
+			}
+		}	
+		return wrapped;
 	}
 
 }

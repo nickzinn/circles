@@ -1,7 +1,10 @@
+import { SpriteSheet } from "./SpriteSheet";
 
 export interface PreloadImage{
     name:string;
     src:string;
+    rows?:number;
+    columns?:number;
 }
 
 
@@ -36,7 +39,7 @@ function makeTransparent(image: HTMLImageElement):HTMLImageElement  {
 
 
 export class ImagePreloader{
-    imageCache: Map<string,HTMLImageElement> = new Map();
+    imageCache: Map<string,SpriteSheet> = new Map();
     loadsCompleted:number =0;
     nLoads:number = 0;
 
@@ -48,12 +51,12 @@ export class ImagePreloader{
         this.loadCallback = callback;
     }
     
-    getImageFromCache(key:string):HTMLImageElement{
-        const image = this.imageCache.get(key);
+    getSpriteSheetFromCache(key:string):SpriteSheet{
+        const spriteSheet = this.imageCache.get(key);
         this.nLoads++;
-        if(!image)
+        if(!spriteSheet)
             throw Error("unable to load image: " + key);
-        return image;
+        return spriteSheet;
     }
     
     preLoadImages(images:PreloadImage[]):void{
@@ -62,14 +65,17 @@ export class ImagePreloader{
             const image = new Image();
             this.nLoads++;
             image.src = des.src;
-            image.onload = this._createOnLoad(image, des.name);
+            image.onload = this._createOnLoad(image, des);
         }
     }
-    private _createOnLoad(image:HTMLImageElement, key:string){
+    private _createOnLoad(image:HTMLImageElement, des:PreloadImage){
         return () => {
             const newImage = makeTransparent(image);
             newImage.onload = () => {
-                this.imageCache.set(key, newImage);
+                const rows = (des.rows) ? des.rows : 1;
+                const columns = (des.columns) ? des.columns :1;
+                const sheet = new SpriteSheet(newImage, rows, columns);
+                this.imageCache.set(des.name, sheet);
                 if(++this.loadsCompleted === this.nLoads && this.loadCallback){
                     this.loadCallback();
                 }

@@ -51,17 +51,6 @@ export class GameController<T extends GameInitializer<T>>{
             throw Error("Game Initializer must set scene.");
     }
 
-    transition(transitionScene: Scene<T>, newScene: Scene<T>) {
-        const that = this;
-        transitionScene.addBehavior({
-            handleKill() {
-                that.scene = newScene;
-            }
-        });
-        if (this.scene !== transitionScene)
-            this.scene = transitionScene;
-    }
-
     set scene(scene: Scene<T>) {
         if (this.debug)
             console.log(`SetScene: ${scene.name}`);
@@ -94,14 +83,14 @@ export class GameController<T extends GameInitializer<T>>{
         const that = this;
         const canvas = this.canvas!;
         const keyDown = (event:KeyboardEvent) => that.keysPressed.set(event.key, true);
-        const keyUp = (event:KeyboardEvent) => that.keysPressed.set(event.key, true);
+        const keyUp = (event:KeyboardEvent) => that.keysPressed.delete(event.key);
         const mouseDown = (e:MouseEvent) => {
             const rect = canvas.getBoundingClientRect();
             const x = e.clientX - rect.left, y = e.clientY - rect.top
             e.preventDefault();
             if(that.debug)
                 console.log(`MouseDown Event: (${x},${y})`);
-            if(!that.pause){
+            if(!that.pause && that.scene){
                 that.scene.handleMouseClick(x,y)
             }
         };
@@ -112,7 +101,7 @@ export class GameController<T extends GameInitializer<T>>{
             e.preventDefault();
             if(that.debug)
                 console.log(`TouchMove Event: (${x},${y})`);
-            if(!that.pause){
+            if(!that.pause && that.scene){
                 that.scene.handleTouchMove(x,y);
             }
         };
@@ -150,20 +139,36 @@ export class GameController<T extends GameInitializer<T>>{
                 that.restart();
             }
 
-            that.keysPressed.forEach((value, key) => that.scene.handleKeyPressed(key));
-
-            ctx.save(); //Freeze redraw
-
-            that.paintBackground(ctx);
-            that.scene.paint({x:0,y:0}, ctx, timeSinceLastAnimation);
-            that.scene.updateModel(timeSinceLastAnimation);
-
-            ctx.restore();//now do redraw
+            that._updateScene(ctx, timeSinceLastAnimation);
 
             requestAnimationFrame(loop);
         }
         requestAnimationFrame(loop);
         this.readyCallback!();
+    }
+
+    private _updateScene(ctx:CanvasRenderingContext2D,timeSinceLastAnimation:number){
+        this.keysPressed.forEach((value, key) => {
+            if(this.debug){
+                console.log(`KeyPressed Event: ${key}`);
+            }
+            this.scene.handleKeyPressed(key);
+        });
+
+        ctx.save(); //Freeze redraw
+
+        this.paintBackground(ctx);
+        this.scene.paint({x:0,y:0}, ctx, timeSinceLastAnimation);
+        this.scene.updateModel(timeSinceLastAnimation);
+
+        if(!this.scene.isAlive){
+            console.log(`Scene Killed: ${this.scene.name}`);
+            this.scene.handleKill();
+            if(!this.scene.isAlive)
+                throw Error(`Scene is still dead.  Can't have a dead scene (${this.scene.name})`);
+        }
+
+        ctx.restore();//now do redraw
     }
 
     private paintBackground(ctx: CanvasRenderingContext2D) {

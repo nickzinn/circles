@@ -1,22 +1,20 @@
 import { Behavior } from "../types/Behavior";
 import { Sprite } from "../types/Sprite";
 import { Point } from "../types/Point";
-import { SpriteSheet } from "./SpriteSheet";
-
-
+import { SpriteSheet } from "../util/SpriteSheet";
 
 export class SpriteSheetBehavior implements Behavior{
     spriteSheet:SpriteSheet;
-    framesPerSecond:number = 10;
+    framesPerSecond:number = 25;
 	age:number = 0;
-    animateOnce:boolean = false;
+    animateOnce:boolean;
 	rotate:boolean = false;
-
-	constructor(spriteSheet:SpriteSheet) {
+	constructor(spriteSheet:SpriteSheet,  animateOnce:boolean = false) {
 		this.spriteSheet = spriteSheet;
+		this.animateOnce = animateOnce;
 	}
     init(sprite:Sprite){
-        sprite.size = this.spriteSheet.size;
+		sprite.size = this.spriteSheet.size;
 	}
     paint(sprite:Sprite, location:Point, ctx: CanvasRenderingContext2D, timeSinceLastAnimation: number):void{
 		let frame;
@@ -28,8 +26,7 @@ export class SpriteSheetBehavior implements Behavior{
 		}
 		const column = Math.floor(frame % this.spriteSheet.columns) + 1;
 		const row = Math.floor( frame/this.spriteSheet.columns ) + 1 ;
-		const angle = (sprite.angle) ? sprite.angle : 0;
-		this.spriteSheet.paint(location,ctx,angle,row,column);		
+		this.spriteSheet.paint(location,ctx,this.getAngle(sprite),row,column);		
 
 	}
 	updateModel(sprite:Sprite, timeSinceLastUpdate:number):void{
@@ -42,5 +39,8 @@ export class SpriteSheetBehavior implements Behavior{
 				sprite.isAlive = false;
 			}
 		}
+	}
+	getAngle(sprite:Sprite){
+		return (sprite.angle) ? sprite.angle : 0;
 	}
 }
