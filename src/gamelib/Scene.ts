@@ -208,6 +208,7 @@ export default class Scene<T extends GameInitializer<T>> extends DefaultSprite{
 				this.totalTime +=timeSinceLastAnimation;
 			}
 			ctx.fillStyle = "red"
+			ctx.font ="8px Electrolize";
 			ctx.fillText(`FPS: ${Math.round(1000 / (this.totalTime/ ++this.count))} Alive Sprites: ${this.sprites.length} On Screen Sprites: ${displayedSprites}` , 10, this.size.height -10);
 		}
 	}

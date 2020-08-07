@@ -33,7 +33,7 @@ export class TitleSprite implements Sprite{
             ctx.fillText(txt, x,y);
         }
 
-        ctx.font = (w>500) ? (w>800) ? "110px Electrolize": "60px Electrolize" : "40px Electrolize";
+        ctx.font = (w>400) ? (w>500) ? (w>800) ? (w>1000) ? "110px Electrolize": "80px Electrolize": "60px Electrolize" : "40px Electrolize": "30px Electrolize";
         let measure = ctx.measureText(this.title);
         let hpos = h/3;
         shadowText(this.title, (w-measure.width)/2, hpos, 3);

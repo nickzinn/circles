@@ -1,7 +1,8 @@
 import { Point } from "./Point";
 import { Size } from "./Size";
+import { Vector } from "./Vector";
 
-export interface Sprite{
+export interface Sprite extends Vector{
     name:string;
     position:Point;
     size:Size;

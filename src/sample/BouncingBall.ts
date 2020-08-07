@@ -6,6 +6,8 @@ import { Size } from "../gamelib/types/Size";
 import { GameInitializer } from "../gamelib/GameInitializer";
 import { AnimatedSprite } from "../gamelib/sprites/AnimatedSprite";
 import { vectorToXYSpeed } from "../gamelib/types/Vector";
+import { CountdownSprite } from "../gamelib/sprites/CountdownSprite";
+import { TitleSprite } from "../gamelib/sprites/TitleSprite";
 
 function createWall(position:Point, size:Size, isVertical:boolean):Sprite{
     const wall = {
@@ -48,7 +50,10 @@ export class BouncingBall implements GameInitializer<BouncingBall>{
     preloadSounds = [{name:'boop', src:'/circles/assets/sounds/boop.wav'}
                     ,{name:'error', src:'/circles/assets/sounds/error.wav'}];
 
-	init(controller:GameController<BouncingBall>):void {
+ 	init(controller:GameController<BouncingBall>):void {
+        this.launchInstructions(controller);
+    }
+    launchGame(controller:GameController<BouncingBall>){
 		const scene = new Scene('bouncing ball',controller);
         controller.scene = scene;
         let score =0;
@@ -57,6 +62,8 @@ export class BouncingBall implements GameInitializer<BouncingBall>{
             const sprites = scene.getSpritesAtPoint({x,y});
             if(sprites.length){
                 sprites.filter( (s) => s.canCollide ).forEach( (s) => {
+                    if(s.name === 'CountdownTimer')
+                        return;
                     scene.removeSprite(s);
                     controller.publishEvent({type:'score', value:(score++)});
                     controller.soundEffects.play('boop');
@@ -81,10 +88,11 @@ export class BouncingBall implements GameInitializer<BouncingBall>{
         scene.addSprite( createWall({x:sz.width-wallSize,y:0},{width:wallSize,height:sz.height-wallSize}, true));
 
         const rand =  (min:number, max:number) => Math.random() * (max-min) + min;
+        const randPosition = (r:number) => ({x: rand(sz.width-(r+wallSize)*2, r+wallSize), y: rand(sz.height-(r+wallSize)*2, r+wallSize)});
         for(let x=0; x<30;x++){
             const ball = new AnimatedSprite(scene, 'ball');
             const radius = ball.size.width/2;
-            ball.position = {x: rand(sz.width-(radius+wallSize)*2, radius+wallSize),y:rand(sz.height-(radius+wallSize)*2, radius+wallSize)};
+            ball.position = randPosition(radius);
             ball.isAlive = true;
             ball.speed = Math.random() * 250+100;
             ball.angle = Math.random() * Math.PI *2;
@@ -93,5 +101,44 @@ export class BouncingBall implements GameInitializer<BouncingBall>{
             ball.size = {width: ball.size.width -2, height: ball.size.height -2}
             scene.addSprite(ball);	
         }
-	}
+        const countdown = new CountdownSprite(15000);
+        countdown.position = randPosition( countdown.size.width );
+        countdown.speed = 500;
+        countdown.angle = Math.random() * Math.PI *2;
+        countdown.zOrder = 1;
+        countdown.canCollide = true;
+        countdown.handleKill = () =>  this.launchGameOverScene(controller, score);
+        scene.addSprite(countdown);
+    }
+    launchGameOverScene(controller:GameController<BouncingBall>, score:number){
+        const scene = new Scene('GameOver',controller);
+        controller.scene = scene;
+        let age =0;
+        scene.paintBackground = function(ctx: CanvasRenderingContext2D) {
+            ctx.fillStyle = 'black';
+            ctx.fillRect(0, 0, scene.size.width, scene.size.height);
+        }
+        scene.addBehavior({ updateModel: (s,time) => age+=time });
+        scene.handleKeyPressed = () => {if(age>1000) this.launchGame(controller)};
+        scene.handleMouseClick = () => {if(age>1000) this.launchGame(controller)};
+        const win = (score>10);
+        scene.addSprite( new TitleSprite( win ? 'YOU WIN!!!' : "YOU LOSE", `${ win ? 'Awesome,': 'Times Up!'} Score ${score}`
+            , 'HIT ANY KEY TO PLAY AGAIN' ) );
+        return scene;
+    }
+    launchInstructions(controller:GameController<BouncingBall>){
+        const scene = new Scene('Intro',controller);
+        controller.scene = scene;
+            
+        scene.paintBackground = function(ctx: CanvasRenderingContext2D) {
+                ctx.fillStyle = 'black';
+                ctx.fillRect(0, 0, scene.size.width, scene.size.height);
+        }
+        scene.handleKeyPressed = () => this.launchGame(controller);
+        scene.handleMouseClick = () => this.launchGame(controller);
+        scene.addSprite( new TitleSprite( "CLICK THE BALLS", `You have 15 seconds. Don't miss.`
+            , 'HIT ANY KEY TO PLAY' ) );
+        return scene;
+    }
 }
+

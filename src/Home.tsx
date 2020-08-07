@@ -56,26 +56,6 @@ export  function Home() {
       <Box component="div" overflow="visible">
         <Grid container alignItems="center" justify = "center" direction="column" className={classes.container} >
             <Card className={classes.root}>
-                <Link to="/circles/ball" className={classes.link}>
-                    <CardActionArea>
-                        <CardMedia
-                            className={classes.media}
-                            image="/circles/assets/images/balls-screen.png"
-                            title="Play Bouncing Ball"
-                        />
-                        <CardContent>
-                            <Typography gutterBottom variant="h5" component="h2">
-                                Play Bouncing Ball
-      </Typography>
-                            <Typography variant="body2" color="textSecondary" component="p">
-                                Try to catch the balls.  If you miss your score goes down, so be careful!  Built this to test the library.
-      </Typography>
-                        </CardContent>
-                    </CardActionArea>
-                </Link>
-            </Card>
-
-            <Card className={classes.root}>
                 <Link to="/circles/space" className={classes.link}>
                     <CardActionArea>
                         <CardMedia
@@ -89,6 +69,25 @@ export  function Home() {
       </Typography>
                             <Typography variant="body2" color="textSecondary" component="p">
                                 Shoot all the asteroids.  Use W-A-S-D to move around and space bar to fire.  Watch out for the enemy...
+      </Typography>
+                        </CardContent>
+                    </CardActionArea>
+                </Link>
+            </Card>
+            <Card className={classes.root}>
+                <Link to="/circles/ball" className={classes.link}>
+                    <CardActionArea>
+                        <CardMedia
+                            className={classes.media}
+                            image="/circles/assets/images/balls-screen.png"
+                            title="Play Bouncing Ball"
+                        />
+                        <CardContent>
+                            <Typography gutterBottom variant="h5" component="h2">
+                                Play Bouncing Ball
+      </Typography>
+                            <Typography variant="body2" color="textSecondary" component="p">
+                                Try to catch the balls.  If you miss your score goes down, so be careful!  Built this to test the library.
       </Typography>
                         </CardContent>
                     </CardActionArea>
