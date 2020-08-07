@@ -68,7 +68,7 @@ export  function Home() {
                                 Play Bouncing Ball
       </Typography>
                             <Typography variant="body2" color="textSecondary" component="p">
-                                Try to catch the balls.  If you miss your score goes down, so be careful!
+                                Try to catch the balls.  If you miss your score goes down, so be careful!  Built this to test the library.
       </Typography>
                         </CardContent>
                     </CardActionArea>

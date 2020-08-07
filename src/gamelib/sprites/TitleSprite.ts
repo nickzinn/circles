@@ -6,6 +6,8 @@ export class TitleSprite implements Sprite{
     name: string = 'Title';
     position: Point = {x:0,y:0};
     size: Size = {width:1, height:1};
+    speed =0;
+    angle =0;
     isAlive: boolean = true;
     zOrder: number = 100;
     canCollide: boolean = false;
@@ -31,7 +33,7 @@ export class TitleSprite implements Sprite{
             ctx.fillText(txt, x,y);
         }
 
-        ctx.font = (w>500) ? (w>800) ? "110px Electrolize": "60px Electrolize" : "45px Electrolize";
+        ctx.font = (w>500) ? (w>800) ? "110px Electrolize": "60px Electrolize" : "40px Electrolize";
         let measure = ctx.measureText(this.title);
         let hpos = h/3;
         shadowText(this.title, (w-measure.width)/2, hpos, 3);

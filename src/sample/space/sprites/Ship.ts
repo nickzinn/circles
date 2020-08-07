@@ -1,9 +1,9 @@
 import { MainGameScene } from "../MainGameScene";
 import { Point } from "../../../gamelib/types/Point";
-import { xySpeed } from "../../../gamelib/types/Sprite";
 import { AnimatedSprite } from "../../../gamelib/sprites/AnimatedSprite";
 import { SpaceGame } from "../SpaceGame";
 import { Missle } from "./Missle";
+import { addVectors } from "../../../gamelib/types/Vector";
 
 const MAX_SPEED = 375;
 
@@ -29,15 +29,9 @@ export class Ship  extends AnimatedSprite<SpaceGame, MainGameScene> {
 		this.shipAngle += +.15;
 	}
 
-	move() {
-		const speed = xySpeed(this);
-
-		let xSpeed = speed.x + 15.0 * Math.cos(this.shipAngle);
-		let ySpeed = speed.y + 15.0 * Math.sin(this.shipAngle);
-		xSpeed = Math.max(Math.min(MAX_SPEED, xSpeed), MAX_SPEED * -1);
-		ySpeed = Math.max(Math.min(MAX_SPEED, ySpeed), MAX_SPEED * -1);
-
-		this.angle =Math.atan2(ySpeed, xSpeed);
-		this.speed =Math.hypot(xSpeed, ySpeed);
+	move(amount:number = 15.0) {
+		const newVector = addVectors(this, {speed:amount, angle:this.shipAngle});
+		this.angle = newVector.angle;
+		this.speed = Math.min(newVector.speed, MAX_SPEED);
 	}
 }

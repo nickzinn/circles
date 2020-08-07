@@ -85,11 +85,14 @@ const GameComponent = withStyles(styles)( class <T extends GameInitializer<T>> e
     return (
     <React.Fragment>
       <AppBar position="static" style={{ background: 'transparent', boxShadow: 'none' }}>
-        <Toolbar>
+        <Toolbar variant="dense">
           <InfoDialog></InfoDialog>
-          <Typography variant="h6" color="primary" className={classes.title}>
+          <Typography variant="h6" color="primary" >
           <Link to="/circles" className={classes.link}> 
-          <Typography variant="h6" color="primary" className={classes.title}>Circles</Typography>           </Link>
+          <Typography variant="h6" color="primary" >Circles</Typography></Link>
+          </Typography>
+          <Typography variant="h6" color="primary" className={classes.title}>
+            &nbsp;
           </Typography>
           <Typography variant="body1" color="primary" className={classes.score}>
             Score: {this.state.score}

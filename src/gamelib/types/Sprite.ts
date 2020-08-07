@@ -6,8 +6,8 @@ export interface Sprite{
     position:Point;
     size:Size;
     isAlive:boolean;
-    speed?: number;
-    angle?: number;
+    speed: number;
+    angle: number;
     acceleration?: number;
     priorPosition?:Point;
     zOrder?:number
@@ -25,13 +25,6 @@ export interface Sprite{
     handleCollision?(otherSprite:Sprite):void;
     
 }
-
-export function xySpeed(sprite:Sprite): Point{
-    if(sprite.speed !== undefined && sprite.angle !== undefined)
-        return {x: sprite.speed * Math.cos(sprite.angle), y: sprite.speed * Math.sin(sprite.angle)};
-    else return {x:0,y:0};
-}
-
 
 export function centerPosition(sprite:Sprite): Point{
     return {x: sprite.position.x + sprite.size.width/2, y: sprite.position.y + sprite.size.height/2};

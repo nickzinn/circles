@@ -2,6 +2,7 @@ import Scene from './Scene';
 import { ImagePreloader } from './util/ImagePreloader';
 import { GameInitializer } from './GameInitializer';
 import SoundEffects from './util/SoundEffects';
+import { Point } from './types/Point';
 
 export interface GameEvent{
     type:string;
@@ -23,6 +24,7 @@ export class GameController<T extends GameInitializer<T>>{
     isShutdown:boolean = false;
     pause:boolean = false;
     gameInitializer:T;
+    touchEvent?:Point;
     
     private _mute:boolean = false;
     private readyCallback?: () => void;
@@ -82,8 +84,8 @@ export class GameController<T extends GameInitializer<T>>{
     private _handleImagesLoaded(){
         const that = this;
         const canvas = this.canvas!;
-        const keyDown = (event:KeyboardEvent) => that.keysPressed.set(event.key, true);
-        const keyUp = (event:KeyboardEvent) => that.keysPressed.delete(event.key);
+        const keyDown = (event:KeyboardEvent) => {event.preventDefault(); this.keysPressed.set(event.key, true);};
+        const keyUp = (event:KeyboardEvent) => {event.preventDefault(); that.keysPressed.delete(event.key);};
         const mouseDown = (e:MouseEvent) => {
             const rect = canvas.getBoundingClientRect();
             const x = e.clientX - rect.left, y = e.clientY - rect.top
@@ -91,25 +93,39 @@ export class GameController<T extends GameInitializer<T>>{
             if(that.debug)
                 console.log(`MouseDown Event: (${x},${y})`);
             if(!that.pause && that.scene){
-                that.scene.handleMouseClick(x,y)
+                that.scene.handleMouseClick(x,y);
             }
         };
         const touchMove = (e:TouchEvent) => {
             const rect = canvas.getBoundingClientRect();
             const touch = e.targetTouches[0];
-            const x = touch.clientX - rect.left, y = touch.clientY - rect.top
             e.preventDefault();
-            if(that.debug)
-                console.log(`TouchMove Event: (${x},${y})`);
-            if(!that.pause && that.scene){
-                that.scene.handleTouchMove(x,y);
-            }
+            this.touchEvent = {x:touch.clientX - rect.left, y: touch.clientY - rect.top}
         };
-        
-        document.addEventListener('keydown', keyDown);
-        document.addEventListener('keyup',keyUp);
+        const touchEnd = (e:TouchEvent) => {
+            this.touchEvent = undefined;
+            e.preventDefault();
+        };
+        const touchStart = (e:TouchEvent) => {
+            const rect = canvas.getBoundingClientRect();
+            const touch = e.targetTouches[0];
+            e.preventDefault();
+            this.touchEvent = {x:touch.clientX - rect.left, y: touch.clientY - rect.top};
+            if(!that.pause && that.scene)
+                that.scene.handleMouseClick(this.touchEvent.x,this.touchEvent.y);
+        };
+        const touchCancel = (e:TouchEvent) => {
+            this.touchEvent = undefined;
+            e.preventDefault();
+        };
+
+        window.addEventListener('keydown', keyDown);
+        window.addEventListener('keyup',keyUp);
         canvas.addEventListener('mousedown', mouseDown);
         canvas.addEventListener("touchmove", touchMove, false);
+        canvas.addEventListener("touchend", touchEnd, false);
+        canvas.addEventListener("touchcancel", touchCancel, false);
+        canvas.addEventListener("touchstart", touchStart, false);
 
         let lastTime = 0;
         this.restart();
@@ -118,10 +134,13 @@ export class GameController<T extends GameInitializer<T>>{
             if(that.isShutdown){
                 if(that.debug)
                     console.log("shutting down game controller.");
-                document.removeEventListener('keydown', keyDown);
-                document.removeEventListener('keyup',keyUp);
+                window.removeEventListener('keydown', keyDown);
+                window.removeEventListener('keyup',keyUp);
                 canvas.removeEventListener('mousedown', mouseDown);
                 canvas.removeEventListener("touchmove", touchMove, false);
+                canvas.removeEventListener("touchend", touchEnd, false);
+                canvas.removeEventListener("touchcancel", touchCancel, false);
+                canvas.removeEventListener("touchstart", touchStart, false);
                 return;
             }
             let timeSinceLastAnimation = (!lastTime) ? 0: time - lastTime;
@@ -154,6 +173,9 @@ export class GameController<T extends GameInitializer<T>>{
             }
             this.scene.handleKeyPressed(key);
         });
+        if(this.touchEvent){
+            this.scene.handleTouch(this.touchEvent.x,this.touchEvent.y);
+        }
 
         ctx.save(); //Freeze redraw
 

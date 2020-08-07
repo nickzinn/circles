@@ -83,7 +83,11 @@ export class MainGameScene extends Scene<SpaceGame> {
 			case 'w':
 			case 'ArrowUp':
 			  	this.player.move();
-			  	break;
+				  break;
+			case 's':
+			case 'ArrowDown':
+				this.player.move(-15.0);
+				break;
 			case 'd':
 			case 'ArrowRight':
 			  	this.player.right();
@@ -169,5 +173,30 @@ export class MainGameScene extends Scene<SpaceGame> {
 		for (let i = 0; i < n; i++)
 			this.stars.push( {x: Math.floor(Math.random()*this.modelSize.width),
 			y:  Math.floor(Math.random()*this.modelSize.height)} );
+	}
+	handleMouseClick(x:number, y:number){
+		if(this.pause)
+			return;
+		this.handleTouch(x,y);
+		this.fire(this.player);
+	}
+
+	handleTouch(x:number, y:number){
+		const xDist = this.player.position.x - x - this.viewPort.x;
+        const yDist = this.player.position.y - y - this.viewPort.y;
+        const distance = Math.hypot(xDist, yDist);
+        const requiredHeading = Math.atan2(yDist, xDist);
+        const crossproduct = Math.sin(requiredHeading - this.player.shipAngle);
+
+        if (crossproduct > .1) 
+            this.player.shipAngle -= .1;
+        else if (crossproduct < -.1)
+            this.player.shipAngle += .1 ;
+        if (distance >100) {
+			this.player.move();
+			this.acceleration = -1;
+        }else{
+			this.acceleration = -5;
+		}
 	}
 }

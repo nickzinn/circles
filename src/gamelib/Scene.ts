@@ -1,10 +1,11 @@
 import { GameController } from "./GameController";
 import { DefaultSprite } from "./behaviors/DefaultSprite";
 import { Point, pointAsInt } from "./types/Point";
-import { Sprite, xySpeed } from "./types/Sprite";
+import { Sprite } from "./types/Sprite";
 import { Size } from "./types/Size";
 import { union, Rectangle, intersects, pointInRect } from "./types/Rectangle";
 import { GameInitializer } from "./GameInitializer";
+import { vectorToXYSpeed } from "./types/Vector";
 
 function insert<T>(array:T[], value:T, comparator: (a:T, b:T)=>number){
 	let low =0;
@@ -54,7 +55,7 @@ export default class Scene<T extends GameInitializer<T>> extends DefaultSprite{
 
     handleMouseClick(x:number, y:number){
     }
-	handleTouchMove(x:number, y:number){
+	handleTouch(x:number, y:number){
     }
 
 	getSpritesAtPoint(point:Point):Sprite[]{
@@ -103,9 +104,9 @@ export default class Scene<T extends GameInitializer<T>> extends DefaultSprite{
 				continue;
 			}
 			let newRect;
-			if (!sprite.isFixedPosition && sprite.speed !== undefined) {
+			if (!sprite.isFixedPosition) {
 				const oldRect = {position:pointAsInt(sprite.position), size:sprite.size};
-				const pointSpeed = xySpeed(sprite);
+				const pointSpeed = vectorToXYSpeed(sprite);
 				let newPosition = {x:sprite.position.x + pointSpeed.x * dx * this.sceneSpeed,
 								   y:sprite.position.y + pointSpeed.y * dx * this.sceneSpeed};
 				let wrapped = this._handleWrap(newPosition, sprite.size);

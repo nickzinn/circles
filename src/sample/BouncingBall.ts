@@ -1,10 +1,11 @@
 import { GameController } from "../gamelib/GameController";
 import { Point } from "../gamelib/types/Point";
 import Scene from "../gamelib/Scene";
-import { Sprite, xySpeed } from "../gamelib/types/Sprite";
+import { Sprite } from "../gamelib/types/Sprite";
 import { Size } from "../gamelib/types/Size";
 import { GameInitializer } from "../gamelib/GameInitializer";
 import { AnimatedSprite } from "../gamelib/sprites/AnimatedSprite";
+import { vectorToXYSpeed } from "../gamelib/types/Vector";
 
 function createWall(position:Point, size:Size, isVertical:boolean):Sprite{
     const wall = {
@@ -13,26 +14,28 @@ function createWall(position:Point, size:Size, isVertical:boolean):Sprite{
         size,
         isAlive:true,
         canCollide:false,
+        speed:0,
+        angle:0,
         paint: function(location:Point, ctx: CanvasRenderingContext2D, timeSinceLastAnimation: number): void{
             ctx.fillStyle =  "	rgb(50,50,50)";
             ctx.fillRect(position.x, position.y, size.width, size.height);
         },
         handleCollision(otherSprite:Sprite):void{
-            const speed = xySpeed(otherSprite);
+            const speed = vectorToXYSpeed(otherSprite);
             if(isVertical){
                 if(speed.x>0)
                    otherSprite.position.x = this.position.x - otherSprite.size.width;
                 else
                     otherSprite.position.x = this.position.x + this.size.width;
                 otherSprite.position.y = otherSprite.priorPosition!.y;
-                otherSprite.angle =  Math.PI - otherSprite.angle! + (Math.random() - .5 )*.2;
+                otherSprite.angle =  Math.PI - otherSprite.angle + (Math.random() - .5 )*.2;
             }else{
                 if(speed.y>0)
                     otherSprite.position.y = this.position.y - otherSprite.size.height;
                 else
                     otherSprite.position.y = this.position.y + this.size.height;
                 otherSprite.position.x = otherSprite.priorPosition!.x;
-                otherSprite.angle =  -1.0 * otherSprite.angle! + (Math.random() - .5 )*.2;
+                otherSprite.angle =  -1.0 * otherSprite.angle + (Math.random() - .5 )*.2;
             }
         }
     };

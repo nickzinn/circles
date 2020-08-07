@@ -9,6 +9,7 @@ export class Player extends Ship {
 	
 	constructor(scene:MainGameScene, position:Point) {
 		super(scene, position, "player");
+		this.acceleration = -4;
 	}
 
 	//handle viewport movement

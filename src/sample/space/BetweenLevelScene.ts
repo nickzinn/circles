@@ -15,10 +15,10 @@ export function launchBetweenLevelsScene(controller:GameController<SpaceGame>, l
             ctx.fillStyle = 'black';
             ctx.fillRect(0, 0, scene.size.width, scene.size.height);
     }
-    scene.handleKeyPressed = (key: string) => { if(key==='n') new MainGameScene(controller,level+1,score) };
+    scene.handleKeyPressed = (key: string) => { new MainGameScene(controller,level+1,score) };
     scene.handleMouseClick = () => new MainGameScene(controller,level+1,score);
     scene.addSprite( new TitleSprite(`LEVEL ${level} COMPLETE`, `Score ${score}`
-        , 'CLICK OR PRESS N FOR NEXT LEVEL' ) );
+        , 'HIT ANY KEY FOR NEXT LEVEL' ) );
     scene.addSprites(generateOpenningSequenceAsteroids(scene, 30));
     scene.controller.soundEffects.play("levelComplete");
     return scene;
