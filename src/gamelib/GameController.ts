@@ -94,7 +94,17 @@ export class GameController<T extends GameInitializer<T>>{
                 console.log(`MouseDown Event: (${x},${y})`);
             if(!that.pause && that.scene){
                 that.scene.handleMouseClick(x,y);
+                this.touchEvent = {x,y};
             }
+        };
+        const mouseMove = (e:MouseEvent) => {
+            const rect = canvas.getBoundingClientRect();
+            e.preventDefault();
+            this.touchEvent = {x:e.clientX - rect.left,y:e.clientY - rect.top};
+        };
+        const mouseUp = (e:MouseEvent) => {
+            this.touchEvent = undefined;
+            e.preventDefault();
         };
         const touchMove = (e:TouchEvent) => {
             const rect = canvas.getBoundingClientRect();
@@ -122,6 +132,8 @@ export class GameController<T extends GameInitializer<T>>{
         window.addEventListener('keydown', keyDown);
         window.addEventListener('keyup',keyUp);
         canvas.addEventListener('mousedown', mouseDown);
+        canvas.addEventListener('mousemove', mouseMove);
+        canvas.addEventListener('mouseup', mouseUp);
         canvas.addEventListener("touchmove", touchMove, false);
         canvas.addEventListener("touchend", touchEnd, false);
         canvas.addEventListener("touchcancel", touchCancel, false);
@@ -137,6 +149,8 @@ export class GameController<T extends GameInitializer<T>>{
                 window.removeEventListener('keydown', keyDown);
                 window.removeEventListener('keyup',keyUp);
                 canvas.removeEventListener('mousedown', mouseDown);
+                canvas.removeEventListener('mousemove', mouseMove);
+                canvas.removeEventListener('mouseup', mouseUp);
                 canvas.removeEventListener("touchmove", touchMove, false);
                 canvas.removeEventListener("touchend", touchEnd, false);
                 canvas.removeEventListener("touchcancel", touchCancel, false);
