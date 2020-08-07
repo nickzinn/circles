@@ -12,7 +12,7 @@ function createWall(position:Point, size:Size, isVertical:boolean):Sprite{
         position,
         size,
         isAlive:true,
-        canCollide:true,
+        canCollide:false,
         paint: function(location:Point, ctx: CanvasRenderingContext2D, timeSinceLastAnimation: number): void{
             ctx.fillStyle =  "	rgb(50,50,50)";
             ctx.fillRect(position.x, position.y, size.width, size.height);

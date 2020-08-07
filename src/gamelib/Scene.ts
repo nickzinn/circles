@@ -68,7 +68,7 @@ export default class Scene<T extends GameInitializer<T>> extends DefaultSprite{
 			sprite.zOrder = 0;
 		insert(this.sprites, sprite, (a,b) => a.zOrder! - b.zOrder!);
 		sprite.priorPosition = sprite.position;
-		if (sprite.handleCollision && sprite.canCollide)
+		if (sprite.handleCollision)
 			this.collisionListeners.push(sprite);
 	}
 

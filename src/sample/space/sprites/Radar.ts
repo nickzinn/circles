@@ -17,7 +17,9 @@ export class Radar extends DefaultSprite{
         this.size = {width,height: y};
         this.isFixedPosition = true;
         this.zOrder = 100;
-        this.scene =scene;
+		this.scene =scene;
+		this.canCollide = false;
+		this.handleCollision = undefined;
     }
     
     paint(location:Point, ctx: CanvasRenderingContext2D, timeSinceLastAnimation: number) {
