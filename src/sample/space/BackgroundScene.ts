@@ -1,7 +1,6 @@
 import Scene from "../../gamelib/Scene";
 import { SpaceGame } from "./SpaceGame";
 import { Point } from "../../gamelib/types/Point";
-import { GameController } from "../../gamelib/GameController";
 
 export class BackgroundScene extends Scene<SpaceGame> {
     stars:Point[] = []
