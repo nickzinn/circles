@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Switch,
   Route
 } from "react-router-dom";
@@ -12,16 +12,13 @@ import { Home } from './Home';
 
 export default function App() {
   return (
-    <Router>
+    <Router hashType='noslash'>
         <Switch>
-          <Route path="/circles/space">
+          <Route path="/space">
           <GameComponent gameInitializer={new SpaceGame()} ></GameComponent>
           </Route>
-          <Route path="/circles/ball">
+          <Route path="/ball">
           <GameComponent gameInitializer={new BouncingBall()} ></GameComponent>
-          </Route>
-          <Route path="/circles">
-            <Home />
           </Route>
           <Route path="/">
             <Home />

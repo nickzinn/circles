@@ -56,7 +56,7 @@ export  function Home() {
       <Box component="div" overflow="visible">
         <Grid container alignItems="center" justify = "center" direction="column" className={classes.container} >
             <Card className={classes.root}>
-                <Link to="/circles/space" className={classes.link}>
+                <Link to="/space" className={classes.link}>
                     <CardActionArea>
                         <CardMedia
                             className={classes.media}
@@ -75,7 +75,7 @@ export  function Home() {
                 </Link>
             </Card>
             <Card className={classes.root}>
-                <Link to="/circles/ball" className={classes.link}>
+                <Link to="/ball" className={classes.link}>
                     <CardActionArea>
                         <CardMedia
                             className={classes.media}

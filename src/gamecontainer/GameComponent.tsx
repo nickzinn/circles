@@ -88,7 +88,7 @@ const GameComponent = withStyles(styles)( class <T extends GameInitializer<T>> e
         <Toolbar variant="dense">
           <InfoDialog></InfoDialog>
           <Typography variant="h6" color="primary" >
-          <Link to="/circles" className={classes.link}> 
+          <Link to="/" className={classes.link}> 
           <Typography variant="h6" color="primary" >Circles</Typography></Link>
           </Typography>
           <Typography variant="h6" color="primary" className={classes.title}>
