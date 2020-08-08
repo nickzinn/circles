@@ -1,5 +1,4 @@
 import { GameController } from "../../gamelib/GameController";
-import Scene from "../../gamelib/Scene";
 import { SpaceGame } from "./SpaceGame";
 import { Point } from "../../gamelib/types/Point";
 import { Radar } from "./sprites/Radar";
@@ -13,9 +12,10 @@ import { Missle } from "./sprites/Missle";
 import { launchBetweenLevelsScene } from "./BetweenLevelScene";
 import { Ship } from "./sprites/Ship";
 import { generateGameAsteroids } from "./sprites/Asteroids";
+import { BackgroundScene } from "./BackgroundScene";
 
 
-export class MainGameScene extends Scene<SpaceGame> {
+export class MainGameScene extends BackgroundScene{
     _score:number=0;
     level:number;
 	stars:Point[] = []
@@ -33,9 +33,7 @@ export class MainGameScene extends Scene<SpaceGame> {
         this.wrapAround = true;
 		
         this.addSprites(generateGameAsteroids(this, Math.floor( (area/300000)*level))) ;
-        
-		this.createStars( Math.floor(area/9000));
-        
+ 
         this.addSprite(new Radar(this));
 
 		const center = { x:this.modelSize.width/2, y:this.modelSize.height/2};
@@ -96,18 +94,6 @@ export class MainGameScene extends Scene<SpaceGame> {
 				this.fire(this.player);
 				break;
 		  }
-	}
-
-	paintBackground(ctx: CanvasRenderingContext2D) {
-		ctx.fillStyle = 'black';
-        ctx.fillRect(0, 0, this.size.width, this.size.height);
-        ctx.fillStyle = 'white';
-    	for(let star of this.stars){
-			const xP = star.x - this.viewPort.x;
-			const yP = star.y - this.viewPort.y;
-			if (xP < this.size.width && yP < this.size.height && xP > 0 && yP > 0)
-				ctx.fillRect(xP, yP, 1, 1);		
-		}
 	}
 
 	gameOver() {
@@ -172,11 +158,6 @@ export class MainGameScene extends Scene<SpaceGame> {
 	}
 	get score():number{
 		return this._score;
-	}
-	private createStars(n:number){
-		for (let i = 0; i < n; i++)
-			this.stars.push( {x: Math.floor(Math.random()*this.modelSize.width),
-			y:  Math.floor(Math.random()*this.modelSize.height)} );
 	}
 	handleMouseClick(x:number, y:number){
 		if(this.pause)

@@ -32,4 +32,9 @@ export class Enemy extends Ship {
             this.move();
         }
     }
+
+    move(amount:number = 12.0) {
+        super.move(amount);
+    	this.speed = Math.min(this.speed, 300);
+	}
 }

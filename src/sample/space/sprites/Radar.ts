@@ -32,11 +32,16 @@ export class Radar extends DefaultSprite{
 			if(sprite === this) continue;
 			const x1 = Math.floor(location.x + (sprite.position.x * scale));
 			const y1 = Math.floor(location.y + (sprite.position.y * scale));
+			let size =2;
 			if(sprite.name === 'enemy' )
 				ctx.fillStyle = 'red';
-			else if(sprite.name === 'player')
+			else if(sprite.name === 'player'){
 				ctx.fillStyle = 'green';
-			ctx.fillRect(x1, y1,2,2);
+				size =3;
+			}
+			ctx.fillRect(x1, y1,size,size);
+			
+			
 			ctx.fillStyle = 'white';
 		}
 		ctx.strokeStyle = 'red';

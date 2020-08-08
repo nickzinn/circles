@@ -8,6 +8,7 @@ export interface PreloadImage{
     scale?:number;
     angle?:number;
     type?:string;
+    noTransparent?:boolean;
 }
 
 
@@ -73,19 +74,26 @@ export class ImagePreloader{
     }
     private _createOnLoad(image:HTMLImageElement, des:PreloadImage){
         return () => {
-            const newImage = makeTransparent(image);
-            newImage.onload = () => {
-                const rows = (des.rows) ? des.rows : 1;
-                const columns = (des.columns) ? des.columns :1;
-                
-                const sheet = new SpriteSheet(newImage, rows, columns, (des.scale)? des.scale: 1.0,
-                 (des.angle) ? des.angle : 0, (des.type) ? des.type: 'animate');
-                this.imageCache.set(des.name, sheet);
-                if(++this.loadsCompleted === this.nLoads && this.loadCallback){
-                    this.loadCallback();
-                }
+            if(des.noTransparent){
+                this._cache(image, des)();
+            }else{
+                const newImage = makeTransparent(image);
+                newImage.onload =  this._cache(newImage, des);
             }
         };
+    }
+    private _cache(image:HTMLImageElement, des:PreloadImage){
+        return () => {
+            const rows = (des.rows) ? des.rows : 1;
+            const columns = (des.columns) ? des.columns :1;
+            
+            const sheet = new SpriteSheet(image, rows, columns, (des.scale)? des.scale: 1.0,
+             (des.angle) ? des.angle : 0, (des.type) ? des.type: 'animate');
+            this.imageCache.set(des.name, sheet);
+            if(++this.loadsCompleted === this.nLoads && this.loadCallback){
+                this.loadCallback();
+            }
+        }
     }
 }
 
