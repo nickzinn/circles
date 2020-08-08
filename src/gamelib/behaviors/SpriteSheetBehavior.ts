@@ -18,12 +18,18 @@ export class SpriteSheetBehavior implements Behavior{
 	}
     paint(sprite:Sprite, location:Point, ctx: CanvasRenderingContext2D, timeSinceLastAnimation: number):void{
 		let frame;
-		if(this.framesPerSecond && this.spriteSheet.frameCount !== 0){
+		if(this.spriteSheet.type==='rotate'){
+			frame = Math.floor( ((Math.abs(this.getAngle(sprite)) % (Math.PI*2))/(Math.PI*2)) * this.spriteSheet.frameCount*2);
+			if(frame>=this.spriteSheet.frameCount){
+				frame = (this.spriteSheet.frameCount*2) - (frame) -1;
+			}
+        }else if(this.framesPerSecond && this.spriteSheet.frameCount !== 0){
 			const timePerFrame = 1.0 / this.framesPerSecond;
 			frame = Math.floor( (this.age/timePerFrame ) % this.spriteSheet.frameCount);
 		}else{
 			frame =0;
 		}
+		frame = Math.min(frame, this.spriteSheet.frameCount-1);
 		const column = Math.floor(frame % this.spriteSheet.columns) + 1;
 		const row = Math.floor( frame/this.spriteSheet.columns ) + 1 ;
 		this.spriteSheet.paint(location,ctx,this.getAngle(sprite),row,column);		

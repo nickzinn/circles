@@ -5,6 +5,9 @@ export interface PreloadImage{
     src:string;
     rows?:number;
     columns?:number;
+    scale?:number;
+    angle?:number;
+    type?:string;
 }
 
 
@@ -74,7 +77,9 @@ export class ImagePreloader{
             newImage.onload = () => {
                 const rows = (des.rows) ? des.rows : 1;
                 const columns = (des.columns) ? des.columns :1;
-                const sheet = new SpriteSheet(newImage, rows, columns);
+                
+                const sheet = new SpriteSheet(newImage, rows, columns, (des.scale)? des.scale: 1.0,
+                 (des.angle) ? des.angle : 0, (des.type) ? des.type: 'animate');
                 this.imageCache.set(des.name, sheet);
                 if(++this.loadsCompleted === this.nLoads && this.loadCallback){
                     this.loadCallback();

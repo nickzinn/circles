@@ -7,9 +7,12 @@ export class SpriteSheet{
     readonly rows:number;
     readonly columns:number;
     readonly image:HTMLImageElement;
+    readonly angle:number;
+    readonly type:string;
     size:Size;
     readonly srcSize:Size;
-    constructor(image:HTMLImageElement, rows:number = 1, columns:number =1, scale:number=1.0) {
+
+    constructor(image:HTMLImageElement, rows:number = 1, columns:number =1, scale:number=1.0, angle:number=0, type:string ='animate') {
         this.image = image;
         this.rows = rows;
         this.columns = columns;
@@ -17,10 +20,13 @@ export class SpriteSheet{
             height: Math.floor(this.image.height/this.rows)};
         this.size = emptySize;
         this.scale = scale;
+        this.angle = angle;
+        this.type = type;
     }
     paint(location:Point, ctx: CanvasRenderingContext2D, angle:number= 0,row:number=1, column:number=1):void{
         if(row<1 || row > this.rows || column < 1 || column > this.columns)
             throw Error(`Row and columns of sprite need to be in bounds (${row},${column})`);
+        angle += this.angle;
         if(angle){
             ctx.translate(location.x + this.size.width / 2.0, location.y+ this.size.height / 2.0);
             ctx.rotate(angle);

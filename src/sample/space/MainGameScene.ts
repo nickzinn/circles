@@ -111,6 +111,8 @@ export class MainGameScene extends Scene<SpaceGame> {
 	}
 
 	gameOver() {
+		if(this.pause)
+			return;
 		this.pause = true;
 		this.controller.soundEffects.play("gameOver");
 
@@ -125,6 +127,8 @@ export class MainGameScene extends Scene<SpaceGame> {
 	}
 
 	hit(hitPoints:number){
+		if(this.pause)
+			return;
 		if(this.player.shield-hitPoints <= 0){
 			const center = centerPosition(this.player);
 			this.addSprite(newBigExplosion(this, center));

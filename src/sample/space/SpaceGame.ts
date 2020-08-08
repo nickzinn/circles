@@ -7,8 +7,8 @@ export class SpaceGame implements GameInitializer<SpaceGame>{
     highscore:number =0;
 
     preloadImages = [{name:'asteroid', src:'/circles/assets/images/asteroid.png', rows:2, columns:10}
-                    ,{name:'player' , src: '/circles/assets/images/Enemy.png'}
-                    ,{name: 'enemy', src:'/circles/assets/images/nightraider-small.png' }
+                    ,{name:'player' , src: '/circles/assets/images/ship_anim.png', rows:1, columns:24, scale:.5, angle:Math.PI/2, type:'rotate' }
+                    ,{name: 'enemy', src:'/circles/assets/images/Enemy.png' }
                     ,{name: 'explosionSmall', src: '/circles/assets/images/ExplosionSheetSmall.png', rows:4, columns:4}
                     ,{name: 'explosionBig', src: '/circles/assets/images/ExplosionSheet2.png', rows:6, columns:8}                                        
                     ,{name: 'missle', src: '/circles/assets/images/Laser.png'}                                        
