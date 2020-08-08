@@ -60,6 +60,7 @@ export class GameController<T extends GameInitializer<T>>{
         const canvas = this.canvas;
         scene.size = {width:canvas!.width, height:canvas!.height};
         this._scene = scene;
+        this.touchEvent = undefined;
     }
     get scene(): Scene<T> {
         return this._scene!;
@@ -100,7 +101,8 @@ export class GameController<T extends GameInitializer<T>>{
         const mouseMove = (e:MouseEvent) => {
             const rect = canvas.getBoundingClientRect();
             e.preventDefault();
-            this.touchEvent = {x:e.clientX - rect.left,y:e.clientY - rect.top};
+            if(this.touchEvent)
+                this.touchEvent = {x:e.clientX - rect.left,y:e.clientY - rect.top};
         };
         const mouseUp = (e:MouseEvent) => {
             this.touchEvent = undefined;
