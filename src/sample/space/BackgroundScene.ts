@@ -6,20 +6,20 @@ export class BackgroundScene extends Scene<SpaceGame> {
     stars:Point[] = []
 
     paintBackground(ctx: CanvasRenderingContext2D) {
-        const spriteSheet = this.controller.imagePreloader.getSpriteSheetFromCache(this.name);
+        const image = this.controller.imagePreloader.getImageFromCache(this.name);
         const sz = (this.modelSize.width === 0) ? this.size : this.modelSize;
         const p = (this.modelSize.width === 0) ? {x:0,y:0} : this.viewPort;
   
-        const rows = Math.floor(sz.height / spriteSheet.srcSize.height) + 1;
-        const columns = Math.floor(sz.width / spriteSheet.srcSize.width) + 1;
+        const rows = Math.floor(sz.height / image.height) + 1;
+        const columns = Math.floor(sz.width / image.width) + 1;
         for(let row = 1; row <=rows; row++){
             for(let col =1; col<=columns; col++){
                 //draw and clip viewport
-                let w= Math.min( spriteSheet.srcSize.width, sz.width - ((col-1) * spriteSheet.srcSize.width ) );
-                let h= Math.min( spriteSheet.srcSize.height, sz.height - ((row-1) * spriteSheet.srcSize.height ));
+                let w= Math.min( image.width, sz.width - ((col-1) * image.width ) );
+                let h= Math.min( image.height, sz.height - ((row-1) * image.height ));
 
-                let x1 = ((col-1) * spriteSheet.srcSize.width ) - p.x;
-                let y1 = ((row-1) * spriteSheet.srcSize.height ) - p.y;
+                let x1 = ((col-1) * image.width ) - p.x;
+                let y1 = ((row-1) * image.height ) - p.y;
 
                 let srcX=0, srcY=0;
                 //clip drawing.
@@ -47,7 +47,7 @@ export class BackgroundScene extends Scene<SpaceGame> {
                     if(h<=0)
                         continue;
                 }
-                ctx.drawImage(spriteSheet.image, srcX, srcY,w,h,x1,y1,w,h);
+                ctx.drawImage(image, srcX, srcY,w,h,x1,y1,w,h);
             }
         }
     }

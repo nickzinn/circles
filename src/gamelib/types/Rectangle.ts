@@ -70,3 +70,12 @@ export function pointInRect(point:Point, rect:Rectangle):boolean{
     return point.x >= rect.position.x && point.x < rect.position.x + rect.size.width
         && point.y >= rect.position.y && point.y < rect.position.y + rect.size.height;
 }
+
+
+export function centerPosition(rect:Rectangle): Point{
+    return {x: rect.position.x + rect.size.width/2, y: rect.position.y + rect.size.height/2};
+}
+
+export function centerPositionAsInt(rect:Rectangle): Point{
+    return {x: Math.round(rect.position.x + rect.size.width/2), y: Math.round(rect.position.y + rect.size.height/2)};
+}

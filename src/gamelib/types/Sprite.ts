@@ -1,8 +1,9 @@
 import { Point } from "./Point";
 import { Size } from "./Size";
 import { Vector } from "./Vector";
+import { Rectangle } from "./Rectangle";
 
-export interface Sprite extends Vector{
+export interface Sprite extends Vector, Rectangle{
     name:string;
     position:Point;
     size:Size;
@@ -25,9 +26,5 @@ export interface Sprite extends Vector{
     
     handleCollision?(otherSprite:Sprite):void;
     
-}
-
-export function centerPosition(sprite:Sprite): Point{
-    return {x: sprite.position.x + sprite.size.width/2, y: sprite.position.y + sprite.size.height/2};
 }
 
