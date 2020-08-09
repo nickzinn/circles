@@ -51,7 +51,7 @@ export class MainGameScene extends BackgroundScene {
 	}
 
 	fire(ship: Ship) {
-		if (ship.lastMissleFired && ship.lastMissleFired.behavior.age < 150 && ship.lastMissleFired.isAlive) {
+		if (ship.lastMissleFired && ship.lastMissleFired.behavior.age < 125 && ship.lastMissleFired.isAlive) {
 			return;
 		}
 		const center = centerPosition(ship);
