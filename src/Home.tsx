@@ -93,6 +93,20 @@ export  function Home() {
                     </CardActionArea>
                 </Link>
             </Card>
+            <Card className={classes.root}>
+                <Link to="/image" className={classes.link}>
+                    <CardActionArea>
+                        <CardContent>
+                            <Typography gutterBottom variant="h5" component="h2">
+                                Image Manipulation Test
+      </Typography>
+                            <Typography variant="body2" color="textSecondary" component="p">
+                                Test the image manipulation features of the graphics library.
+      </Typography>
+                        </CardContent>
+                    </CardActionArea>
+                </Link>
+            </Card>
             <ReactLink  component="button" variant="body2" className={classes.githublink}
           onClick={() => window.open('https://github.com/nickzinn/circles')} >
             Github Repository
