@@ -200,7 +200,8 @@ export class GameController<T extends GameInitializer<T>>{
         this.scene.updateModel(timeSinceLastAnimation);
 
         if(!this.scene.isAlive){
-            console.log(`Scene Killed: ${this.scene.name}`);
+            if(this.debug)
+                console.log(`Scene Killed: ${this.scene.name}`);
             this.scene.handleKill();
             if(!this.scene.isAlive)
                 throw Error(`Scene is still dead.  Can't have a dead scene (${this.scene.name})`);

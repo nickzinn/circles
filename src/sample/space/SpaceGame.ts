@@ -27,6 +27,6 @@ export class SpaceGame implements GameInitializer<SpaceGame>{
 
     init(controller: GameController<SpaceGame>): void {
         launchOpenningSequence(controller);
-        controller.debug = true;
+        //controller.debug = true;
     }
 }

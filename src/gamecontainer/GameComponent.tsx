@@ -52,7 +52,6 @@ const GameComponent = withStyles(styles)( class <T extends GameInitializer<T>> e
   constructor(props:Props<T>){
     super(props);
     this.gameController= new GameController<T>(props.gameInitializer);
-    this.gameController.debug = true;
     this.state = { score:0, imagesLoaded:false, pause:false, mute:false};
   }
   componentDidMount() { 
