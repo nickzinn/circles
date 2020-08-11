@@ -23,7 +23,7 @@ export class SpaceGame implements GameInitializer<SpaceGame>{
         , { name: 'levelComplete', src: '/circles/assets/sounds/level_complete.wav' }
         , { name: 'explosionSmall', src: '/circles/assets/sounds/small_explosion.wav' }
         , { name: 'explosionBig', src: '/circles/assets/sounds/big_explosion.wav' }
-        , { name: 'newHighScore', src: 'circles/assets/sounds/new_high_score.wav' }];
+        , { name: 'newHighScore', src: '/circles/assets/sounds/new_high_score.wav' }];
 
     init(controller: GameController<SpaceGame>): void {
         launchOpenningSequence(controller);
