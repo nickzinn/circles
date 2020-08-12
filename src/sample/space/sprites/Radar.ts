@@ -1,4 +1,4 @@
-import { DefaultSprite } from "../../../gamelib/behaviors/DefaultSprite";
+import { DefaultSprite } from "../../../gamelib/sprites/DefaultSprite";
 import { MainGameScene } from "../MainGameScene";
 import { Point } from "../../../gamelib/types/Point";
 

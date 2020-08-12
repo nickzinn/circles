@@ -1,7 +1,7 @@
 import { GameController } from "../gamelib/GameController";
 import { Point } from "../gamelib/types/Point";
 import Scene from "../gamelib/Scene";
-import { Sprite } from "../gamelib/types/Sprite";
+import { Sprite } from "../gamelib/sprites/Sprite";
 import { Size } from "../gamelib/types/Size";
 import { GameInitializer } from "../gamelib/GameInitializer";
 import { AnimatedSprite } from "../gamelib/sprites/AnimatedSprite";

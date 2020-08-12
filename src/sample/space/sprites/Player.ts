@@ -1,18 +1,14 @@
 import { Ship } from "./Ship";
 import { MainGameScene } from "../MainGameScene";
 import { Point, pointAsInt } from "../../../gamelib/types/Point";
-import { BlendedSpriteSheet } from "../../../gamelib/util/BlendedSpriteSheet";
+import { BlendImageBehavior } from "../../../gamelib/sprites/behaviors/BlendImageBehavior";
 
 export class Player extends Ship {
 	shield = 100;
-	shieldAge = 0;
-	blendedSpriteSheet: BlendedSpriteSheet;
+
 	constructor(scene: MainGameScene, position: Point) {
 		super(scene, position, "player");
 		this.acceleration = -4;
-		const primary = this.spriteSheetBehavior.spriteSheet;
-		const secondary = scene.controller.imagePreloader.getSpriteSheetFromCache("shield");
-		this.blendedSpriteSheet = new BlendedSpriteSheet(primary, secondary);
 	}
 
 	//handle viewport movement
@@ -35,19 +31,10 @@ export class Player extends Ship {
 			, y: Math.min(Math.max(viewport.y, 0), this.scene.modelSize.height - size.height)
 		};
 	}
-
-	paint(location: Point, ctx: CanvasRenderingContext2D, timeSinceLastAnimation: number): void {
-		if (this.shieldAge && this.shieldAge > 0) {
-			this.blendedSpriteSheet.blendAmount = Math.min(Math.max(.25, this.shield / 100 + .25), 1.0);
-			this.shieldAge -= timeSinceLastAnimation;
-			this.spriteSheetBehavior.spriteSheet = this.blendedSpriteSheet;
-			super.paint(location, ctx, timeSinceLastAnimation);
-			this.spriteSheetBehavior.spriteSheet = this.blendedSpriteSheet.primarySpriteSheet;
-		} else {
-			super.paint(location, ctx, timeSinceLastAnimation);
-		}
-	}
 	animateShield() {
-		this.shieldAge = 500;
+		const shieldSpriteSheet = this.scene.controller.imagePreloader.getSpriteSheetFromCache("shield");
+		const blendAmount = Math.min(Math.max(.15, this.shield / 100 + .15), 1.0);
+		const shieldAge = 500;
+		this.addBehavior(new BlendImageBehavior(shieldSpriteSheet, shieldAge, blendAmount));
 	}
 }

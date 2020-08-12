@@ -1,6 +1,6 @@
 import { Point } from "../types/Point";
-import { SpriteSheetBehavior } from "../behaviors/SpriteSheetBehavior";
-import { DefaultSprite } from "../behaviors/DefaultSprite";
+import { SpriteSheetBehavior } from "./behaviors/SpriteSheetBehavior";
+import { DefaultSprite } from "./DefaultSprite";
 import Scene from "../Scene";
 import { GameInitializer } from "../GameInitializer";
 

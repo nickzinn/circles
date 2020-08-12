@@ -1,5 +1,5 @@
 
-import { DefaultSprite } from "../behaviors/DefaultSprite";
+import { DefaultSprite } from "./DefaultSprite";
 import { Point } from "../types/Point";
 
 export class CountdownSprite extends DefaultSprite{

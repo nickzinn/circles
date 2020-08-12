@@ -1,7 +1,7 @@
 import { GameController } from "./GameController";
-import { DefaultSprite } from "./behaviors/DefaultSprite";
+import { DefaultSprite } from "./sprites/DefaultSprite";
 import { Point, pointAsInt } from "./types/Point";
-import { Sprite } from "./types/Sprite";
+import { Sprite } from "./sprites/Sprite";
 import { Size } from "./types/Size";
 import { union, Rectangle, intersects, pointInRect } from "./types/Rectangle";
 import { GameInitializer } from "./GameInitializer";

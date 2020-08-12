@@ -1,5 +1,5 @@
 import { Point } from "../../../gamelib/types/Point";
-import { Sprite } from "../../../gamelib/types/Sprite";
+import { Sprite } from "../../../gamelib/sprites/Sprite";
 import { MainGameScene } from "../MainGameScene";
 import { AnimatedSprite } from "../../../gamelib/sprites/AnimatedSprite";
 

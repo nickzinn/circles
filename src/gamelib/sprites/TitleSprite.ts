@@ -1,4 +1,4 @@
-import { Sprite } from "../types/Sprite";
+import { Sprite } from "./Sprite";
 import { Point } from "../types/Point";
 import { Size } from "../types/Size";
 

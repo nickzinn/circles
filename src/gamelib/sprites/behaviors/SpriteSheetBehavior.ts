@@ -1,7 +1,7 @@
-import { Behavior } from "../types/Behavior";
-import { Sprite } from "../types/Sprite";
-import { Point } from "../types/Point";
-import { SpriteSheet } from "../util/SpriteSheet";
+import { Behavior } from "./Behavior";
+import { Point } from "../../types/Point";
+import { SpriteSheet } from "../../util/SpriteSheet";
+import { DefaultSprite } from "../DefaultSprite";
 
 export class SpriteSheetBehavior implements Behavior{
     spriteSheet:SpriteSheet;
@@ -13,10 +13,12 @@ export class SpriteSheetBehavior implements Behavior{
 		this.spriteSheet = spriteSheet;
 		this.animateOnce = animateOnce;
 	}
-    init(sprite:Sprite){
+
+	init(sprite:DefaultSprite){
 		sprite.size = this.spriteSheet.size;
 	}
-    paint(sprite:Sprite, location:Point, ctx: CanvasRenderingContext2D, timeSinceLastAnimation: number):void{
+
+    paint(sprite:DefaultSprite, location:Point, ctx: CanvasRenderingContext2D, timeSinceLastAnimation: number):void{
 		let frame;
 		if(this.spriteSheet.type==='rotate'){
 			frame = Math.floor( ((Math.abs(this.getAngle(sprite)) % (Math.PI*2))/(Math.PI*2)) * this.spriteSheet.frameCount*2);
@@ -35,18 +37,16 @@ export class SpriteSheetBehavior implements Behavior{
 		this.spriteSheet.paint(location,ctx,this.getAngle(sprite),row,column);		
 
 	}
-	updateModel(sprite:Sprite, timeSinceLastUpdate:number):void{
+	updateModel(sprite:DefaultSprite, timeSinceLastUpdate:number):void{
 		const dx = timeSinceLastUpdate/1000;
 		this.age += dx;
 		if(this.animateOnce){
 			if (this.age > this.spriteSheet.frameCount / this.framesPerSecond) {
-				// System.out.println("FPS:" + getFramesPerSecond()
-				// 		+ "\tFC:" + getFrameCount() + "\tage:" + age);
 				sprite.isAlive = false;
 			}
 		}
 	}
-	getAngle(sprite:Sprite){
+	getAngle(sprite:DefaultSprite){
 		return (sprite.angle) ? sprite.angle : 0;
 	}
 }

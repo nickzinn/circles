@@ -1,7 +1,7 @@
 import { Point } from "../types/Point";
-import { Sprite } from "../types/Sprite";
+import { Sprite } from "./Sprite";
 import { Size } from "../types/Size";
-import { Behavior } from "../types/Behavior";
+import { Behavior } from "./behaviors/Behavior";
 
 export class DefaultSprite implements Sprite{
     name:string;
@@ -28,12 +28,21 @@ export class DefaultSprite implements Sprite{
         if(behavior.init) behavior.init(this);
         this.behaviors.push(behavior);
     }
+
+    removeBehavior(behavior:Behavior){
+        const i = this.behaviors.indexOf(behavior)
+        if(i === -1)
+            throw Error('Behavior not found!');
+        this.behaviors.splice(i,1);
+    }
     
     paint(location:Point, ctx: CanvasRenderingContext2D, timeSinceLastAnimation: number) {
+        this.behaviors.forEach( (b) =>  b.beforePaint?.(this, location, ctx, timeSinceLastAnimation));
         this.behaviors.forEach( (b) =>  b.paint?.(this, location, ctx, timeSinceLastAnimation));
+        this.behaviors.forEach( (b) =>  b.afterPaint?.(this, location, ctx, timeSinceLastAnimation));
     }
     updateModel(timeSinceLastUpdate: number) {
-        this.behaviors.forEach( (b) =>  b.updateModel?.(this, timeSinceLastUpdate));
+        this.behaviors.slice().forEach( (b) =>  b.updateModel?.(this, timeSinceLastUpdate));
     }
     
     handleKill():void{

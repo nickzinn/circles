@@ -1,7 +1,7 @@
-import { Behavior } from "../types/Behavior";
-import { Sprite } from "../types/Sprite";
+import { Behavior } from "./Behavior";
+import { Sprite } from "../Sprite";
 
-export class ExpirationBehavior implements Behavior{
+export class SpriteExpirationBehavior implements Behavior{
 	age = 0;
 	expirationTime:number;
 	public constructor(expirationTime:number){

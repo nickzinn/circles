@@ -1,5 +1,5 @@
 import { SpaceGame } from "../SpaceGame";
-import { Sprite } from "../../../gamelib/types/Sprite";
+import { Sprite } from "../../../gamelib/sprites/Sprite";
 import { MainGameScene } from "../MainGameScene";
 import { newSmallExplosion } from "./Explosion";
 import { AnimatedSprite } from "../../../gamelib/sprites/AnimatedSprite";

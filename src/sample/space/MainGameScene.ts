@@ -2,8 +2,8 @@ import { GameController } from "../../gamelib/GameController";
 import { SpaceGame } from "./SpaceGame";
 import { Point } from "../../gamelib/types/Point";
 import { Radar } from "./sprites/Radar";
-import { Sprite } from "../../gamelib/types/Sprite";
-import { ExpirationBehavior } from "../../gamelib/behaviors/ExpirationBehavior";
+import { Sprite } from "../../gamelib/sprites/Sprite";
+import { SpriteExpirationBehavior } from "../../gamelib/sprites/behaviors/SpriteExpirationBehavior";
 import { launchOpenningSequence } from "./OpenningSequence";
 import { newBigExplosion, newSmallExplosion } from "./sprites/Explosion";
 import { Player } from "./sprites/Player";
@@ -14,6 +14,8 @@ import { Ship } from "./sprites/Ship";
 import { generateGameAsteroids } from "./sprites/Asteroids";
 import { BackgroundScene } from "./BackgroundScene";
 import { centerPosition } from "../../gamelib/types/Rectangle";
+import { FadeOutBehavior} from "../../gamelib/sprites/behaviors/FadeOutBehavior"
+import { FadeInBehavior } from "../../gamelib/sprites/behaviors/FadeInBehavior";
 
 
 export class MainGameScene extends BackgroundScene {
@@ -41,6 +43,7 @@ export class MainGameScene extends BackgroundScene {
 		this.viewPort = { x: center.x - this.size.width / 2, y: center.y - this.size.height / 2 };
 
 		this.player = new Player(this, center);
+		this.player.addBehavior(new FadeInBehavior(500));
 		this.addSprite(this.player);
 
 		this.alienCount = level;
@@ -105,7 +108,7 @@ export class MainGameScene extends BackgroundScene {
 		this.pause = true;
 		this.controller.soundEffects.play("gameOver");
 
-		this.addBehavior(new ExpirationBehavior(4000));
+		this.addBehavior(new SpriteExpirationBehavior(4000));
 		this.addBehavior({
 			handleKill: () => {
 				if (this.controller.gameInitializer.highscore < this.score) {
@@ -118,7 +121,10 @@ export class MainGameScene extends BackgroundScene {
 	}
 	nextLevel() {
 		this.pause = true;
-		this.addBehavior(new ExpirationBehavior(4000));
+		this.addBehavior(new SpriteExpirationBehavior(3000));
+		const behavior = new FadeOutBehavior(2000);
+		behavior.handleTimeUp = () => this.player.isAlive = false;
+		this.player.addBehavior(behavior);
 		this.addBehavior({ handleKill: () => launchBetweenLevelsScene(this.controller, this.level, this.score) });
 	}
 
@@ -172,6 +178,8 @@ export class MainGameScene extends BackgroundScene {
 	}
 
 	handleTouch(x: number, y: number) {
+		if (this.pause)
+			return;
 		const xDist = this.player.position.x - x - this.viewPort.x;
 		const yDist = this.player.position.y - y - this.viewPort.y;
 		const distance = Math.hypot(xDist, yDist);
