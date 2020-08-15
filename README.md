@@ -1,3 +1,5 @@
+[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/nickzinn/circles)
+
 # Circles JavaScript Game Library.
 A simple 2D game library for JavaScript to teach my kids programming.   Includes a demo space game implemented using the library.
 
