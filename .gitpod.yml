@@ -1,3 +1,7 @@
 tasks:
   - init: npm install && npm run build
     command: npm run start
+
+vscode:
+  extensions:
+    - ms-vscode.vscode-typescript-tslint-plugin@1.2.2:0nQ3PEEA0NPEt3UcbCYiIQ==
