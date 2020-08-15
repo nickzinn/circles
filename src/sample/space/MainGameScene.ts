@@ -150,7 +150,7 @@ export class MainGameScene extends BackgroundScene {
 
 		if (otherSprite.name === 'player') {
 			this.hit(49);
-		} else if (otherSprite.name === 'enemy') {
+		} else if (otherSprite.name === 'enemy' && owner === this.player) {
 			otherSprite.isAlive = false;
 			this.addSprite(newBigExplosion(this, centerPosition(otherSprite)));
 			this.score += 50;
