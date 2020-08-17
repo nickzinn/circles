@@ -12,3 +12,7 @@ export function calcDistance(a:Point, b:Point):number{
         const yDist = Math.abs(a.y - b.y);
         return Math.hypot(xDist, yDist);
 }
+
+export function pointEquals(a:Point, b:Point):boolean{
+    return a.x === b.x && a.y === b.y;
+}

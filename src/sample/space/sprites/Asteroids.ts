@@ -17,7 +17,7 @@ export function generateOpenningSequenceAsteroids(scene:Scene<SpaceGame>, n:numb
         a.angle = Math.random() * Math.PI *2;
         a.zOrder = -1;
         a.canCollide = true;
-        a.size = {width: a.size.width, height: a.size.height}
+        a.size = {width: a.size.width, height: a.size.height};
         sprites.push(a);	
     }
     return sprites;

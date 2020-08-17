@@ -38,8 +38,11 @@ export class DefaultSprite implements Sprite{
     
     paint(location:Point, ctx: CanvasRenderingContext2D, timeSinceLastAnimation: number) {
         this.behaviors.forEach( (b) =>  b.beforePaint?.(this, location, ctx, timeSinceLastAnimation));
-        this.behaviors.forEach( (b) =>  b.paint?.(this, location, ctx, timeSinceLastAnimation));
+        this.paintStep(location, ctx, timeSinceLastAnimation);
         this.behaviors.forEach( (b) =>  b.afterPaint?.(this, location, ctx, timeSinceLastAnimation));
+    }
+    paintStep(location:Point, ctx: CanvasRenderingContext2D, timeSinceLastAnimation: number) {
+        this.behaviors.forEach( (b) =>  b.paint?.(this, location, ctx, timeSinceLastAnimation));
     }
     updateModel(timeSinceLastUpdate: number) {
         this.behaviors.slice().forEach( (b) =>  b.updateModel?.(this, timeSinceLastUpdate));

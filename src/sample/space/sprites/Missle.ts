@@ -4,6 +4,7 @@ import { AnimatedSprite } from "../../../gamelib/sprites/AnimatedSprite";
 import { SpaceGame } from "../SpaceGame";
 import { Point } from "../../../gamelib/types/Point";
 import { SpriteExpirationBehavior } from "../../../gamelib/sprites/behaviors/SpriteExpirationBehavior";
+import { TrailingEffectBehavior } from "../../../gamelib/sprites/behaviors/TrailingEffectBehavior";
 
 const NAME = "missle";
 
@@ -20,6 +21,7 @@ export class Missle extends AnimatedSprite<SpaceGame, MainGameScene>{
 		this.canCollide = true;
 		this.behavior =new SpriteExpirationBehavior(expiration);
 		this.addBehavior(this.behavior);
+		this.addBehavior(new TrailingEffectBehavior(.2));
 	}
 	
 	handleCollision(otherSprite:Sprite):void{
