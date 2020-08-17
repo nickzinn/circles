@@ -46,12 +46,10 @@ export class BlendImageBehavior extends TimedBehavior{
         const center = centerPosition({position:location, size:sprite.size});
         const w2 = this.spriteSheet.size.width, h2 = this.spriteSheet.size.height;
         const location2 = {x: Math.floor(center.x - w2/2), y: Math.floor(center.y - h2/2)  }
-        const oldAlpha = ctx.globalAlpha;
-        const oldComposite = ctx.globalCompositeOperation;
+        ctx.save();
         ctx.globalAlpha = this.blendAmount;
         ctx.globalCompositeOperation = this.compositeOperation;
         this.spriteSheet.paint(location2,ctx,0,1,1);
-        ctx.globalAlpha = oldAlpha;
-        ctx.globalCompositeOperation = oldComposite;
+        ctx.restore();
     }
 }
