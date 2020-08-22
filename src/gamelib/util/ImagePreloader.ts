@@ -111,8 +111,8 @@ class SpriteSheetImpl implements SpriteSheet{
     readonly size:Size;
     readonly type:string;
 
-    readonly image:HTMLImageElement;
-    private readonly srcSize:Size;
+    image:HTMLImageElement;
+    private srcSize:Size;
 
     constructor(image:HTMLImageElement, rows:number = 1, columns:number =1, scale:number=1.0, angle:number=0, type:string ='animate') {
         this.image = image;
@@ -120,7 +120,12 @@ class SpriteSheetImpl implements SpriteSheet{
         this.columns = columns;
         this.srcSize = {width:Math.floor(this.image.width/this.columns),
             height: Math.floor(this.image.height/this.rows)};
-        this.size = {width:Math.floor(this.srcSize.width * scale), height:Math.floor(this.srcSize.height * scale)};
+        if(scale !== 1){
+            this.size = {width:Math.floor(this.srcSize.width * scale), height:Math.floor(this.srcSize.height * scale)};
+            this._preRenderScaledImage(scale);
+        }else{
+            this.size = this.srcSize;
+        }
         this.angle = angle;
         this.type = type;
     }
@@ -151,6 +156,23 @@ class SpriteSheetImpl implements SpriteSheet{
 
     get frameCount():number{
         return this.rows*this.columns;
+    }
+    private _preRenderScaledImage(scale:number){
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d")!;
+        const image = this.image;
+
+        const w = Math.floor(image.width * scale) , h = Math.floor(image.height * scale);
+        canvas.height = h;
+        canvas.width = w;
+        ctx.drawImage(this.image, 0, 0, image.width, image.height, 0, 0, w, h);
+        const output = document.createElement('img');
+        output.src = canvas.toDataURL('image/png');
+        output.onload = () =>{
+            this.srcSize = {width:Math.floor(w/this.columns),
+                height: Math.floor(h/this.rows)};
+            this.image = output; 
+        };
     }
 }
 
