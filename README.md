@@ -4,6 +4,8 @@
 A simple 2D game library for JavaScript/TypeScript to teach my kids programming.   Includes a demo space game implemented using the library.
 
 **[Demo Hosted Here](https://nickzinn.github.io/circles/)**
+
+**[2D Game Programming Presentation](docs/2d-Game-Programming.pdf)**
 ### Game Library Key Concepts
 + **GameController**, Runs the main game loop for a given graphical scene.   For each step in the loop two functions are called for each scene and sprite:
   + paint: paints to the 2d graphics context.
