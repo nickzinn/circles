@@ -18,5 +18,14 @@ const theme = createMuiTheme({
         },
       },
 });
+theme.typography.h5 = {
+  fontSize: '18px',
+  '@media (min-width:600px)': {
+    fontSize: '22px',
+  },
+  [theme.breakpoints.up('md')]: {
+    fontSize: '28px',
+  },
+};
 
 export default theme;

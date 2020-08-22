@@ -7,13 +7,16 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import { PauseCircleOutline, PlayCircleOutline, Refresh, VolumeUp, VolumeOff } from '@material-ui/icons';
 import { GameController} from '../gamelib/GameController';
-import { CircularProgress, createStyles, Theme, WithStyles, withStyles, Backdrop } from '@material-ui/core';
+import { CircularProgress, createStyles, Theme, WithStyles, withStyles, Backdrop, Button } from '@material-ui/core';
 import InfoDialog from './InfoDialog';
 import { GameInitializer } from '../gamelib/GameInitializer';
 
 const styles = (theme: Theme) => createStyles({
   root: {
     flexGrow: 1,
+  },
+  homeButton: {
+    textTransform: 'none',
   },
   controlButton: {
   },
@@ -22,9 +25,6 @@ const styles = (theme: Theme) => createStyles({
   },
   title: {
     flexGrow: 1,
-  },
-  link:{
-    textDecoration: 'none'
   },
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
@@ -86,14 +86,15 @@ const GameComponent = withStyles(styles)( class <T extends GameInitializer<T>> e
       <AppBar position="static" style={{ background: 'transparent', boxShadow: 'none' }}>
         <Toolbar variant="dense">
           <InfoDialog></InfoDialog>
-          <Typography variant="h6" color="primary" >
-          <Link to="/" className={classes.link}> 
-          <Typography variant="h6" color="primary" >Circles</Typography></Link>
+          <Button component={Link} to="/" className={classes.homeButton} >
+          <Typography variant="h5" color="primary"   className={classes.title}>
+          Circles
           </Typography>
-          <Typography variant="h6" color="primary" className={classes.title}>
+          </Button>
+          <Typography variant="h5" color="primary" className={classes.title}>
             &nbsp;
           </Typography>
-          <Typography variant="body1" color="primary" className={classes.score}>
+          <Typography variant="h5" color="primary" className={classes.score}>
             Score: {this.state.score}
           </Typography>
           <IconButton edge="start" className={classes.controlButton} onClick={(e) => this.handlePause(e)} color="primary" aria-label="menu">
