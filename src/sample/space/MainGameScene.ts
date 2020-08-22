@@ -4,7 +4,7 @@ import { Point } from "../../gamelib/types/Point";
 import { Radar } from "./sprites/Radar";
 import { Sprite } from "../../gamelib/sprites/Sprite";
 import { SpriteExpirationBehavior } from "../../gamelib/sprites/behaviors/SpriteExpirationBehavior";
-import { launchOpenningSequence } from "./OpenningSequence";
+import { launchOpeningSequence } from "./OpeningSequence";
 import { newBigExplosion, newSmallExplosion } from "./sprites/Explosion";
 import { Player } from "./sprites/Player";
 import { Enemy } from "./sprites/Enemy";
@@ -115,7 +115,7 @@ export class MainGameScene extends BackgroundScene {
 					this.controller.gameInitializer.highscore = this.score;
 					this.controller.soundEffects.play("newHighScore");
 				}
-				launchOpenningSequence(this.controller);
+				launchOpeningSequence(this.controller);
 			}
 		});
 	}

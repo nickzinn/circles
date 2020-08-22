@@ -1,6 +1,6 @@
 import { GameInitializer } from "../../gamelib/GameInitializer";
 import { GameController } from "../../gamelib/GameController";
-import { launchOpenningSequence } from "./OpenningSequence";
+import { launchOpeningSequence } from "./OpeningSequence";
 
 export class SpaceGame implements GameInitializer<SpaceGame>{
 
@@ -13,7 +13,7 @@ export class SpaceGame implements GameInitializer<SpaceGame>{
         , { name: 'explosionSmall', src: '/circles/assets/images/ExplosionSheetSmall.png', rows: 4, columns: 4 }
         , { name: 'explosionBig', src: '/circles/assets/images/ExplosionSheet2.png', rows: 6, columns: 8 }
         , { name: 'missle', src: '/circles/assets/images/Laser.png' }
-        , { name: 'OpenningScene', src: '/circles/assets/images/Scene.jpg', noTransparent: true }
+        , { name: 'OpeningScene', src: '/circles/assets/images/Scene.jpg', noTransparent: true }
         , { name: 'MainGameScene', src: '/circles/assets/images/starfield_alpha2.png', noTransparent: true }
         , { name: 'BetweenLevelScene', src: '/circles/assets/images/Scene.jpg', noTransparent: true }
     ];
@@ -26,7 +26,7 @@ export class SpaceGame implements GameInitializer<SpaceGame>{
         , { name: 'newHighScore', src: '/circles/assets/sounds/new_high_score.wav' }];
 
     init(controller: GameController<SpaceGame>): void {
-        launchOpenningSequence(controller);
+        launchOpeningSequence(controller);
         //controller.debug = true;
     }
 }

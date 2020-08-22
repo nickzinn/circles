@@ -5,8 +5,8 @@ import { SpaceGame } from "./SpaceGame";
 import { TitleSprite } from "../../gamelib/sprites/TitleSprite";
 import { BackgroundScene } from "./BackgroundScene";
 
-export function launchOpenningSequence(controller:GameController<SpaceGame>){
-    const scene = new BackgroundScene('OpenningScene',controller);
+export function launchOpeningSequence(controller:GameController<SpaceGame>){
+    const scene = new BackgroundScene('OpeningScene',controller);
     controller.scene = scene;
     controller.publishEvent({type:'score', value:0});
     scene.wrapAround = true;
