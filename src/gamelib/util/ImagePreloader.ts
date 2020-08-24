@@ -129,9 +129,9 @@ class SpriteSheetImpl implements SpriteSheet{
         this.angle = angle;
         this.type = type;
     }
-    paint(location:Point, ctx: CanvasRenderingContext2D, angle:number= 0,row:number=1, column:number=1):void{
+    paint(location:Point, ctx: CanvasRenderingContext2D, angle:number= 0,row:number=0, column:number=0):void{
         let x = location.x, y= location.y;
-        if(row<1 || row > this.rows || column < 1 || column > this.columns)
+        if(row<0 || row >= this.rows || column < 0 || column >= this.columns)
             throw Error(`Row and columns of sprite need to be in bounds (${row},${column})`);
         angle += this.angle;
         if(angle){
@@ -140,12 +140,12 @@ class SpriteSheetImpl implements SpriteSheet{
             x = 0 - this.size.width / 2.0;
             y = 0 - this.size.height / 2.0;
         }
-        if(this.columns === 1 && this.rows === 1)
+        if(this.columns === 0 && this.rows === 0)
             ctx.drawImage(this.image, 0, 0, this.srcSize.width, this.srcSize.height,
                 x, y, this.size.width, this.size.height);
         else{
-            const srcX = Math.floor(this.image.width * ((column-1)/this.columns));
-            const srcY = Math.floor(this.image.height * ((row-1)/this.rows));
+            const srcX = Math.floor(this.image.width * ((column)/this.columns));
+            const srcY = Math.floor(this.image.height * ((row)/this.rows));
             ctx.drawImage(this.image, srcX, srcY, this.srcSize.width, this.srcSize.height,
                  x, y, this.size.width, this.size.height);
         }

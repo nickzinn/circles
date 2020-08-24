@@ -12,14 +12,14 @@ export class BackgroundScene extends Scene<SpaceGame> {
   
         const rows = Math.floor(sz.height / image.height) + 1;
         const columns = Math.floor(sz.width / image.width) + 1;
-        for(let row = 1; row <=rows; row++){
-            for(let col =1; col<=columns; col++){
+        for(let row = 0; row <rows; row++){
+            for(let col =0; col<columns; col++){
                 //draw and clip viewport
-                let w= Math.min( image.width, sz.width - ((col-1) * image.width ) );
-                let h= Math.min( image.height, sz.height - ((row-1) * image.height ));
+                let w= Math.min( image.width, sz.width - ((col) * image.width ) );
+                let h= Math.min( image.height, sz.height - ((row) * image.height ));
 
-                let x1 = ((col-1) * image.width ) - p.x;
-                let y1 = ((row-1) * image.height ) - p.y;
+                let x1 = ((col) * image.width ) - p.x;
+                let y1 = ((row) * image.height ) - p.y;
 
                 let srcX=0, srcY=0;
                 //clip drawing.

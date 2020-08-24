@@ -32,8 +32,8 @@ export class SpriteSheetBehavior implements Behavior{
 			frame =0;
 		}
 		frame = Math.min(frame, this.spriteSheet.frameCount-1);
-		const column = Math.floor(frame % this.spriteSheet.columns) + 1;
-		const row = Math.floor( frame/this.spriteSheet.columns ) + 1 ;
+		const column = Math.floor(frame % this.spriteSheet.columns);
+		const row = Math.floor( frame/this.spriteSheet.columns );
 		this.spriteSheet.paint(location,ctx,this.getAngle(sprite),row,column);		
 
 	}

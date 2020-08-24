@@ -49,7 +49,7 @@ export class BlendImageBehavior extends TimedBehavior{
         ctx.save();
         ctx.globalAlpha = this.blendAmount;
         ctx.globalCompositeOperation = this.compositeOperation;
-        this.spriteSheet.paint(location2,ctx,0,1,1);
+        this.spriteSheet.paint(location2,ctx,0,0,0);
         ctx.restore();
     }
 }
