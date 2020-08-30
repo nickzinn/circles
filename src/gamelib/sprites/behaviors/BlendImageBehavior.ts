@@ -49,7 +49,8 @@ export class BlendImageBehavior extends TimedBehavior{
         ctx.save();
         ctx.globalAlpha = this.blendAmount;
         ctx.globalCompositeOperation = this.compositeOperation;
-        this.spriteSheet.paint(location2,ctx,0,0,0);
+        const size = this.spriteSheet.size;
+        this.spriteSheet.paint(ctx, 0, 0, {position:{x:0,y:0}, size}, {position:location2, size});
         ctx.restore();
     }
 }

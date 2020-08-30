@@ -3,6 +3,7 @@ import { ImagePreloader } from './util/ImagePreloader';
 import { GameInitializer } from './GameInitializer';
 import SoundEffects from './util/SoundEffects';
 import { Point } from './types/Point';
+import { TileAtlas } from './tiles/TileAtlas';
 
 export interface GameEvent{
     type:string;
@@ -25,6 +26,7 @@ export class GameController<T extends GameInitializer<T>>{
     pause:boolean = false;
     gameInitializer:T;
     touchEvent?:Point;
+    tileAtlas:TileAtlas;
     
     private _mute:boolean = false;
     private readyCallback?: () => void;
@@ -36,6 +38,7 @@ export class GameController<T extends GameInitializer<T>>{
         this.soundEffects = new SoundEffects(gameInitializer.preloadSounds || []);
         this.imagePreloader = new ImagePreloader();
         this.imagePreloader.preLoadImages(gameInitializer.preloadImages);
+        this.tileAtlas = new TileAtlas(this.imagePreloader);
     }
 
     init(canvas:HTMLCanvasElement, readyCallback: () => void) {
@@ -194,8 +197,6 @@ export class GameController<T extends GameInitializer<T>>{
         }
 
         ctx.save(); //Freeze redraw
-
-        this.paintBackground(ctx);
         this.scene.paint({x:0,y:0}, ctx, timeSinceLastAnimation);
         this.scene.updateModel(timeSinceLastAnimation);
 
@@ -208,14 +209,5 @@ export class GameController<T extends GameInitializer<T>>{
         }
 
         ctx.restore();//now do redraw
-    }
-
-    private paintBackground(ctx: CanvasRenderingContext2D) {
-        if(this.scene.paintBackground)
-            this.scene.paintBackground(ctx);
-        else{
-            ctx.fillStyle = 'white';
-            ctx.fillRect(0, 0, this.scene.size.width, this.scene.size.height);
-        }
     }
 }

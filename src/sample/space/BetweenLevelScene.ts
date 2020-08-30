@@ -3,10 +3,11 @@ import { GameController } from "../../gamelib/GameController";
 import { MainGameScene } from "./MainGameScene";
 import { generateOpenningSequenceAsteroids } from "./sprites/Asteroids";
 import { TitleSprite } from "../../gamelib/sprites/TitleSprite";
-import { BackgroundScene } from "./BackgroundScene";
-
+import Scene from "../../gamelib/Scene";
+const NAME = 'BetweenLevelScene';
 export function launchBetweenLevelsScene(controller:GameController<SpaceGame>, level:number, score:number){
-    const scene = new BackgroundScene('BetweenLevelScene',controller);
+    const scene = new Scene(NAME,controller);
+    scene.setTiles(3,3, [(new Array(9)).fill(NAME)], false);
     controller.scene = scene;
     controller.publishEvent({type:'score', value:score});
     scene.wrapAround = true;

@@ -46,7 +46,7 @@ function createWall(position: Point, size: Size, isVertical: boolean): Sprite {
 
 export class BouncingBall implements GameInitializer<BouncingBall>{
 
-    preloadImages = [{ name: 'ball', src: '/circles/assets/images/ball.png', rows: 4, columns: 8 }];
+    preloadImages = [{ name: 'ball', src: '/circles/assets/images/ball.png', rows: 4, columns: 8 , type: 'animate'}];
     preloadSounds = [{ name: 'boop', src: '/circles/assets/sounds/boop.wav' }
         , { name: 'error', src: '/circles/assets/sounds/error.wav' }];
 
@@ -74,10 +74,6 @@ export class BouncingBall implements GameInitializer<BouncingBall>{
             }
         }
         scene.wrapAround = false;
-        scene.paintBackground = function (ctx: CanvasRenderingContext2D) {
-            ctx.fillStyle = 'black';
-            ctx.fillRect(0, 0, scene.size.width, scene.size.height);
-        }
 
         const sz = scene.size;
         const wallSize = 4;
@@ -114,10 +110,6 @@ export class BouncingBall implements GameInitializer<BouncingBall>{
         const scene = new Scene('GameOver', controller);
         controller.scene = scene;
         let age = 0;
-        scene.paintBackground = function (ctx: CanvasRenderingContext2D) {
-            ctx.fillStyle = 'black';
-            ctx.fillRect(0, 0, scene.size.width, scene.size.height);
-        }
         scene.addBehavior({ updateModel: (s, time) => age += time });
         scene.handleKeyPressed = () => { if (age > 1000) this.launchGame(controller) };
         scene.handleMouseClick = () => { if (age > 1000) this.launchGame(controller) };
@@ -130,10 +122,6 @@ export class BouncingBall implements GameInitializer<BouncingBall>{
         const scene = new Scene('Intro', controller);
         controller.scene = scene;
 
-        scene.paintBackground = function (ctx: CanvasRenderingContext2D) {
-            ctx.fillStyle = 'black';
-            ctx.fillRect(0, 0, scene.size.width, scene.size.height);
-        }
         scene.handleKeyPressed = () => this.launchGame(controller);
         scene.handleMouseClick = () => this.launchGame(controller);
         scene.addSprite(new TitleSprite("CLICK THE BALLS", `You have 15 seconds. Don't miss.`

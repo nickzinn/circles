@@ -6,6 +6,7 @@ import { Size } from "./types/Size";
 import { union, Rectangle, intersects, pointInRect } from "./types/Rectangle";
 import { GameInitializer } from "./GameInitializer";
 import { vectorToXYSpeed } from "./types/Vector";
+import { TileMap } from "./tiles/TileMap";
 
 function insert<T>(array:T[], value:T, comparator: (a:T, b:T)=>number){
 	let low =0;
@@ -35,6 +36,7 @@ function remove(array:any[], key:any){
 
 export default class Scene<T extends GameInitializer<T>> extends DefaultSprite{
 
+	tileMap?:TileMap;
     viewPort:Point = {x:0, y:0};
     controller:GameController<T>;
     debug: boolean = false;
@@ -84,6 +86,13 @@ export default class Scene<T extends GameInitializer<T>> extends DefaultSprite{
 	public resetGame() {
 	    this.sprites = [];
 		this.collisionListeners = [];
+	}
+	
+	setTiles(rows:number, columns:number, logicalGrid:string[][], setWorldSize:boolean, tileSize:Size|undefined = undefined){
+		this.tileMap = new TileMap(this.controller.tileAtlas,rows, columns, logicalGrid, tileSize);
+		if(setWorldSize){
+			this.modelSize = this.tileMap.worldSize;
+		}
 	}
 
     updateModel(timeSinceLastUpdate: number) {
@@ -182,8 +191,11 @@ export default class Scene<T extends GameInitializer<T>> extends DefaultSprite{
 	totalTime =0;
 	paint(location:Point, ctx: CanvasRenderingContext2D, timeSinceLastAnimation: number):void {
         //enable you to embed a scene as a sprite in another scene
-        location = {x: location.x + this.viewPort.x, y:location.y+this.viewPort.y}; 
-		super.paint(location, ctx, timeSinceLastAnimation);
+		location = {x: location.x + this.viewPort.x, y:location.y+this.viewPort.y}; 
+		this.paintBackground(ctx);
+		if(this.tileMap){
+			this.tileMap.paint({position:location, size:this.size},  ctx, timeSinceLastAnimation);
+		}
 		let displayedSprites =0
 		for(let sprite of this.sprites){
 			if(!sprite.isAlive)
@@ -213,6 +225,11 @@ export default class Scene<T extends GameInitializer<T>> extends DefaultSprite{
 		}
 	}
 
+	paintBackground(ctx: CanvasRenderingContext2D):void {
+			ctx.fillStyle = 'black';
+			ctx.fillRect(0, 0, this.size.width, this.size.height);
+	}
+
 	addSprites(sprites:Sprite[] ) {
 		if(!sprites || !sprites.length)
 			throw Error(`Attempting to add empty array of sprites in scene (${this.name})`);
@@ -222,8 +239,6 @@ export default class Scene<T extends GameInitializer<T>> extends DefaultSprite{
 		sprites.forEach( (s) => this.addSprite(s) )
 	}
 
-	paintBackground?(ctx: CanvasRenderingContext2D):void;
-	
 	_validateSprite(sprite:Sprite){
 		if(sprite.position.x < 0 || sprite.position.y < 0 )
 			throw Error(`Sprite position less 0 (${sprite.position.x}, ${sprite.position.y})`);
