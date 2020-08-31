@@ -49,3 +49,9 @@ A simple 2D game library for JavaScript/TypeScript to teach my kids programming.
 + material-ui, used to draw surrounding UI for demo.
 ## Library Dependencies
 + [Howler.js](https://github.com/goldfire/howler.js)
+## Free Game Art Websites
++ [GameDev Market](https://www.gamedevmarket.net/)
++ [Game Art 2D](https://www.gameart2d.com/)
++ [CraftPIX](https://craftpix.net/freebies/)
++ [ich.io](https://itch.io/game-assets/free)
++ [OpenGameArt.Org](https://opengameart.org/)

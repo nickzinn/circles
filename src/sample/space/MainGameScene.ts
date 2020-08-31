@@ -12,13 +12,13 @@ import { Missle } from "./sprites/Missle";
 import { launchBetweenLevelsScene } from "./BetweenLevelScene";
 import { Ship } from "./sprites/Ship";
 import { generateGameAsteroids } from "./sprites/Asteroids";
-import { BackgroundScene } from "./BackgroundScene";
 import { centerPosition } from "../../gamelib/types/Rectangle";
 import { FadeOutBehavior} from "../../gamelib/sprites/behaviors/FadeOutBehavior"
 import { FadeInBehavior } from "../../gamelib/sprites/behaviors/FadeInBehavior";
+import Scene from "../../gamelib/Scene";
 
-
-export class MainGameScene extends BackgroundScene {
+const NAME = 'MainGameScene';
+export class MainGameScene extends Scene<SpaceGame> {
 	_score: number = 0;
 	level: number;
 	stars: Point[] = []
@@ -27,7 +27,9 @@ export class MainGameScene extends BackgroundScene {
 	pause: boolean = false;
 
 	constructor(controller: GameController<SpaceGame>, level: number, score: number) {
-		super('MainGameScene', controller);
+		super(NAME, controller);
+		this.setTiles(3,3, [(new Array(9)).fill(NAME)], false);
+		
 		this.level = level;
 		this.score = score;
 		controller.scene = this;

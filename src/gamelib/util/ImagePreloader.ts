@@ -1,18 +1,20 @@
 import { SpriteSheet } from "./SpriteSheet";
 import { Size } from "../types/Size";
-import { Point } from "../types/Point";
+import { Rectangle } from "../types/Rectangle";
 
 export interface PreloadImage{
     name:string;
     src:string;
+    type:string;
     rows?:number;
     columns?:number;
     scale?:number;
-    angle?:number;
-    type?:string;
+    angleOffset?:number;
+    fixRow?:number;
+    fixColumn?:number;
     noTransparent?:boolean;
 }
-
+const VALID_TYPES = ['rotate', 'animate', 'static'];
 
 function makeTransparent(image: HTMLImageElement):HTMLImageElement  {
     const canvas = document.createElement("canvas");
@@ -73,6 +75,8 @@ export class ImagePreloader{
     preLoadImages(images:PreloadImage[]):void{
         
         for(let des of images){
+            if(VALID_TYPES.indexOf(des.type) === -1)
+                throw Error(`Invalid type: ${des.type}`);
             const image = new Image();
             this.nLoads++;
             image.src = des.src;
@@ -94,8 +98,7 @@ export class ImagePreloader{
             const rows = (des.rows) ? des.rows : 1;
             const columns = (des.columns) ? des.columns :1;
             
-            const sheet = new SpriteSheetImpl(image, rows, columns, (des.scale)? des.scale: 1.0,
-             (des.angle) ? des.angle : 0, (des.type) ? des.type: 'animate');
+            const sheet = new SpriteSheetImpl(image, rows, columns, des);
             this.imageCache.set(des.name, sheet);
             if(++this.loadsCompleted === this.nLoads && this.loadCallback){
                 this.loadCallback();
@@ -107,55 +110,62 @@ export class ImagePreloader{
 class SpriteSheetImpl implements SpriteSheet{
     readonly rows:number;
     readonly columns:number;
-    readonly angle:number;
     readonly size:Size;
     readonly type:string;
+    readonly frameCount:number;
 
+    description:PreloadImage;
     image:HTMLImageElement;
     private srcSize:Size;
 
-    constructor(image:HTMLImageElement, rows:number = 1, columns:number =1, scale:number=1.0, angle:number=0, type:string ='animate') {
+    constructor(image:HTMLImageElement, rows:number, columns:number, description:PreloadImage) {
         this.image = image;
         this.rows = rows;
         this.columns = columns;
         this.srcSize = {width:Math.floor(this.image.width/this.columns),
             height: Math.floor(this.image.height/this.rows)};
-        if(scale !== 1){
-            this.size = {width:Math.floor(this.srcSize.width * scale), height:Math.floor(this.srcSize.height * scale)};
-            this._preRenderScaledImage(scale);
+        if(description.scale){
+            this.size = {width:Math.floor(this.srcSize.width * description.scale), height:Math.floor(this.srcSize.height * description.scale)};
+            this._preRenderScaledImage(description.scale);
         }else{
             this.size = this.srcSize;
         }
-        this.angle = angle;
-        this.type = type;
+        this.description = description;
+        this.type = description.type;
+        this.frameCount = this.rows*this.columns;
     }
-    paint(location:Point, ctx: CanvasRenderingContext2D, angle:number= 0,row:number=1, column:number=1):void{
-        let x = location.x, y= location.y;
-        if(row<1 || row > this.rows || column < 1 || column > this.columns)
+    paint(ctx: CanvasRenderingContext2D, frame:number, angle:number, source:Rectangle, dest:Rectangle):void{    
+        let column, row;
+
+        if(this.description.type === 'static'){
+            column = (this.description.fixColumn) ? this.description.fixColumn : 0;
+            row = (this.description.fixRow) ? this.description.fixRow : 0;
+            angle =0;
+		}else{
+            frame = Math.min(frame, this.frameCount-1);
+            column = Math.floor(frame % this.columns);
+            row = Math.floor( frame/this.columns );        
+        }
+
+        let x = dest.position.x, y= dest.position.y;
+        if(row<0 || row >= this.rows || column < 0 || column >= this.columns)
             throw Error(`Row and columns of sprite need to be in bounds (${row},${column})`);
-        angle += this.angle;
+        if(this.description.angleOffset)
+            angle += this.description.angleOffset;
         if(angle){
             ctx.translate(x + this.size.width / 2.0, y+ this.size.height / 2.0);
             ctx.rotate(angle);
             x = 0 - this.size.width / 2.0;
             y = 0 - this.size.height / 2.0;
         }
-        if(this.columns === 1 && this.rows === 1)
-            ctx.drawImage(this.image, 0, 0, this.srcSize.width, this.srcSize.height,
-                x, y, this.size.width, this.size.height);
-        else{
-            const srcX = Math.floor(this.image.width * ((column-1)/this.columns));
-            const srcY = Math.floor(this.image.height * ((row-1)/this.rows));
-            ctx.drawImage(this.image, srcX, srcY, this.srcSize.width, this.srcSize.height,
-                 x, y, this.size.width, this.size.height);
-        }
+
+        const srcX = Math.floor(this.image.width * ((column)/this.columns)) + source.position.x;
+        const srcY = Math.floor(this.image.height * ((row)/this.rows)) + source.position.y;
+            ctx.drawImage(this.image, srcX, srcY, source.size.width, source.size.height,
+                 x, y, dest.size.width, dest.size.height);
         if(angle){
             ctx.setTransform(1, 0, 0, 1, 0, 0);    
         }
-    }
-
-    get frameCount():number{
-        return this.rows*this.columns;
     }
     private _preRenderScaledImage(scale:number){
         const canvas = document.createElement("canvas");

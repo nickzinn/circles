@@ -3,6 +3,7 @@ import { ImagePreloader } from './util/ImagePreloader';
 import { GameInitializer } from './GameInitializer';
 import SoundEffects from './util/SoundEffects';
 import { Point } from './types/Point';
+import { TileAtlas } from './tiles/TileAtlas';
 
 export interface GameEvent{
     type:string;
@@ -25,10 +26,12 @@ export class GameController<T extends GameInitializer<T>>{
     pause:boolean = false;
     gameInitializer:T;
     touchEvent?:Point;
+    tileAtlas:TileAtlas;
     
     private _mute:boolean = false;
     private readyCallback?: () => void;
     private _scene?: Scene<T>;
+    private events:GameEvent[] = [];
     
     private gameEventListeners:HandleGameEvent[] = [];
     constructor(gameInitializer:T){
@@ -36,6 +39,7 @@ export class GameController<T extends GameInitializer<T>>{
         this.soundEffects = new SoundEffects(gameInitializer.preloadSounds || []);
         this.imagePreloader = new ImagePreloader();
         this.imagePreloader.preLoadImages(gameInitializer.preloadImages);
+        this.tileAtlas = new TileAtlas(this.imagePreloader);
     }
 
     init(canvas:HTMLCanvasElement, readyCallback: () => void) {
@@ -68,8 +72,8 @@ export class GameController<T extends GameInitializer<T>>{
 
     publishEvent(event:GameEvent){
         if(this.debug)
-            console.log(`Publish Game Event: {${event.type}, ${event.value}}`);
-        this.gameEventListeners.forEach( (handler) => handler(event));
+                console.log(`Publish Game Event: {${event.type}, ${event.value}}`);
+        this.events.push(event);
     }
 
     subscribeEvent(gameEventListener:HandleGameEvent){
@@ -182,6 +186,7 @@ export class GameController<T extends GameInitializer<T>>{
         this.readyCallback!();
     }
 
+    private _timer =0;
     private _updateScene(ctx:CanvasRenderingContext2D,timeSinceLastAnimation:number){
         this.keysPressed.forEach((value, key) => {
             if(this.debug){
@@ -194,11 +199,20 @@ export class GameController<T extends GameInitializer<T>>{
         }
 
         ctx.save(); //Freeze redraw
-
-        this.paintBackground(ctx);
         this.scene.paint({x:0,y:0}, ctx, timeSinceLastAnimation);
+        ctx.restore();//now do redraw
+
         this.scene.updateModel(timeSinceLastAnimation);
 
+        
+        if(  (this._timer += timeSinceLastAnimation) > 600){
+            window.queueMicrotask( () => { 
+                this.events.forEach( (event) => this.gameEventListeners.forEach( (handler) => handler(event)));
+                this.events = [];
+            });
+            this._timer = 0;
+        }
+        
         if(!this.scene.isAlive){
             if(this.debug)
                 console.log(`Scene Killed: ${this.scene.name}`);
@@ -206,16 +220,6 @@ export class GameController<T extends GameInitializer<T>>{
             if(!this.scene.isAlive)
                 throw Error(`Scene is still dead.  Can't have a dead scene (${this.scene.name})`);
         }
-
-        ctx.restore();//now do redraw
-    }
-
-    private paintBackground(ctx: CanvasRenderingContext2D) {
-        if(this.scene.paintBackground)
-            this.scene.paintBackground(ctx);
-        else{
-            ctx.fillStyle = 'white';
-            ctx.fillRect(0, 0, this.scene.size.width, this.scene.size.height);
-        }
+        
     }
 }

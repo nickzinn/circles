@@ -50,9 +50,5 @@ export class DefaultSprite implements Sprite{
     
     handleKill():void{
         this.behaviors.forEach( (b) =>  b.handleKill?.(this));
-    }
-    
-    handleCollision?(otherSprite:Sprite):void{
-        this.behaviors.forEach( (b) =>  b.handleCollision?.(this, otherSprite));
-    }
+    }   
 }

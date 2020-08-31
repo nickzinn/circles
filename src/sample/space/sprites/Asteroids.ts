@@ -1,10 +1,8 @@
 import { SpaceGame } from "../SpaceGame";
 import { Sprite } from "../../../gamelib/sprites/Sprite";
 import { MainGameScene } from "../MainGameScene";
-import { newSmallExplosion } from "./Explosion";
 import { AnimatedSprite } from "../../../gamelib/sprites/AnimatedSprite";
 import Scene from "../../../gamelib/Scene";
-import { centerPosition } from "../../../gamelib/types/Rectangle";
 
 export function generateOpenningSequenceAsteroids(scene:Scene<SpaceGame>, n:number):Sprite[]{
     const sz = scene.controller.scene.size;
@@ -28,13 +26,6 @@ export function generateGameAsteroids(scene:MainGameScene, n:number ):Sprite[]{
         a.position.x = Math.random() * scene.modelSize.width;
         a.position.y = 0;
         a.speed = Math.random() * 100 +50;
-        a.handleCollision = (otherSprite) =>{
-            if (otherSprite === scene.player && !scene.pause) {
-                scene.hit(10);
-                scene.addSprite(newSmallExplosion(scene, centerPosition(a)));
-                a.isAlive = false;
-            }
-        };
     });
     return roids;
 }
