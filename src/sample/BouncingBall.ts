@@ -94,7 +94,7 @@ export class BouncingBall implements GameInitializer<BouncingBall>{
             ball.angle = Math.random() * Math.PI * 2;
             ball.zOrder = Math.random() * 10 - 5;
             ball.canCollide = true;
-            ball.size = { width: ball.size.width - 2, height: ball.size.height - 2 }
+            ball.size = { width: ball.size.width - 2, height: ball.size.height - 2 };
             scene.addSprite(ball);
         }
         const countdown = new CountdownSprite(15000);

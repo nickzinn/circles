@@ -2,6 +2,9 @@ import { Ship } from "./Ship";
 import { MainGameScene } from "../MainGameScene";
 import { Point, pointAsInt } from "../../../gamelib/types/Point";
 import { BlendImageBehavior } from "../../../gamelib/sprites/behaviors/BlendImageBehavior";
+import { Sprite } from "../../../gamelib/sprites/Sprite";
+import { newSmallExplosion } from "./Explosion";
+import { centerPosition } from "../../../gamelib/types/Rectangle";
 
 export class Player extends Ship {
 	shield = 100;
@@ -36,5 +39,12 @@ export class Player extends Ship {
 		const blendAmount = Math.min(Math.max(.15, this.shield / 100 + .15), 1.0);
 		const shieldAge = 500;
 		this.addBehavior(new BlendImageBehavior(shieldSpriteSheet, shieldAge, blendAmount));
+	}
+	handleCollision(otherSprite:Sprite){
+		if (otherSprite.name === 'asteroid' && !this.scene.pause) {
+			this.scene.hit(10);
+			this.scene.addSprite(newSmallExplosion(this.scene, centerPosition(otherSprite)));
+			otherSprite.isAlive = false;
+		}
 	}
 }

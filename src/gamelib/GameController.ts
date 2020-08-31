@@ -31,6 +31,7 @@ export class GameController<T extends GameInitializer<T>>{
     private _mute:boolean = false;
     private readyCallback?: () => void;
     private _scene?: Scene<T>;
+    private events:GameEvent[] = [];
     
     private gameEventListeners:HandleGameEvent[] = [];
     constructor(gameInitializer:T){
@@ -71,8 +72,8 @@ export class GameController<T extends GameInitializer<T>>{
 
     publishEvent(event:GameEvent){
         if(this.debug)
-            console.log(`Publish Game Event: {${event.type}, ${event.value}}`);
-        this.gameEventListeners.forEach( (handler) => handler(event));
+                console.log(`Publish Game Event: {${event.type}, ${event.value}}`);
+        this.events.push(event);
     }
 
     subscribeEvent(gameEventListener:HandleGameEvent){
@@ -185,6 +186,7 @@ export class GameController<T extends GameInitializer<T>>{
         this.readyCallback!();
     }
 
+    private _timer =0;
     private _updateScene(ctx:CanvasRenderingContext2D,timeSinceLastAnimation:number){
         this.keysPressed.forEach((value, key) => {
             if(this.debug){
@@ -198,8 +200,19 @@ export class GameController<T extends GameInitializer<T>>{
 
         ctx.save(); //Freeze redraw
         this.scene.paint({x:0,y:0}, ctx, timeSinceLastAnimation);
+        ctx.restore();//now do redraw
+
         this.scene.updateModel(timeSinceLastAnimation);
 
+        
+        if(  (this._timer += timeSinceLastAnimation) > 1000){
+            window.queueMicrotask( () => { 
+                this.events.forEach( (event) => this.gameEventListeners.forEach( (handler) => handler(event)));
+                this.events = [];
+            });
+            this._timer = 0;
+        }
+        
         if(!this.scene.isAlive){
             if(this.debug)
                 console.log(`Scene Killed: ${this.scene.name}`);
@@ -207,7 +220,6 @@ export class GameController<T extends GameInitializer<T>>{
             if(!this.scene.isAlive)
                 throw Error(`Scene is still dead.  Can't have a dead scene (${this.scene.name})`);
         }
-
-        ctx.restore();//now do redraw
+        
     }
 }

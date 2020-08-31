@@ -140,6 +140,7 @@ class SpriteSheetImpl implements SpriteSheet{
         if(this.description.type === 'static'){
             column = (this.description.fixColumn) ? this.description.fixColumn : 0;
             row = (this.description.fixRow) ? this.description.fixRow : 0;
+            angle =0;
 		}else{
             frame = Math.min(frame, this.frameCount-1);
             column = Math.floor(frame % this.columns);

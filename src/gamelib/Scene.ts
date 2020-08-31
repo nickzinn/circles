@@ -143,9 +143,8 @@ export default class Scene<T extends GameInitializer<T>> extends DefaultSprite{
 			}
 			if(sprite.updateModel)
 				sprite.updateModel(timeSinceLastUpdate);
-			try {
-				this._validateSprite(sprite);
-			} catch (error) {
+			const error = this._validateSprite(sprite);
+			if(error){
 				console.log(`Sprite position not valid.  Killing spite (${sprite.name}). ${error}`);
 				sprite.isAlive=false;
 			}
@@ -155,7 +154,6 @@ export default class Scene<T extends GameInitializer<T>> extends DefaultSprite{
 	}
 
 	private _handleCollision( newRect:Rectangle, sprite:Sprite) {
-		//need to make this more sophisticated so it doesn't break out after one collision.
 		let collisionSprite;
 		if(sprite.handleCollision){
 			for(let i =0; i< this.sprites.length;i++){
@@ -221,7 +219,7 @@ export default class Scene<T extends GameInitializer<T>> extends DefaultSprite{
 			}
 			ctx.fillStyle = "red"
 			ctx.font ="8px Electrolize";
-			ctx.fillText(`FPS: ${Math.round(1000 / (this.totalTime/ ++this.count))} Alive Sprites: ${this.sprites.length} On Screen Sprites: ${displayedSprites}` , 10, this.size.height -10);
+			ctx.fillText(`FPS: ${Math.round(1000 / (this.totalTime/ ++this.count))} Alive: ${this.sprites.length} On Screen: ${displayedSprites} Collision Handlers: ${this.collisionListeners.length}` , 10, this.size.height -10);
 		}
 	}
 
@@ -239,20 +237,21 @@ export default class Scene<T extends GameInitializer<T>> extends DefaultSprite{
 		sprites.forEach( (s) => this.addSprite(s) )
 	}
 
-	_validateSprite(sprite:Sprite){
+	_validateSprite(sprite:Sprite):string|undefined{
 		if(sprite.position.x < 0 || sprite.position.y < 0 )
-			throw Error(`Sprite position less 0 (${sprite.position.x}, ${sprite.position.y})`);
+			return `Sprite position less 0 (${sprite.position.x}, ${sprite.position.y})`;
 		if(this.modelSize.width !==0){
 			if(sprite.position.x >= this.modelSize.width || sprite.position.y >= this.modelSize.height)
-				throw Error(`Sprite position(${sprite.position.x}, ${sprite.position.y}) > model(${this.modelSize.width},${this.modelSize.height})`);
+				return `Sprite position(${sprite.position.x}, ${sprite.position.y}) > model(${this.modelSize.width},${this.modelSize.height})`;
 		}else if(sprite.position.x >= this.size.width || sprite.position.y >= this.size.height) {
-			throw Error(`Sprite position(${sprite.position.x}, ${sprite.position.y})  > screen(${this.size.width},${this.size.height}) `);
+			return `Sprite position(${sprite.position.x}, ${sprite.position.y})  > screen(${this.size.width},${this.size.height})`;
 		}
 		if(sprite.size.width <=0 || sprite.size.height <= 0)
-			throw Error(`Sprite size too small (${sprite.size.width}, ${sprite.size.height})`);
+			return `Sprite size too small (${sprite.size.width}, ${sprite.size.height})`;
 		if( (sprite.speed !== undefined &&  sprite.angle === undefined) 
 			|| (sprite.speed === undefined &&  sprite.angle !== undefined))
-			throw Error(`Either speed(${sprite.speed}) and angle(${sprite.angle}) are both defined or both undefined.`)
+			return `Either speed(${sprite.speed}) and angle(${sprite.angle}) are both defined or both undefined.`;
+		return undefined;
 	}
 	_handleWrap(position:Point, size:Size):boolean{
 		// handle wrap around
