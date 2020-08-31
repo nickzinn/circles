@@ -65,11 +65,11 @@ export class BouncingBall implements GameInitializer<BouncingBall>{
                     if (s.name === 'CountdownTimer')
                         return;
                     scene.removeSprite(s);
-                    controller.publishEvent({ type: 'score', value: (score++) });
+                    controller.publishEvent({ type: 'score', value: (++score) });
                     controller.soundEffects.play('boop');
                 });
             } else {
-                controller.publishEvent({ type: 'score', value: (score--) });
+                controller.publishEvent({ type: 'score', value: (--score) });
                 controller.soundEffects.play('error');
             }
         }

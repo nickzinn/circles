@@ -205,7 +205,7 @@ export class GameController<T extends GameInitializer<T>>{
         this.scene.updateModel(timeSinceLastAnimation);
 
         
-        if(  (this._timer += timeSinceLastAnimation) > 1000){
+        if(  (this._timer += timeSinceLastAnimation) > 600){
             window.queueMicrotask( () => { 
                 this.events.forEach( (event) => this.gameEventListeners.forEach( (handler) => handler(event)));
                 this.events = [];
