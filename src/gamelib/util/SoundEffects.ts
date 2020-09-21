@@ -16,11 +16,12 @@ export default class SoundEffects {
     for(let effect of effectPreloads )
         this.sounds.set(effect.name, new Howl({src:effect.src,preload: true}) );
     this.rate = 1.0;
+    Howler.volume(.1);
     this._mute = false;
   }
 
   play (key:string) {
-    const sound = this.sounds.get(key);
+    const sound = this.sounds.get(key);   
     if(sound){
         sound.rate(this.rate);
         sound.play();
