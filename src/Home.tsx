@@ -68,7 +68,7 @@ export  function Home() {
                                 Play Space Hunter
       </Typography>
                             <Typography variant="body2" color="textSecondary" component="p">
-                                Shoot all the asteroids.  Use W-A-S-D to move around and space bar to fire.  Watch out for the enemy...
+                                Shoot all the alien ships!  Use mouse, touch or W-A-S-D to move around and space bar to fire.  Watch out for the enemy...
       </Typography>
                         </CardContent>
                     </CardActionArea>

@@ -189,9 +189,9 @@ export class MainGameScene extends Scene<SpaceGame> {
 		const crossproduct = Math.sin(requiredHeading - this.player.shipAngle);
 
 		if (crossproduct > .1)
-			this.player.shipAngle -= .1;
+			this.player.shipAngle -= .05;
 		else if (crossproduct < -.1)
-			this.player.shipAngle += .1;
+			this.player.shipAngle += .05;
 		if (distance > 100) {
 			this.player.move();
 			this.acceleration = -1;

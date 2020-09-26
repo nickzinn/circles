@@ -22,11 +22,11 @@ export class Ship extends AnimatedSprite<SpaceGame, MainGameScene> {
 	}
 
 	left() {
-		this.shipAngle += -.15;
+		this.shipAngle += -.1;
 	}
 
 	right() {
-		this.shipAngle += +.15;
+		this.shipAngle += +.1;
 	}
 
 	move(amount: number = 15.0) {
