@@ -54,7 +54,7 @@ export  function Home() {
         </Toolbar>
       </AppBar>
       <Box component="div" overflow="visible">
-        <Grid container alignItems="center" justify = "center" direction="column" className={classes.container} >
+        <Grid container alignItems="center" justifyContent = "center" direction="column" className={classes.container} >
             <Card className={classes.root}>
                 <Link to="/space" className={classes.link}>
                     <CardActionArea>
