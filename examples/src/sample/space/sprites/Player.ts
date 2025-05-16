@@ -9,9 +9,10 @@ import { newSmallExplosion } from "./Explosion";
 
 export class Player extends Ship {
 	shield = 100;
-
+	mainGameScene: MainGameScene;
 	constructor(scene: MainGameScene, position: Point) {
 		super(scene, position, "player");
+		this.mainGameScene = scene;
 		this.acceleration = -4;
 	}
 
@@ -42,8 +43,8 @@ export class Player extends Ship {
 		this.addBehavior(new BlendImageBehavior(shieldSpriteSheet, shieldAge, blendAmount));
 	}
 	handleCollision(otherSprite:Sprite){
-		if (otherSprite.name === 'asteroid' && !this.scene.pause) {
-			this.scene.hit(10);
+		if (otherSprite.name === 'asteroid' && !this.mainGameScene.pause) {
+			this.mainGameScene.hit(10);
 			this.scene.addSprite(newSmallExplosion(this.scene, centerPosition(otherSprite)));
 			otherSprite.isAlive = false;
 		}

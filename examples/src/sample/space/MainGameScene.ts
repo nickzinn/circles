@@ -16,18 +16,19 @@ import { generateGameAsteroids } from "./sprites/Asteroids";
 
 
 const NAME = 'MainGameScene';
-export class MainGameScene extends Scene<SpaceGame> {
+export class MainGameScene extends Scene {
 	_score: number = 0;
 	level: number;
 	stars: Point[] = []
 	player: Player;
 	alienCount: number;
 	pause: boolean = false;
+	spaceGame:SpaceGame
 
-	constructor(controller: GameController<SpaceGame>, level: number, score: number) {
+	constructor(controller: GameController, spaceGame:SpaceGame, level: number, score: number) {
 		super(NAME, controller);
 		this.setTiles(3,3, [(new Array(9)).fill(NAME)], false);
-		
+		this.spaceGame = spaceGame;
 		this.level = level;
 		this.score = score;
 		controller.scene = this;
@@ -111,11 +112,11 @@ export class MainGameScene extends Scene<SpaceGame> {
 		this.addBehavior(new SpriteExpirationBehavior(4000));
 		this.addBehavior({
 			handleKill: () => {
-				if (this.controller.gameInitializer.highscore < this.score) {
-					this.controller.gameInitializer.highscore = this.score;
+				if (this.spaceGame.highscore < this.score) {
+					this.spaceGame.highscore = this.score;
 					this.controller.soundEffects.play("newHighScore");
 				}
-				launchOpeningSequence(this.controller);
+				launchOpeningSequence(this.controller, this.spaceGame);
 			}
 		});
 	}
@@ -125,7 +126,7 @@ export class MainGameScene extends Scene<SpaceGame> {
 		const behavior = new FadeOutBehavior(2000);
 		behavior.handleTimeUp = () => this.player.isAlive = false;
 		this.player.addBehavior(behavior);
-		this.addBehavior({ handleKill: () => launchBetweenLevelsScene(this.controller, this.level, this.score) });
+		this.addBehavior({ handleKill: () => launchBetweenLevelsScene(this) });
 	}
 
 	hit(hitPoints: number) {

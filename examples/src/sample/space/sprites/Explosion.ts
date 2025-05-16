@@ -1,16 +1,15 @@
-import {Sprite, AnimatedSprite, Point} from "gamelib";
+import {Sprite, AnimatedSprite, Scene, Point} from "gamelib";
 
-import { MainGameScene } from "../MainGameScene";
 
-export function newSmallExplosion(scene:MainGameScene, position:Point):Sprite{
+export function newSmallExplosion(scene:Scene, position:Point):Sprite{
     return newExplosion(scene, position, 'explosionSmall');
 }
 
-export function newBigExplosion(scene:MainGameScene, position:Point):Sprite{
+export function newBigExplosion(scene:Scene, position:Point):Sprite{
     return newExplosion(scene, position, 'explosionBig');
 }
 
-function newExplosion(scene:MainGameScene, position:Point, name:string):Sprite {
+function newExplosion(scene:Scene, position:Point, name:string):Sprite {
     const explosion = new AnimatedSprite(scene,name, position, true);
     explosion.position = {x: position.x - explosion.size.width / 2
         ,y: position.y - explosion.size.height / 2};

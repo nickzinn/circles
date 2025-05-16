@@ -1,10 +1,7 @@
 import {Scene, Sprite} from "gamelib";
 import {AnimatedSprite} from "gamelib";
 
-import { SpaceGame } from "../SpaceGame";
-import { MainGameScene } from "../MainGameScene";
-
-export function generateOpenningSequenceAsteroids(scene:Scene<SpaceGame>, n:number):Sprite[]{
+export function generateOpenningSequenceAsteroids(scene:Scene, n:number):Sprite[]{
     const sz = scene.controller.scene.size;
     const rand =  (minn:number, max:number) => Math.random() * (max-minn) + minn;
     const min =100;
@@ -20,7 +17,7 @@ export function generateOpenningSequenceAsteroids(scene:Scene<SpaceGame>, n:numb
     }
     return sprites;
 }
-export function generateGameAsteroids(scene:MainGameScene, n:number ):Sprite[]{
+export function generateGameAsteroids(scene:Scene, n:number ):Sprite[]{
     const roids = generateOpenningSequenceAsteroids(scene, n);
     roids.forEach( (a) => {
         a.position.x = Math.random() * scene.modelSize.width;

@@ -40,16 +40,16 @@ function createWall(position: Point, size: Size, isVertical: boolean): Sprite {
     return wall;
 }
 
-export class BouncingBall implements GameInitializer<BouncingBall>{
+export class BouncingBall implements GameInitializer{
 
     preloadImages = [{ name: 'ball', src: '/circles/assets/images/ball.png', rows: 4, columns: 8 , type: 'animate'}];
     preloadSounds = [{ name: 'boop', src: '/circles/assets/sounds/boop.wav' }
         , { name: 'error', src: '/circles/assets/sounds/error.wav' }];
 
-    init(controller: GameController<BouncingBall>): void {
+    init(controller: GameController): void {
         this.launchInstructions(controller);
     }
-    launchGame(controller: GameController<BouncingBall>) {
+    launchGame(controller: GameController) {
         const scene = new Scene('bouncing ball', controller);
         controller.scene = scene;
         let score = 0;
@@ -102,7 +102,7 @@ export class BouncingBall implements GameInitializer<BouncingBall>{
         countdown.handleKill = () => this.launchGameOverScene(controller, score);
         scene.addSprite(countdown);
     }
-    launchGameOverScene(controller: GameController<BouncingBall>, score: number) {
+    launchGameOverScene(controller: GameController, score: number) {
         const scene = new Scene('GameOver', controller);
         controller.scene = scene;
         let age = 0;
@@ -114,7 +114,7 @@ export class BouncingBall implements GameInitializer<BouncingBall>{
             , 'HIT ANY KEY TO PLAY AGAIN'));
         return scene;
     }
-    launchInstructions(controller: GameController<BouncingBall>) {
+    launchInstructions(controller: GameController) {
         const scene = new Scene('Intro', controller);
         controller.scene = scene;
 

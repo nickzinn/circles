@@ -34,11 +34,11 @@ function remove(array:any[], key:any){
     }
 }
 
-export default class Scene<T extends GameInitializer<T>> extends DefaultSprite{
+export default class Scene extends DefaultSprite{
 
 	tileMap?:TileMap;
     viewPort:Point = {x:0, y:0};
-    controller:GameController<T>;
+    controller:GameController;
     debug: boolean = false;
 	wrapAround:boolean = false;
 	sceneSpeed:number = 1.0;
@@ -47,7 +47,7 @@ export default class Scene<T extends GameInitializer<T>> extends DefaultSprite{
 
 	private collisionListeners:Sprite[] = [];
 	
-    constructor(name:string, controller:GameController<T>, modelSize:Size={width:0.0, height:0.0}){
+    constructor(name:string, controller:GameController, modelSize:Size={width:0.0, height:0.0}){
         super(name);
         this.controller = controller;
         this.modelSize = modelSize;

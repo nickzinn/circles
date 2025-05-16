@@ -15,7 +15,7 @@ export interface HandleGameEvent{
 }
 
 
-export class GameController<T extends GameInitializer<T>>{
+export class GameController{
 
     debug: boolean = false;
     keysPressed: Map<string, boolean> = new Map();
@@ -24,17 +24,17 @@ export class GameController<T extends GameInitializer<T>>{
     canvas?:HTMLCanvasElement;
     isShutdown:boolean = false;
     pause:boolean = false;
-    gameInitializer:T;
+    gameInitializer:GameInitializer;
     touchEvent?:Point;
     tileAtlas:TileAtlas;
     
     private _mute:boolean = false;
     private readyCallback?: () => void;
-    private _scene?: Scene<T>;
+    private _scene?: Scene;
     private events:GameEvent[] = [];
     
     private gameEventListeners:HandleGameEvent[] = [];
-    constructor(gameInitializer:T){
+    constructor(gameInitializer:GameInitializer){
         this.gameInitializer = gameInitializer;
         this.soundEffects = new SoundEffects(gameInitializer.preloadSounds || []);
         this.imagePreloader = new ImagePreloader();
@@ -57,7 +57,7 @@ export class GameController<T extends GameInitializer<T>>{
             throw Error("Game Initializer must set scene.");
     }
 
-    set scene(scene: Scene<T>) {
+    set scene(scene: Scene) {
         if (this.debug)
             console.log(`SetScene: ${scene.name}`);
         scene.debug = this.debug;
@@ -66,7 +66,7 @@ export class GameController<T extends GameInitializer<T>>{
         this._scene = scene;
         this.touchEvent = undefined;
     }
-    get scene(): Scene<T> {
+    get scene(): Scene {
         return this._scene!;
     }
 

@@ -2,14 +2,13 @@ import { Point } from "../types/Point";
 import { SpriteSheetBehavior } from "./behaviors/SpriteSheetBehavior";
 import { DefaultSprite } from "./DefaultSprite";
 import Scene from "../Scene";
-import { GameInitializer } from "../GameInitializer";
 
 
-export class AnimatedSprite<T extends GameInitializer<T>, S extends Scene<T>> extends DefaultSprite{
-    scene:S;
+export class AnimatedSprite extends DefaultSprite{
+    scene:Scene;
     spriteSheetBehavior:SpriteSheetBehavior;
 
-    constructor(scene:S, name:string,position:Point ={x:0,y:0},animateOnce:boolean =false){
+    constructor(scene:Scene, name:string,position:Point ={x:0,y:0},animateOnce:boolean =false){
         super(name, position);
         this.scene = scene;
         const spriteSheet = scene.controller.imagePreloader.getSpriteSheetFromCache(name)

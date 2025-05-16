@@ -1,15 +1,16 @@
 import { Sprite, AnimatedSprite, Point, SpriteExpirationBehavior, TrailingEffectBehavior } from "gamelib";
 import { MainGameScene } from "../MainGameScene";
-import { SpaceGame } from "../SpaceGame";
 
 const NAME = "missle";
 
-export class Missle extends AnimatedSprite<SpaceGame, MainGameScene>{
+export class Missle extends AnimatedSprite{
 	owner:Sprite;
 	behavior:SpriteExpirationBehavior;
+	mainGameScene:MainGameScene;
 	constructor(position:Point,angle:number, speed:number,
 			owner:Sprite, scene:MainGameScene, expiration:number) {
 		super(scene,NAME, position);
+		this.mainGameScene = scene;
 		this.owner = owner;
 		this.angle = angle;
 		this.speed = speed;
@@ -24,6 +25,6 @@ export class Missle extends AnimatedSprite<SpaceGame, MainGameScene>{
 		if(otherSprite === this.owner || otherSprite.name === NAME )
 			return;
 		this.isAlive = false;
-		this.scene.missleHit(this.owner,otherSprite);
+		this.mainGameScene.missleHit(this.owner,otherSprite);
 	}
 }

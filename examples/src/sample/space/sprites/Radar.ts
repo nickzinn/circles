@@ -24,7 +24,7 @@ export class Radar extends DefaultSprite {
 		ctx.strokeStyle = 'white';
 		ctx.strokeRect(location.x - 1, location.y - 1, this.size.width + 2, this.size.height + 2);
 		ctx.fillStyle = 'white';
-
+		
 		const scale = this.size.width / this.scene.modelSize.width;
 		for (let sprite of this.scene.sprites) {
 			if (sprite === this) continue;

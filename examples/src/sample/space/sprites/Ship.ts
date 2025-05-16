@@ -1,13 +1,11 @@
 import { Point, AnimatedSprite,addVectors } from "gamelib";
 
-
 import { MainGameScene } from "../MainGameScene";
-import { SpaceGame } from "../SpaceGame";
 import { Missle } from "./Missle";
 
 const MAX_SPEED = 375;
 
-export class Ship extends AnimatedSprite<SpaceGame, MainGameScene> {
+export class Ship extends AnimatedSprite {
 	shipAngle: number;
 	lastMissleFired?: Missle;
 

@@ -2,9 +2,9 @@ import { GameController } from "./GameController";
 import { PreloadImage } from "./util/ImagePreloader";
 import { PreloadSoundEffect } from "./util/SoundEffects";
 
-export interface GameInitializer<T extends GameInitializer<T>>{
+export interface GameInitializer{
 
-    init(controller:GameController<T>):void;
+    init(controller:GameController):void;
 
     preloadImages:PreloadImage[];
 

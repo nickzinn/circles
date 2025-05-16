@@ -2,7 +2,7 @@ import { GameInitializer, GameController } from "gamelib";
 
 import { launchOpeningSequence } from "./OpeningSequence";
 
-export class SpaceGame implements GameInitializer<SpaceGame>{
+export class SpaceGame implements GameInitializer{
 
     highscore: number = 0;
 
@@ -25,8 +25,8 @@ export class SpaceGame implements GameInitializer<SpaceGame>{
         , { name: 'explosionBig', src: '/circles/assets/sounds/big_explosion.wav' }
         , { name: 'newHighScore', src: '/circles/assets/sounds/new_high_score.wav' }];
 
-    init(controller: GameController<SpaceGame>): void {
-        launchOpeningSequence(controller);
+    init(controller: GameController): void {
+        launchOpeningSequence(controller, this);
         //controller.debug = true;
     }
 }
