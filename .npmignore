@@ -1,0 +1,4 @@
+examples/
+test/
+*.log
+*.md

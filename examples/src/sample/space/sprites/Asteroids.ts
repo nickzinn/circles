@@ -1,8 +1,8 @@
+import {Scene, Sprite} from "gamelib";
+import {AnimatedSprite} from "gamelib";
+
 import { SpaceGame } from "../SpaceGame";
-import { Sprite } from "../../../gamelib/sprites/Sprite";
 import { MainGameScene } from "../MainGameScene";
-import { AnimatedSprite } from "../../../gamelib/sprites/AnimatedSprite";
-import Scene from "../../../gamelib/Scene";
 
 export function generateOpenningSequenceAsteroids(scene:Scene<SpaceGame>, n:number):Sprite[]{
     const sz = scene.controller.scene.size;

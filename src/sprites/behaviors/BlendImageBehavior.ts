@@ -12,7 +12,7 @@ const SUPPORTED_BLEND_METHODS = ['lighten','source-over'];
  */
 export class BlendImageBehavior extends TimedBehavior{
     spriteSheet:SpriteSheet;
-    compositeOperation:string;
+    compositeOperation:GlobalCompositeOperation;
     blendAmount:number;
 
     /**
@@ -22,7 +22,7 @@ export class BlendImageBehavior extends TimedBehavior{
      * @param blendMethod 
      * @param blendAmount 
      */
-    constructor(spriteSheet:SpriteSheet, expirationTime:number = -1,  blendAmount =1.0, compositeOperation:string = 'lighten',){
+    constructor(spriteSheet:SpriteSheet, expirationTime:number = -1,  blendAmount =1.0, compositeOperation:GlobalCompositeOperation = 'lighten',){
         super(expirationTime);
         if(!SUPPORTED_BLEND_METHODS.includes(compositeOperation))
             throw Error(`Unsupported composite operation: ${compositeOperation}`);

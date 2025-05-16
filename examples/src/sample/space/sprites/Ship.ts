@@ -1,9 +1,9 @@
+import { Point, AnimatedSprite,addVectors } from "gamelib";
+
+
 import { MainGameScene } from "../MainGameScene";
-import { Point } from "../../../gamelib/types/Point";
-import { AnimatedSprite } from "../../../gamelib/sprites/AnimatedSprite";
 import { SpaceGame } from "../SpaceGame";
 import { Missle } from "./Missle";
-import { addVectors } from "../../../gamelib/types/Vector";
 
 const MAX_SPEED = 375;
 

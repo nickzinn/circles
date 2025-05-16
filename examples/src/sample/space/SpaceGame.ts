@@ -1,5 +1,5 @@
-import { GameInitializer } from "../../gamelib/GameInitializer";
-import { GameController } from "../../gamelib/GameController";
+import { GameInitializer, GameController } from "gamelib";
+
 import { launchOpeningSequence } from "./OpeningSequence";
 
 export class SpaceGame implements GameInitializer<SpaceGame>{

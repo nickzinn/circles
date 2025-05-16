@@ -1,9 +1,8 @@
 import { SpaceGame } from "./SpaceGame";
-import { GameController } from "../../gamelib/GameController";
+import { GameController,TitleSprite, Scene } from "gamelib";
 import { MainGameScene } from "./MainGameScene";
 import { generateOpenningSequenceAsteroids } from "./sprites/Asteroids";
-import { TitleSprite } from "../../gamelib/sprites/TitleSprite";
-import Scene from "../../gamelib/Scene";
+
 const NAME = 'BetweenLevelScene';
 export function launchBetweenLevelsScene(controller:GameController<SpaceGame>, level:number, score:number){
     const scene = new Scene(NAME,controller);
