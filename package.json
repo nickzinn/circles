@@ -1,50 +1,27 @@
 {
-  "name": "circles",
-  "version": "0.2.0",
-  "private": true,
-  "homepage": "https://nickzinn.github.io/circles",
-  "dependencies": {
-    "@material-ui/core": "^4.11.0",
-    "@material-ui/icons": "^4.9.1",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
-    "@types/howler": "^2.2.1",
-    "@types/jest": "^26.0.5",
-    "@types/node": "^14.0.23",
-    "@types/react": "^16.9.43",
-    "@types/react-dom": "^16.9.8",
-    "@types/react-router-dom": "^5.1.5",
-    "gh-pages": "^3.1.0",
-    "howler": "^2.2.0",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "^5.0.1",
-    "typeface-electrolize": "0.0.72",
-    "typescript": "^3.9.7"
-  },
+  "name": "gamelib",
+  "version": "1.0.0",
+  "description": "A browser-based TypeScript library",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "start": "NODE_OPTIONS='--openssl-legacy-provider' react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "build": "tsc",
+    "test": "jest"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/howler": "^2.2.12",
+    "@types/jest": "^29.0.0",
+    "jest": "^29.0.0",
+    "jest-canvas-mock": "^2.5.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "ts-jest": "^29.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.0.0"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "dependencies": {
+    "howler": "^2.2.4"
   }
 }

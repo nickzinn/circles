@@ -1,9 +1,8 @@
-import { GameController } from "../../gamelib/GameController";
+import { GameController, TitleSprite, Scene } from "gamelib";
 import { generateOpenningSequenceAsteroids } from "./sprites/Asteroids";
 import { MainGameScene } from "./MainGameScene";
 import { SpaceGame } from "./SpaceGame";
-import { TitleSprite } from "../../gamelib/sprites/TitleSprite";
-import Scene from "../../gamelib/Scene";
+
 
 
 const NAME = 'OpeningScene';

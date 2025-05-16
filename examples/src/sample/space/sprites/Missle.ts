@@ -1,10 +1,6 @@
-import { Sprite } from "../../../gamelib/sprites/Sprite";
+import { Sprite, AnimatedSprite, Point, SpriteExpirationBehavior, TrailingEffectBehavior } from "gamelib";
 import { MainGameScene } from "../MainGameScene";
-import { AnimatedSprite } from "../../../gamelib/sprites/AnimatedSprite";
 import { SpaceGame } from "../SpaceGame";
-import { Point } from "../../../gamelib/types/Point";
-import { SpriteExpirationBehavior } from "../../../gamelib/sprites/behaviors/SpriteExpirationBehavior";
-import { TrailingEffectBehavior } from "../../../gamelib/sprites/behaviors/TrailingEffectBehavior";
 
 const NAME = "missle";
 

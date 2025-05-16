@@ -1,6 +1,5 @@
-import { DefaultSprite } from "../../../gamelib/sprites/DefaultSprite";
+import { DefaultSprite, Point } from "gamelib";
 import { MainGameScene } from "../MainGameScene";
-import { Point } from "../../../gamelib/types/Point";
 
 
 export class Radar extends DefaultSprite {

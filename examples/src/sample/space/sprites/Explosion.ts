@@ -1,7 +1,6 @@
-import { Point } from "../../../gamelib/types/Point";
-import { Sprite } from "../../../gamelib/sprites/Sprite";
+import {Sprite, AnimatedSprite, Point} from "gamelib";
+
 import { MainGameScene } from "../MainGameScene";
-import { AnimatedSprite } from "../../../gamelib/sprites/AnimatedSprite";
 
 export function newSmallExplosion(scene:MainGameScene, position:Point):Sprite{
     return newExplosion(scene, position, 'explosionSmall');

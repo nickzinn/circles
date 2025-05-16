@@ -1,13 +1,9 @@
-import { GameController } from "../gamelib/GameController";
-import { Point } from "../gamelib/types/Point";
-import Scene from "../gamelib/Scene";
-import { Sprite } from "../gamelib/sprites/Sprite";
-import { Size } from "../gamelib/types/Size";
-import { GameInitializer } from "../gamelib/GameInitializer";
-import { AnimatedSprite } from "../gamelib/sprites/AnimatedSprite";
-import { vectorToXYSpeed } from "../gamelib/types/Vector";
-import { CountdownSprite } from "../gamelib/sprites/CountdownSprite";
-import { TitleSprite } from "../gamelib/sprites/TitleSprite";
+import {
+    GameController, Scene, GameInitializer, Point,
+    vectorToXYSpeed, Sprite, Size, AnimatedSprite,
+    TitleSprite, CountdownSprite
+} from "gamelib";
+
 
 function createWall(position: Point, size: Size, isVertical: boolean): Sprite {
     const wall = {

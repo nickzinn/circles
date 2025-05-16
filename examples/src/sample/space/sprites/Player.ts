@@ -1,10 +1,11 @@
+import { Sprite, BlendImageBehavior } from "gamelib";
+import {centerPosition} from "gamelib";
+
+
 import { Ship } from "./Ship";
 import { MainGameScene } from "../MainGameScene";
-import { Point, pointAsInt } from "../../../gamelib/types/Point";
-import { BlendImageBehavior } from "../../../gamelib/sprites/behaviors/BlendImageBehavior";
-import { Sprite } from "../../../gamelib/sprites/Sprite";
+import { Point, pointAsInt } from "gamelib";
 import { newSmallExplosion } from "./Explosion";
-import { centerPosition } from "../../../gamelib/types/Rectangle";
 
 export class Player extends Ship {
 	shield = 100;

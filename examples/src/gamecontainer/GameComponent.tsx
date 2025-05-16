@@ -6,10 +6,10 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import { PauseCircleOutline, PlayCircleOutline, Refresh, VolumeUp, VolumeOff } from '@material-ui/icons';
-import { GameController} from '../gamelib/GameController';
+import { GameController} from 'gamelib';
 import { CircularProgress, createStyles, Theme, WithStyles, withStyles, Backdrop, Button } from '@material-ui/core';
 import InfoDialog from './InfoDialog';
-import { GameInitializer } from '../gamelib/GameInitializer';
+import { GameInitializer } from 'gamelib';
 
 const styles = (theme: Theme) => createStyles({
   root: {
