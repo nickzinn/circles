@@ -219,7 +219,8 @@ export default class Scene extends DefaultSprite{
 			}
 			ctx.fillStyle = "red"
 			ctx.font ="8px Electrolize";
-			ctx.fillText(`FPS: ${Math.round(1000 / (this.totalTime/ ++this.count))} Alive: ${this.sprites.length} On Screen: ${displayedSprites} Collision Handlers: ${this.collisionListeners.length}` , 10, this.size.height -10);
+			const fps = Math.round(1000 / (this.totalTime/ this.count));
+			ctx.fillText(`FPS: ${fps} Alive: ${this.sprites.length} On Screen: ${displayedSprites} Collision Handlers: ${this.collisionListeners.length}` , 10, this.size.height -10);
 		}
 	}
 

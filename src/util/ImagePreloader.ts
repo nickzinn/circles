@@ -81,6 +81,7 @@ export class ImagePreloader{
             this.nLoads++;
             image.src = des.src;
             image.onload = this._createOnLoad(image, des);
+            image.onerror = this._handleImageError(des);
         }
     }
     private _createOnLoad(image:HTMLImageElement, des:PreloadImage){
@@ -105,6 +106,15 @@ export class ImagePreloader{
             }
         }
     }
+    private _handleImageError(des:PreloadImage){
+        return () => {
+            console.error(`Failed to load image: ${des.name} from ${des.src}`);
+            // Still count this as a completed load so we don't block the callback
+            if(++this.loadsCompleted === this.nLoads && this.loadCallback){
+                this.loadCallback();
+         }
+    };
+}
 }
 
 class SpriteSheetImpl implements SpriteSheet{

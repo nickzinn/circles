@@ -1,25 +1,27 @@
-import * as React from 'react';
-import { BrowserRouter, Routes, Route } from "react-router";
-import {Home} from './Home.tsx';
-import PerformanceTest from './performance/PerformanceTest.tsx';
-import TileMapEditor from './editor/TileMapEditor.tsx';
+import { BrowserRouter, Routes, Route } from 'react-router-dom'; // Fix import from 'react-router' to 'react-router-dom'
+import { Home } from './Home';
+import PerformanceTest from './performance/PerformanceTest';
+import TileMapEditor from './editor/TileMapEditor';
+import About from './About';
+import GameComponent from './GameComponent';
+import { SpaceGame } from './sample/space/SpaceGame';
+import { BouncingBall } from './sample/BouncingBall';
 
-import About from './About.tsx';
+// Create these wrapper components to lazy load game initializers
+const SpaceGameComponent = () => <GameComponent gameInitializer={new SpaceGame()} />;
+const BouncingBallComponent = () => <GameComponent gameInitializer={new BouncingBall()} />;
 
 export default function App() {
   return (
-    <React.StrictMode>
     <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/performance" element={<PerformanceTest />} />
-      <Route path="/editor" element={<TileMapEditor />} />
-{/*       <Route path="/space" element={<App />} />
-      <Route path="/balls" element={<App />} /> 
- */}
-       <Route path="/about" element={<About />} />
-    </Routes>
-  </BrowserRouter>
-    </React.StrictMode>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/performance" element={<PerformanceTest />} />
+        <Route path="/editor" element={<TileMapEditor />} />
+        <Route path="/space" element={<SpaceGameComponent />} />
+        <Route path="/ball" element={<BouncingBallComponent />} />
+        <Route path="/about" element={<About />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
