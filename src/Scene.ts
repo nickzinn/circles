@@ -210,17 +210,25 @@ export default class Scene extends DefaultSprite{
 			sprite.paint(pos, ctx, timeSinceLastAnimation);
 			displayedSprites++;
 		}
+		
+		if(++this.count % 300 === 0){
+			this.totalTime  = timeSinceLastAnimation;
+			this.count =1;
+		}else{
+			this.totalTime +=timeSinceLastAnimation;
+		}
+		const stats = {
+			fps: Math.round(1000 / (this.totalTime/ this.count)),
+			displayedSpriteCount: displayedSprites,
+			spriteCount: this.sprites.length,
+			collisionHandlers: this.collisionListeners.length,
+			totalTime: this.totalTime	
+		};
+		this.controller.performanceStats = stats;
 		if(this.debug){
-			if(++this.count % 300 === 0){
-				this.totalTime  = timeSinceLastAnimation;
-				this.count =1;
-			}else{
-				this.totalTime +=timeSinceLastAnimation;
-			}
 			ctx.fillStyle = "red"
 			ctx.font ="8px Electrolize";
-			const fps = Math.round(1000 / (this.totalTime/ this.count));
-			ctx.fillText(`FPS: ${fps} Alive: ${this.sprites.length} On Screen: ${displayedSprites} Collision Handlers: ${this.collisionListeners.length}` , 10, this.size.height -10);
+			ctx.fillText(`FPS: ${stats.fps} Alive: ${stats.spriteCount} On Screen: ${stats.displayedSpriteCount} Collision Handlers: ${stats.collisionHandlers}` , 10, this.size.height -10);
 		}
 	}
 

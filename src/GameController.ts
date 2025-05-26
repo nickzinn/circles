@@ -14,6 +14,13 @@ export interface HandleGameEvent{
     (event:GameEvent):void;
 }
 
+export interface PerformanceStats{
+    fps: number;
+    spriteCount: number;
+    displayedSpriteCount: number;
+    collisionHandlers: number;
+    totalTime: number;
+}
 
 export class GameController{
 
@@ -27,6 +34,13 @@ export class GameController{
     gameInitializer:GameInitializer;
     touchEvent?:Point;
     tileAtlas:TileAtlas;
+    performanceStats:PerformanceStats = {
+        fps: 0,
+        spriteCount: 0,
+        displayedSpriteCount: 0,
+        collisionHandlers: 0,
+        totalTime: 0
+    };
     
     private _mute:boolean = false;
     private readyCallback?: () => void;
