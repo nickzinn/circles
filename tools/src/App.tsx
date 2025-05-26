@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'; // Fix import from 'react-router' to 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'; // Fix import from 'react-router' to 'react-router-dom'
 import { Home } from './Home';
 import PerformanceTest from './performance/PerformanceTest';
 import TileMapEditor from './editor/TileMapEditor';
@@ -21,6 +21,7 @@ export default function App() {
         <Route path="/space" element={<SpaceGameComponent />} />
         <Route path="/ball" element={<BouncingBallComponent />} />
         <Route path="/about" element={<About />} />
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import CssBaseline from '@mui/material/CssBaseline';
 import Button from '@mui/material/Button';
 
 import { Link } from "react-router";
@@ -51,18 +50,12 @@ export  function Home() {
     return (
 
         <React.Fragment>
-            <CssBaseline />
-
-
-     <AppBar position="absolute" color="default">
-
-
+     <AppBar position="sticky" color="default">
         <Toolbar>
-                        <Typography variant="h6" color="inherit" component="div">
-      Circles
-    </Typography>
+            <Typography variant="h6" color="inherit" component="div">
+                Circles
+            </Typography>
             <Box sx={{ flexGrow: 1 }} />
-
               <Button href="/about">
                 ABOUT
               </Button>
@@ -75,8 +68,8 @@ export  function Home() {
             justifyContent="center" 
             direction="column" 
             sx={{
-                marginTop: 3,
-                marginBottom: 2,
+                marginTop: 1,
+                marginBottom: 1,
                 padding: 2,
                 '@media (min-width: 1200px)': {
                     marginTop: 6,

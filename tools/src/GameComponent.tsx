@@ -14,6 +14,7 @@ import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import { GameController } from 'gamelib';
 import { CircularProgress, Backdrop, Button } from '@mui/material';
 import { GameInitializer } from 'gamelib';
+import Info from '@mui/icons-material/Info';
 
 interface Props<T extends GameInitializer> {
   gameInitializer: T;
@@ -73,6 +74,9 @@ class GameComponentClass<T extends GameInitializer> extends React.Component<Prop
       <React.Fragment>
         <AppBar position="static" sx={{ background: 'transparent', boxShadow: 'none' }}>
           <Toolbar variant="dense">
+            <IconButton edge="start" href='\about' sx={{textTransform: 'none'}} color="primary" aria-label="menu">
+              <Info />
+            </IconButton>
             <Button 
               component={Link} 
               to="/" 
