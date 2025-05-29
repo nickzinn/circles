@@ -29,11 +29,11 @@ export class GameController{
     imagePreloader:ImagePreloader;
     soundEffects:SoundEffects;
     canvas?:HTMLCanvasElement;
-    isShutdown:boolean = false;
     pause:boolean = false;
     gameInitializer:GameInitializer;
     touchEvent?:Point;
     tileAtlas:TileAtlas;
+    animationFrameId?: number;
     performanceStats:PerformanceStats = {
         fps: 0,
         spriteCount: 0,
@@ -100,9 +100,86 @@ export class GameController{
     get mute(){
         return this._mute;
     }
+    shutdown() {
+        if(this.debug)
+            console.log("shutting down game controller.");
+        if (this.animationFrameId !== null) 
+            cancelAnimationFrame(this.animationFrameId!);
+        // Remove all listeners
+        this._shutdownListeners();
+        this._shutdownListeners = () => {};
+    }
+
     private _handleImagesLoaded(){
         const that = this;
         const canvas = this.canvas!;
+        this._setupListeners(canvas);
+
+        let lastTime = 0;
+        this.restart();
+        
+        function loop(time: number) {
+            let timeSinceLastAnimation = (!lastTime) ? 0: time - lastTime;
+            lastTime = time;
+            if(timeSinceLastAnimation > 100 || that.pause){
+                //assume animation thread was paused due to moving off window/browser
+                timeSinceLastAnimation = 0;
+            }
+            const ctx = canvas.getContext('2d')!;
+            const size = {width:canvas.width, height: canvas.height};
+            if (size.width !== window.innerWidth || size.height !== window.innerHeight) {
+                // If window size is changed this is called to resize the canvas
+                // It is not called via the resize event as that can fire to often an
+                // debounce makes it feel sluggish so is called from main loop.
+                that.restart();
+            }
+
+            that._updateScene(ctx, timeSinceLastAnimation);
+
+            that.animationFrameId= requestAnimationFrame(loop);
+        }
+        this.animationFrameId = requestAnimationFrame(loop);
+        this.readyCallback!();
+    }
+
+    private _timer =0;
+    private _updateScene(ctx:CanvasRenderingContext2D,timeSinceLastAnimation:number){
+        this.keysPressed.forEach((value, key) => {
+            if(this.debug){
+                console.log(`KeyPressed Event: ${key}`);
+            }
+            this.scene.handleKeyPressed(key);
+        });
+        if(this.touchEvent){
+            this.scene.handleTouch(this.touchEvent.x,this.touchEvent.y);
+        }
+
+        ctx.save(); //Freeze redraw
+        this.scene.paint({x:0,y:0}, ctx, timeSinceLastAnimation);
+        ctx.restore();//now do redraw
+
+        this.scene.updateModel(timeSinceLastAnimation);
+
+        
+        if(  (this._timer += timeSinceLastAnimation) > 600){
+            window.queueMicrotask( () => { 
+                this.events.forEach( (event) => this.gameEventListeners.forEach( (handler) => handler(event)));
+                this.events = [];
+            });
+            this._timer = 0;
+        }
+        
+        if(!this.scene.isAlive){
+            if(this.debug)
+                console.log(`Scene Killed: ${this.scene.name}`);
+            this.scene.handleKill();
+            if(!this.scene.isAlive)
+                throw Error(`Scene is still dead.  Can't have a dead scene (${this.scene.name})`);
+        }
+        
+    }
+    private _setupListeners(canvas: HTMLCanvasElement) {
+        const that = this;
         const keyDown = (event:KeyboardEvent) => {event.preventDefault(); this.keysPressed.set(event.key, true);};
         const keyUp = (event:KeyboardEvent) => {event.preventDefault(); that.keysPressed.delete(event.key);};
         const mouseDown = (e:MouseEvent) => {
@@ -159,81 +236,17 @@ export class GameController{
         canvas.addEventListener("touchcancel", touchCancel, false);
         canvas.addEventListener("touchstart", touchStart, false);
 
-        let lastTime = 0;
-        this.restart();
-        
-        function loop(time: number) {
-            if(that.isShutdown){
-                if(that.debug)
-                    console.log("shutting down game controller.");
-                window.removeEventListener('keydown', keyDown);
-                window.removeEventListener('keyup',keyUp);
-                canvas.removeEventListener('mousedown', mouseDown);
-                canvas.removeEventListener('mousemove', mouseMove);
-                canvas.removeEventListener('mouseup', mouseUp);
-                canvas.removeEventListener("touchmove", touchMove, false);
-                canvas.removeEventListener("touchend", touchEnd, false);
-                canvas.removeEventListener("touchcancel", touchCancel, false);
-                canvas.removeEventListener("touchstart", touchStart, false);
-                return;
-            }
-            let timeSinceLastAnimation = (!lastTime) ? 0: time - lastTime;
-            lastTime = time;
-            if(timeSinceLastAnimation > 100 || that.pause){
-                //assume animation thread was paused due to moving off window/browser
-                timeSinceLastAnimation = 0;
-            }
-            const ctx = canvas.getContext('2d')!;
-            const size = {width:canvas.width, height: canvas.height};
-            if (size.width !== window.innerWidth || size.height !== window.innerHeight) {
-                // If window size is changed this is called to resize the canvas
-                // It is not called via the resize event as that can fire to often an
-                // debounce makes it feel sluggish so is called from main loop.
-                that.restart();
-            }
-
-            that._updateScene(ctx, timeSinceLastAnimation);
-
-            requestAnimationFrame(loop);
+        this._shutdownListeners = () => {
+            window.removeEventListener('keydown', keyDown);
+            window.removeEventListener('keyup',keyUp);
+            canvas.removeEventListener('mousedown', mouseDown);
+            canvas.removeEventListener('mousemove', mouseMove);
+            canvas.removeEventListener('mouseup', mouseUp);
+            canvas.removeEventListener("touchmove", touchMove, false);
+            canvas.removeEventListener("touchend", touchEnd, false);
+            canvas.removeEventListener("touchcancel", touchCancel, false);
+            canvas.removeEventListener("touchstart", touchStart, false);
         }
-        requestAnimationFrame(loop);
-        this.readyCallback!();
     }
-
-    private _timer =0;
-    private _updateScene(ctx:CanvasRenderingContext2D,timeSinceLastAnimation:number){
-        this.keysPressed.forEach((value, key) => {
-            if(this.debug){
-                console.log(`KeyPressed Event: ${key}`);
-            }
-            this.scene.handleKeyPressed(key);
-        });
-        if(this.touchEvent){
-            this.scene.handleTouch(this.touchEvent.x,this.touchEvent.y);
-        }
-
-        ctx.save(); //Freeze redraw
-        this.scene.paint({x:0,y:0}, ctx, timeSinceLastAnimation);
-        ctx.restore();//now do redraw
-
-        this.scene.updateModel(timeSinceLastAnimation);
-
-        
-        if(  (this._timer += timeSinceLastAnimation) > 600){
-            window.queueMicrotask( () => { 
-                this.events.forEach( (event) => this.gameEventListeners.forEach( (handler) => handler(event)));
-                this.events = [];
-            });
-            this._timer = 0;
-        }
-        
-        if(!this.scene.isAlive){
-            if(this.debug)
-                console.log(`Scene Killed: ${this.scene.name}`);
-            this.scene.handleKill();
-            if(!this.scene.isAlive)
-                throw Error(`Scene is still dead.  Can't have a dead scene (${this.scene.name})`);
-        }
-        
-    }
+    private _shutdownListeners = () => {}
 }

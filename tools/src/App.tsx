@@ -6,6 +6,7 @@ import About from './About';
 import GameComponent from './GameComponent';
 import { SpaceGame } from './sample/space/SpaceGame';
 import { BouncingBall } from './sample/BouncingBall';
+import React from 'react';
 
 // Create these wrapper components to lazy load game initializers
 const SpaceGameComponent = () => <GameComponent gameInitializer={new SpaceGame()} />;
@@ -13,6 +14,7 @@ const BouncingBallComponent = () => <GameComponent gameInitializer={new Bouncing
 
 export default function App() {
   return (
+    <React.StrictMode>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -24,5 +26,6 @@ export default function App() {
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
+    </React.StrictMode>
   );
 }

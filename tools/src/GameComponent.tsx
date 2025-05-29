@@ -66,7 +66,8 @@ class GameComponentClass<T extends GameInitializer> extends React.Component<Prop
   }
 
   componentWillUnmount() {
-    this.gameController.isShutdown = true;
+    this.gameController.shutdown();
+    console.log('GameComponent unmounted');
   }
 
   render() {
