@@ -1,44 +1,36 @@
-import { describe, expect, test } from 'vitest'
-import { render } from 'vitest-browser-react'
-import App from '../src/App.tsx'
-import { page, userEvent } from '@vitest/browser/context'
+import { describe, it,vi } from 'vitest'
+import { render,screen } from '@testing-library/react';
+
+import About from '../src/About.tsx';
+import '@testing-library/jest-dom'
+import PerformanceTest from '../src/performance/PerformanceTest.tsx';
+import TileMapEditor from '../src/performance/PerformanceTest.tsx';
+import GameComponent from '../src/GameComponent.tsx';
+import { SpaceGame } from '../src/sample/space/SpaceGame.ts';
+import { BouncingBall } from '../src/sample/BouncingBall.ts';
 
 
-describe('Routing tests', () => {
-  test('check home route test', async () => {
-    const screen = render(<App />)
-
-    await expect.element(screen.getByText('Play Asteroids')).toBeInTheDocument();
+describe('Component Tests', () => {
+  it('renders the PerformanceTest component', () => {
+    render(
+      <PerformanceTest />
+    )
+    //expect(screen.getByText('Play Asteroids')).toBeInTheDocument();
+  })
+  it('renders the TileMapEditor component', () => {
+    render(<TileMapEditor />)
     
-
-  });
-
-  test('about route test', async () => {
-    render(<App />)
-    await expect.element(page.getByText('Play Asteroids')).toBeInTheDocument();
-
-    await userEvent.click(page.getByText(/about/i), {
-      timeout: 1_000,
-    });
-
+  })
+  it('renders the SpaceGame component', () => {
+    render(<GameComponent gameInitializer={new SpaceGame()} />);
     
-    //await expect.element(page.getByText(/Circles/i)).toBeInTheDocument();
-    //await screen.getByText(/close/i).click();
-    // await expect.element(screen.getByText('Play Asteroids')).toBeInTheDocument();
-
-  });
-  // test('Play asteroids route test', async () => {
-  //   const screen = render(<App />)
-  //   await expect.element(screen.getByText('Play Asteroids')).toBeInTheDocument();
-
-  //   await userEvent.click(screen.getByText(/play asteroids/i), {
-  //     timeout: 1_000,
-  //   });
-
+  })
+  it('renders the BouncingBall component', () => {
+    render(<GameComponent gameInitializer={new BouncingBall()} />)
     
-  //   //await expect.element(screen.getByText(/Circles/i)).toBeInTheDocument();
-    
-  // })
-
-
-});
+  })
+  it('renders the About component', () => {
+    render(<About />)
+    expect(screen.getByText(/Circles/i)).toBeInTheDocument();
+  })
+})

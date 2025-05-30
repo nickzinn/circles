@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from "react-router";
 import './GameComponent.css';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -79,8 +78,7 @@ class GameComponentClass<T extends GameInitializer> extends React.Component<Prop
               <Info />
             </IconButton>
             <Button 
-              component={Link} 
-              to="/" 
+              href="/" 
               sx={{ textTransform: 'none' }}
             >
               <Typography variant="h5" color="primary" sx={{ flexGrow: 1 }}>

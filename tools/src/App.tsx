@@ -17,13 +17,13 @@ export default function App() {
     <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/performance" element={<PerformanceTest />} />
-        <Route path="/editor" element={<TileMapEditor />} />
-        <Route path="/space" element={<SpaceGameComponent />} />
-        <Route path="/ball" element={<BouncingBallComponent />} />
-        <Route path="/about" element={<About />} />
-        <Route path="*" element={<Navigate to="/" />} />
+          <Route path="/" element={<Home />} />
+          <Route path="performance" element={<PerformanceTest />} />
+          <Route path="editor" element={<TileMapEditor />} />
+          <Route path="space" element={<SpaceGameComponent />} />
+          <Route path="ball" element={<BouncingBallComponent />} />
+          <Route path="about" element={<About />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
     </React.StrictMode>
