@@ -1,3 +1,4 @@
 export default [
-  'tools/vitest.config.ts'
+  'tools/vitest.config.ts',
+  'vitest.config.ts'
 ]
