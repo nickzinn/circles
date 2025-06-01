@@ -66,7 +66,11 @@ export default class Scene extends DefaultSprite{
 	
 	addSprite(sprite:Sprite) {
 		this._handleWrap(sprite.position,sprite.size);
-		this._validateSprite(sprite);
+		const error = this._validateSprite(sprite);
+		if(error){
+			console.log(`Sprite position not valid.  Killing spite (${sprite.name}). ${error}`);
+			sprite.isAlive=false;
+		}
 		if(!sprite.zOrder)
 			sprite.zOrder = 0;
 		insert(this.sprites, sprite, (a,b) => a.zOrder! - b.zOrder!);
@@ -247,7 +251,7 @@ export default class Scene extends DefaultSprite{
 	}
 
 	_validateSprite(sprite:Sprite):string|undefined{
-		if(sprite.position.x < 0 || sprite.position.y < 0 )
+		if(sprite.position.x + sprite.size.width < 0 || sprite.position.y + sprite.size.height < 0 )
 			return `Sprite position less 0 (${sprite.position.x}, ${sprite.position.y})`;
 		if(this.modelSize.width !==0){
 			if(sprite.position.x >= this.modelSize.width || sprite.position.y >= this.modelSize.height)
@@ -272,17 +276,17 @@ export default class Scene extends DefaultSprite{
 				width= this.modelSize.width;
 				height = this.modelSize.height;
 			}
-			if (position.x < 0) {
+			if (position.x + size.width < 0) {
 				position.x = width - size.width;
 				wrapped = true;
-			} else if (position.x + size.width > width) {
+			} else if (position.x > width) {
 				position.x = 0;
 				wrapped = true;
 			}
-			if (position.y < 0) {
+			if (position.y + size.height < 0) {
 				position.y = height - size.height;
 				wrapped = true;
-			} else if (position.y + size.height > height) {
+			} else if (position.y  > height) {
 				position.y = 0;
 				wrapped = true;
 			}
