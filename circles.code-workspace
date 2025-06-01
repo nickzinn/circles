@@ -4,5 +4,8 @@
 			"path": "."
 		}
 	],
-	"settings": {    "debug.javascript.usePreview": true},
+	"settings": {
+		"debug.javascript.usePreview": true,
+		"vitest.rootConfig": ""
+	},
 }

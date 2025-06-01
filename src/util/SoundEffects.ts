@@ -13,8 +13,17 @@ export default class SoundEffects {
     private _mute:boolean = false;
 
   constructor (effectPreloads:PreloadSoundEffect[]) {
-    for(let effect of effectPreloads )
-        this.sounds.set(effect.name, new Howl({src:effect.src,preload: true}) );
+    for(let effect of effectPreloads ){
+        const sound = new Howl({
+            src: effect.src,
+            preload: true,
+            onloaderror: (id, error) => {
+                console.error(`Error loading sound "${effect.name}":`, error);
+            }
+        });
+        this.sounds.set(effect.name, sound);
+
+    }
     this.rate = 1.0;
     Howler.volume(.1);
     this._mute = false;
