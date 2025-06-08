@@ -1,9 +1,9 @@
-import { Tile } from "./Tile";
-import { ImagePreloader } from "../util/ImagePreloader";
-import { SpriteSheet } from "../util/SpriteSheet";
-import { Size } from "../types/Size";
-import { EMPTY_TILE } from "./TileMap";
-import { Rectangle } from "../types/Rectangle";
+import { Tile } from "./Tile.js";
+import { ImagePreloader } from "../util/ImagePreloader.js";
+import { SpriteSheet } from "../util/SpriteSheet.js";
+import { Size } from "../types/Size.js";
+import { EMPTY_TILE } from "./TileMap.js";
+import { Rectangle } from "../types/Rectangle.js";
 
 class StaticTile implements Tile{
     name:string;

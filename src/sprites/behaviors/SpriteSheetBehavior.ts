@@ -1,7 +1,7 @@
-import { Behavior } from "./Behavior";
-import { Point } from "../../types/Point";
-import { SpriteSheet } from "../../util/SpriteSheet";
-import { DefaultSprite } from "../DefaultSprite";
+import { Behavior } from "./Behavior.js";
+import { Point } from "../../types/Point.js";
+import { SpriteSheet } from "../../util/SpriteSheet.js";
+import { DefaultSprite } from "../DefaultSprite.js";
 
 export class SpriteSheetBehavior implements Behavior{
     spriteSheet:SpriteSheet;

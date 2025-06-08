@@ -1,12 +1,10 @@
-import { GameController } from "./GameController";
-import { DefaultSprite } from "./sprites/DefaultSprite";
-import { Point, pointAsInt } from "./types/Point";
-import { Sprite } from "./sprites/Sprite";
-import { Size } from "./types/Size";
-import { Vector } from "./types/Vector";
-import { union, Rectangle, intersects, pointInRect } from "./types/Rectangle";
-import { GameInitializer } from "./GameInitializer";
-import { TileMap } from "./tiles/TileMap";
+import { GameController } from "./GameController.js";
+import { DefaultSprite } from "./sprites/DefaultSprite.js";
+import { Point, pointAsInt } from "./types/Point.js";
+import { Sprite } from "./sprites/Sprite.js";
+import { Size } from "./types/Size.js";
+import { union, Rectangle, intersects, pointInRect } from "./types/Rectangle.js";
+import { TileMap } from "./tiles/TileMap.js";
 
 function insert<T>(array:T[], value:T, comparator: (a:T, b:T)=>number){
 	let low =0;

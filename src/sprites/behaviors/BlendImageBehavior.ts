@@ -1,8 +1,8 @@
-import { Point } from "../../types/Point";
-import { centerPosition} from "../../types/Rectangle";
-import { SpriteSheet } from "../../util/SpriteSheet";
-import { DefaultSprite } from "../DefaultSprite";
-import { TimedBehavior } from "./TimedBehavior";
+import { Point } from "../../types/Point.js";
+import { centerPosition} from "../../types/Rectangle.js";
+import { SpriteSheet } from "../../util/SpriteSheet.js";
+import { DefaultSprite } from "../DefaultSprite.js";
+import { TimedBehavior } from "./TimedBehavior.js";
 
 
 const SUPPORTED_BLEND_METHODS = ['lighten','source-over'];

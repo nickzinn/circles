@@ -1,4 +1,4 @@
-import { Vector } from "./Vector";
+import { Vector } from "./Vector.js";
 
 export class PolarVector {
     private readonly _speed: number;

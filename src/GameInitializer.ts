@@ -1,6 +1,6 @@
-import { GameController } from "./GameController";
-import { PreloadImage } from "./util/ImagePreloader";
-import { PreloadSoundEffect } from "./util/SoundEffects";
+import { GameController } from "./GameController.js";
+import { PreloadImage } from "./util/ImagePreloader.js";
+import { PreloadSoundEffect } from "./util/SoundEffects.js";
 
 export interface GameInitializer{
 

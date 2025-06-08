@@ -1,1 +1,1 @@
-export * from './SpriteSheet'
+export * from './SpriteSheet.js'

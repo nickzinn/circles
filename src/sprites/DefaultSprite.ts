@@ -1,8 +1,8 @@
-import { Point } from "../types/Point";
-import { Sprite } from "./Sprite";
-import { Size } from "../types/Size";
-import { Behavior } from "./behaviors/Behavior";
-import { Vector } from "../types/Vector";
+import { Point } from "../types/Point.js";
+import { Sprite } from "./Sprite.js";
+import { Size } from "../types/Size.js";
+import { Behavior } from "./behaviors/Behavior.js";
+import { Vector } from "../types/Vector.js";
 
 export class DefaultSprite implements Sprite{
     name:string;

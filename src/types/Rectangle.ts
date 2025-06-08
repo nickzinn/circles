@@ -1,5 +1,5 @@
-import { Point } from "./Point";
-import { Size } from "./Size";
+import { Point } from "./Point.js";
+import { Size } from "./Size.js";
 
 export interface Rectangle{
     position:Point;

@@ -1,5 +1,5 @@
-import { Behavior } from "./Behavior";
-import { Sprite } from "../Sprite";
+import { Behavior } from "./Behavior.js";
+import { Sprite } from "../Sprite.js";
 
 export class SpriteExpirationBehavior implements Behavior{
 	age = 0;

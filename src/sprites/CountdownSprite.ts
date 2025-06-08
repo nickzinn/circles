@@ -1,6 +1,6 @@
 
-import { DefaultSprite } from "./DefaultSprite";
-import { Point } from "../types/Point";
+import { DefaultSprite } from "./DefaultSprite.js";
+import { Point } from "../types/Point.js";
 
 export class CountdownSprite extends DefaultSprite{
     timeInMillis:number;

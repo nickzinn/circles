@@ -1,7 +1,7 @@
-import { Size } from "../types/Size";
-import { Point } from "../types/Point";
-import { Camera } from "../types/Camera";
-import { TileAtlas } from "./TileAtlas";
+import { Size } from "../types/Size.js";
+import { Point } from "../types/Point.js";
+import { Camera } from "../types/Camera.js";
+import { TileAtlas } from "./TileAtlas.js";
 import { Tile } from "./Tile";
 
 export const EMPTY_TILE = -1;
