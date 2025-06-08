@@ -1,4 +1,4 @@
-import {Scene, Sprite} from "gamelib";
+import {PolarVector, Scene, Sprite} from "gamelib";
 import {AnimatedSprite} from "gamelib";
 
 export function generateOpenningSequenceAsteroids(scene:Scene, n:number):Sprite[]{
@@ -8,8 +8,8 @@ export function generateOpenningSequenceAsteroids(scene:Scene, n:number):Sprite[
     const sprites:Sprite[] = [];
     for(let x=0; x<n;x++){
         const a = new AnimatedSprite(scene, 'asteroid', {x: rand(sz.width-min, min),y:rand(sz.height-min, min)});
-        a.speed = Math.random() * 200+50;
-        a.angle = Math.random() * Math.PI *2;
+        const v = new PolarVector(Math.random() * 200+50, Math.random() * Math.PI *2);
+        a.vector = v.toVector();
         a.zOrder = -1;
         a.canCollide = true;
         a.size = {width: a.size.width, height: a.size.height};
@@ -22,7 +22,7 @@ export function generateGameAsteroids(scene:Scene, n:number ):Sprite[]{
     roids.forEach( (a) => {
         a.position.x = Math.random() * scene.modelSize.width;
         a.position.y = 0;
-        a.speed = Math.random() * 100 +50;
+        a.vector = a.vector.toPolar().withSpeed(Math.random() * 100 + 50).toVector();
     });
     return roids;
 }

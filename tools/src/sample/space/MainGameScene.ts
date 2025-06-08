@@ -50,8 +50,6 @@ export class MainGameScene extends Scene {
 		this.alienCount = level;
 		for (let i = 0; i < this.alienCount; i++)
 			this.addSprite(new Enemy(this));
-
-		this.speed = 1;
 	}
 
 	fire(ship: Ship) {
@@ -72,7 +70,7 @@ export class MainGameScene extends Scene {
 			expiration = 1000;
 			this.controller.soundEffects.play("alienMissle");
 		}
-		const missle = new Missle(pos, ship.shipAngle, ship.speed + 50, ship, this, expiration);
+		const missle = new Missle(pos, ship.shipAngle, ship.vector.toPolar().speed + 50, ship, this, expiration);
 		ship.lastMissleFired = missle;
 		this.addSprite(missle);
 	}

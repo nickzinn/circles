@@ -1,7 +1,8 @@
-import { Point, AnimatedSprite,addVectors } from "gamelib";
+import { Point, AnimatedSprite } from "gamelib";
 
 import { MainGameScene } from "../MainGameScene";
 import { Missle } from "./Missle";
+import { PolarVector } from "../../../../../dist/types/PolarVector";
 
 const MAX_SPEED = 375;
 
@@ -12,8 +13,6 @@ export class Ship extends AnimatedSprite {
 	constructor(scene: MainGameScene, position: Point, name: string) {
 		super(scene, name, position);
 		this.shipAngle = 0;
-		this.speed = 0;
-		this.angle = 0;
 		this.acceleration = -.1;
 		this.canCollide = true;
 		this.spriteSheetBehavior.getAngle = () => this.shipAngle;
@@ -28,8 +27,10 @@ export class Ship extends AnimatedSprite {
 	}
 
 	move(amount: number = 15.0) {
-		const newVector = addVectors(this, { speed: amount, angle: this.shipAngle });
-		this.angle = newVector.angle;
-		this.speed = Math.min(newVector.speed, MAX_SPEED);
+
+		const addVector = new PolarVector(amount, this.shipAngle);
+		const newVector = this.vector.add(addVector.toVector()).toPolar();
+
+		this.vector = newVector.withSpeed(Math.min(newVector.speed, MAX_SPEED)).toVector();
 	}
 }

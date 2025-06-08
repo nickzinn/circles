@@ -2,15 +2,14 @@ import { Point } from "../types/Point";
 import { Sprite } from "./Sprite";
 import { Size } from "../types/Size";
 import { Behavior } from "./behaviors/Behavior";
+import { Vector } from "../types/Vector";
 
 export class DefaultSprite implements Sprite{
     name:string;
     position:Point;
     size:Size;
-    isAlive:boolean = true;
-	
-    speed:number = 0.0;
-    angle:number = 0.0;
+    isAlive:boolean = true;	
+    vector:Vector = new Vector(0.0, 0.0);
     acceleration:number = 0.0;
 	canCollide:boolean = false;
     isFixedPosition:boolean = false;

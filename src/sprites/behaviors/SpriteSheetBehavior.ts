@@ -46,6 +46,6 @@ export class SpriteSheetBehavior implements Behavior{
 		}
 	}
 	getAngle(sprite:DefaultSprite){
-		return (sprite.angle) ? sprite.angle : 0;
+		return sprite.vector.toPolar().angle;
 	}
 }

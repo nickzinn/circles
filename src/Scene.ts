@@ -3,9 +3,9 @@ import { DefaultSprite } from "./sprites/DefaultSprite";
 import { Point, pointAsInt } from "./types/Point";
 import { Sprite } from "./sprites/Sprite";
 import { Size } from "./types/Size";
+import { Vector } from "./types/Vector";
 import { union, Rectangle, intersects, pointInRect } from "./types/Rectangle";
 import { GameInitializer } from "./GameInitializer";
-import { vectorToXYSpeed } from "./types/Vector";
 import { TileMap } from "./tiles/TileMap";
 
 function insert<T>(array:T[], value:T, comparator: (a:T, b:T)=>number){
@@ -119,9 +119,9 @@ export default class Scene extends DefaultSprite{
 			let newRect;
 			if (!sprite.isFixedPosition) {
 				const oldRect = {position:pointAsInt(sprite.position), size:sprite.size};
-				const pointSpeed = vectorToXYSpeed(sprite);
-				let newPosition = {x:sprite.position.x + pointSpeed.x * dx * this.sceneSpeed,
-								   y:sprite.position.y + pointSpeed.y * dx * this.sceneSpeed};
+
+				let newPosition = {x:sprite.position.x + sprite.vector.x * dx * this.sceneSpeed,
+								   y:sprite.position.y + sprite.vector.y * dx * this.sceneSpeed};
 				let wrapped = this._handleWrap(newPosition, sprite.size);
 				sprite.priorPosition = oldRect.position;
 				sprite.position = newPosition;
@@ -131,12 +131,15 @@ export default class Scene extends DefaultSprite{
 					newRect = union(oldRect, newRect);
 				
 				if (sprite.acceleration) {
+					let polarVector = sprite.vector.toPolar();
+					
 					if (Math.sign(sprite.acceleration
-							+ sprite.speed) !== Math.sign(sprite
+							+ polarVector.speed) !== Math.sign(polarVector
 							.speed))
-						sprite.speed = 0;
+						polarVector = polarVector.withSpeed(0);
 					else
-						sprite.speed = sprite.speed + sprite.acceleration;
+						polarVector = polarVector.withSpeed( polarVector.speed + sprite.acceleration);
+					sprite.vector = polarVector.toVector();
 				}
 			}
 
@@ -261,9 +264,8 @@ export default class Scene extends DefaultSprite{
 		}
 		if(sprite.size.width <=0 || sprite.size.height <= 0)
 			return `Sprite size too small (${sprite.size.width}, ${sprite.size.height})`;
-		if( (sprite.speed !== undefined &&  sprite.angle === undefined) 
-			|| (sprite.speed === undefined &&  sprite.angle !== undefined))
-			return `Either speed(${sprite.speed}) and angle(${sprite.angle}) are both defined or both undefined.`;
+		if( sprite.vector.x === undefined || sprite.vector.y === undefined)
+			return `X speed(${sprite.vector.x}) and y speed(${sprite.vector.y}) need to be both defined.`;
 		return undefined;
 	}
 	_handleWrap(position:Point, size:Size):boolean{

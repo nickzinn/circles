@@ -1,10 +1,13 @@
 import { Sprite } from "./Sprite";
 import { Point } from "../types/Point";
 import { Size } from "../types/Size";
+import { Vector } from "../types/Vector";
 
 export class TitleSprite implements Sprite{
     name: string = 'Title';
+
     position: Point = {x:0,y:0};
+    vector:Vector = new Vector(0.0, 0.0);
     size: Size = {width:1, height:1};
     speed =0;
     angle =0;
