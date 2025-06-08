@@ -1,8 +1,11 @@
 import {
     GameController, Scene, GameInitializer, Point,
-    vectorToXYSpeed, Sprite, Size, AnimatedSprite,
-    TitleSprite, CountdownSprite
+    Sprite, Size, AnimatedSprite,
+    TitleSprite, CountdownSprite,
+    Vector,
+    PolarVector
 } from "gamelib";
+
 
 
 function createWall(position: Point, size: Size, isVertical: boolean): Sprite {
@@ -12,28 +15,27 @@ function createWall(position: Point, size: Size, isVertical: boolean): Sprite {
         size,
         isAlive: true,
         canCollide: false,
-        speed: 0,
-        angle: 0,
+        vector: new Vector(0, 0),
         paint: function (_location: Point, ctx: CanvasRenderingContext2D, timeSinceLastAnimation: number): void {
             ctx.fillStyle = "	rgb(50,50,50)";
             ctx.fillRect(position.x, position.y, size.width, size.height);
         },
         handleCollision(otherSprite: Sprite): void {
-            const speed = vectorToXYSpeed(otherSprite);
+            const polar = otherSprite.vector.toPolar();
             if (isVertical) {
-                if (speed.x > 0)
+                if (otherSprite.vector.x > 0)
                     otherSprite.position.x = this.position.x - otherSprite.size.width;
                 else
                     otherSprite.position.x = this.position.x + this.size.width;
                 otherSprite.position.y = otherSprite.priorPosition!.y;
-                otherSprite.angle = Math.PI - otherSprite.angle + (Math.random() - .5) * .2;
+                otherSprite.vector = polar.withAngle(Math.PI - polar.angle + (Math.random() - .5) * .2).toVector();
             } else {
-                if (speed.y > 0)
+                if (otherSprite.vector.y > 0)
                     otherSprite.position.y = this.position.y - otherSprite.size.height;
                 else
                     otherSprite.position.y = this.position.y + this.size.height;
                 otherSprite.position.x = otherSprite.priorPosition!.x;
-                otherSprite.angle = -1.0 * otherSprite.angle + (Math.random() - .5) * .2;
+                otherSprite.vector =  polar.withAngle(-1.0 * polar.angle + (Math.random() - .5) * .2).toVector();
             }
         }
     };
@@ -86,8 +88,8 @@ export class BouncingBall implements GameInitializer{
             const radius = ball.size.width / 2;
             ball.position = randPosition(radius);
             ball.isAlive = true;
-            ball.speed = Math.random() * 250 + 100;
-            ball.angle = Math.random() * Math.PI * 2;
+            const polar = new PolarVector(Math.random() * 250 + 100, Math.random() * Math.PI * 2);
+            ball.vector = polar.toVector();
             ball.zOrder = Math.random() * 10 - 5;
             ball.canCollide = true;
             ball.size = { width: ball.size.width - 2, height: ball.size.height - 2 };
@@ -95,8 +97,8 @@ export class BouncingBall implements GameInitializer{
         }
         const countdown = new CountdownSprite(15000);
         countdown.position = randPosition(countdown.size.width);
-        countdown.speed = 500;
-        countdown.angle = Math.random() * Math.PI * 2;
+        const polar = new PolarVector(100, Math.random() * Math.PI * 2);
+        countdown.vector = polar.toVector();
         countdown.zOrder = 1;
         countdown.canCollide = true;
         countdown.handleKill = () => this.launchGameOverScene(controller, score);

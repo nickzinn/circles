@@ -1,5 +1,6 @@
 import { Sprite, AnimatedSprite, Point, SpriteExpirationBehavior, TrailingEffectBehavior } from "gamelib";
 import { MainGameScene } from "../MainGameScene";
+import { PolarVector } from "../../../../../dist/types/PolarVector";
 
 const NAME = "missle";
 
@@ -12,8 +13,7 @@ export class Missle extends AnimatedSprite{
 		super(scene,NAME, position);
 		this.mainGameScene = scene;
 		this.owner = owner;
-		this.angle = angle;
-		this.speed = speed;
+		this.vector = new PolarVector(speed, angle).toVector();
 		this.acceleration = 10;
 		this.canCollide = true;
 		this.behavior =new SpriteExpirationBehavior(expiration);

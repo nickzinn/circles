@@ -3,13 +3,12 @@ import { Size } from "../types/Size";
 import { Vector } from "../types/Vector";
 import { Rectangle } from "../types/Rectangle";
 
-export interface Sprite extends Vector, Rectangle{
+export interface Sprite extends Rectangle{
     name:string;
     position:Point;
     size:Size;
     isAlive:boolean;
-    speed: number;
-    angle: number;
+    vector:Vector;
     acceleration?: number;
     priorPosition?:Point;
     zOrder?:number

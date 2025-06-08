@@ -6,6 +6,8 @@
 	],
 	"settings": {
 		"debug.javascript.usePreview": true,
-		"vitest.rootConfig": ""
+		"vitest.rootConfig": "",
+		"typescript.tsdk": "node_modules/typescript/lib",
+		"typescript.tsserver.experimental.enableProjectDiagnostics": true
 	},
 }

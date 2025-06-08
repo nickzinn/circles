@@ -1,3 +1,5 @@
+
+import { PolarVector } from "gamelib";
 import { MainGameScene } from "../MainGameScene";
 import { Ship } from "./Ship";
 
@@ -7,8 +9,7 @@ export class Enemy extends Ship {
     constructor(scene:MainGameScene) {
         super(scene, {x:Math.floor(Math.random() * scene.modelSize.width), y:50}, "enemy");
         this.mainGameScene = scene;
-        this.speed = 100;
-        this.angle = Math.random();
+        this.vector = new PolarVector(100, Math.random()).toVector();
         this.shipAngle = 0;
     }
 
@@ -37,6 +38,8 @@ export class Enemy extends Ship {
 
     move(amount:number = 12.0) {
         super.move(amount);
-    	this.speed = Math.min(this.speed, 300);
+
+        const polar = this.vector.toPolar();
+        this.vector = polar.withSpeed(Math.min(polar.speed, 300)).toVector();
 	}
 }
