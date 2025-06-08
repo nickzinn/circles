@@ -1,6 +1,6 @@
-import { TimedBehavior } from "./TimedBehavior";
-import { DefaultSprite } from "../DefaultSprite";
-import { Point } from "../../types/Point";
+import { TimedBehavior } from "./TimedBehavior.js";
+import { DefaultSprite } from "../DefaultSprite.js";
+import { Point } from "../../types/Point.js";
 
 
 export class FadeInBehavior extends TimedBehavior{

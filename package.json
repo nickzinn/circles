@@ -1,7 +1,8 @@
 {
   "name": "gamelib",
   "version": "1.0.0",
-  "description": "A browser-based TypeScript library",
+  "description": "A browser-based TypeScript library for game development",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {

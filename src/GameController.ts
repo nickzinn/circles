@@ -1,9 +1,9 @@
-import Scene from './Scene';
-import { ImagePreloader } from './util/ImagePreloader';
-import { GameInitializer } from './GameInitializer';
-import SoundEffects from './util/SoundEffects';
-import { Point } from './types/Point';
-import { TileAtlas } from './tiles/TileAtlas';
+import Scene from './Scene.js';
+import { ImagePreloader } from './util/ImagePreloader.js';
+import { GameInitializer } from './GameInitializer.js';
+import SoundEffects from './util/SoundEffects.js';
+import { Point } from './types/Point.js';
+import { TileAtlas } from './tiles/TileAtlas.js';
 
 export interface GameEvent{
     type:string;

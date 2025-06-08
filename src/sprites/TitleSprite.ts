@@ -1,7 +1,7 @@
-import { Sprite } from "./Sprite";
-import { Point } from "../types/Point";
-import { Size } from "../types/Size";
-import { Vector } from "../types/Vector";
+import { Sprite } from "./Sprite.js";
+import { Point } from "../types/Point.js";
+import { Size } from "../types/Size.js";
+import { Vector } from "../types/Vector.js";
 
 export class TitleSprite implements Sprite{
     name: string = 'Title';

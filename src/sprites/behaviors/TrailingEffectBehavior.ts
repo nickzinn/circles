@@ -1,6 +1,6 @@
-import { Behavior } from "./Behavior";
-import { DefaultSprite } from "../DefaultSprite";
-import { Point, pointEquals } from "../../types/Point";
+import { Behavior } from "./Behavior.js";
+import { DefaultSprite } from "../DefaultSprite.js";
+import { Point, pointEquals } from "../../types/Point.js";
 
 
 export class TrailingEffectBehavior implements Behavior{

@@ -1,6 +1,5 @@
-import { Point } from "../types/Point";
-import { Size } from "../types/Size";
-import { Rectangle } from "../types/Rectangle";
+import { Size } from "../types/Size.js";
+import { Rectangle } from "../types/Rectangle.js";
 
 
 /**

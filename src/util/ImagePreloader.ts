@@ -1,6 +1,6 @@
-import { SpriteSheet } from "./SpriteSheet";
-import { Size } from "../types/Size";
-import { Rectangle } from "../types/Rectangle";
+import { SpriteSheet } from "./SpriteSheet.js";
+import { Size } from "../types/Size.js";
+import { Rectangle } from "../types/Rectangle.js";
 
 export interface PreloadImage{
     name:string;

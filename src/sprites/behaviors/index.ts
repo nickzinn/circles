@@ -1,10 +1,10 @@
 
 // Behaviors
-export { BlendImageBehavior } from "./BlendImageBehavior";
-export { FadeOutBehavior } from './FadeOutBehavior';
-export { FadeInBehavior } from './FadeInBehavior';
-export { SpriteExpirationBehavior } from "./SpriteExpirationBehavior";
-export { SpriteSheetBehavior } from "./SpriteSheetBehavior";
-export { TrailingEffectBehavior } from "./TrailingEffectBehavior";
-export { Behavior } from "./Behavior";
-export { TimedBehavior } from "./TimedBehavior";
+export { BlendImageBehavior } from "./BlendImageBehavior.js";
+export { FadeOutBehavior } from './FadeOutBehavior.js';
+export { FadeInBehavior } from './FadeInBehavior.js';
+export { SpriteExpirationBehavior } from "./SpriteExpirationBehavior.js";
+export { SpriteSheetBehavior } from "./SpriteSheetBehavior.js";
+export { TrailingEffectBehavior } from "./TrailingEffectBehavior.js";
+export { Behavior } from "./Behavior.js";
+export { TimedBehavior } from "./TimedBehavior.js";

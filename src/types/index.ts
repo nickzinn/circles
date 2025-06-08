@@ -1,8 +1,8 @@
-export * from './Point';
-export {pointAsInt} from './Point';
-export * from './Size';
-export * from './Vector';
-export * from './PolarVector';
-export * from './Rectangle';
-export {union, intersects, centerPosition, centerPositionAsInt} from './Rectangle';
-export * from './Camera';
+export * from './Point.js';
+export {pointAsInt} from './Point.js';
+export * from './Size.js';
+export * from './Vector.js';
+export * from './PolarVector.js';
+export * from './Rectangle.js';
+export {union, intersects, centerPosition, centerPositionAsInt} from './Rectangle.js';
+export * from './Camera.js';

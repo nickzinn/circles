@@ -1,7 +1,7 @@
-import { Point } from "../types/Point";
-import { Size } from "../types/Size";
-import { Vector } from "../types/Vector";
-import { Rectangle } from "../types/Rectangle";
+import { Point } from "../types/Point.js";
+import { Size } from "../types/Size.js";
+import { Vector } from "../types/Vector.js";
+import { Rectangle } from "../types/Rectangle.js";
 
 export interface Sprite extends Rectangle{
     name:string;

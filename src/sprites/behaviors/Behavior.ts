@@ -1,5 +1,5 @@
-import { Point } from "../../types/Point";
-import { DefaultSprite } from "../DefaultSprite";
+import { Point } from "../../types/Point.js";
+import { DefaultSprite } from "../DefaultSprite.js";
 
 export interface Behavior {
 

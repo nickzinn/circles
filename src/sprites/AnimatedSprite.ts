@@ -1,7 +1,7 @@
-import { Point } from "../types/Point";
-import { SpriteSheetBehavior } from "./behaviors/SpriteSheetBehavior";
-import { DefaultSprite } from "./DefaultSprite";
-import Scene from "../Scene";
+import { Point } from "../types/Point.js";
+import { SpriteSheetBehavior } from "./behaviors/SpriteSheetBehavior.js";
+import { DefaultSprite } from "./DefaultSprite.js";
+import Scene from "../Scene.js";
 
 
 export class AnimatedSprite extends DefaultSprite{

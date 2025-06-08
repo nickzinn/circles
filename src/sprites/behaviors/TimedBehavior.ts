@@ -1,5 +1,5 @@
-import { Behavior } from "./Behavior";
-import { DefaultSprite } from "../DefaultSprite";
+import { Behavior } from "./Behavior.js";
+import { DefaultSprite } from "../DefaultSprite.js";
 
 export class TimedBehavior implements Behavior{
 	age = 0;

@@ -1,9 +1,8 @@
-export { GameController } from './GameController';
-export { default as Scene } from './Scene';
-export * from './GameInitializer';
+export { GameController } from './GameController.js';
+export { default as Scene } from './Scene.js';
+export * from './GameInitializer.js';
 
-export * from './types'
-export * from './util';
-export * from './sprites';
-export * from './sprites/behaviors';
-
+export * from './types/index.js';
+export * from './util/index.js';
+export * from './sprites/index.js';
+export * from './sprites/behaviors/index.js';
