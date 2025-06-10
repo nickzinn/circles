@@ -1,5 +1,6 @@
 import { Point } from "../../types/Point.js";
 import { DefaultSprite } from "../DefaultSprite.js";
+import { Sprite } from "../Sprite.js";
 
 export interface Behavior {
 
@@ -14,4 +15,6 @@ export interface Behavior {
 	updateModel?(sprite:DefaultSprite, timeSinceLastUpdate:number):void;
 
     handleKill?(sprite:DefaultSprite):void;
+
+	handleCollision?(sprite:DefaultSprite, otherSprite:Sprite):void;
 }

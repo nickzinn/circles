@@ -3,43 +3,24 @@ import {
     Sprite, Size, AnimatedSprite,
     TitleSprite, CountdownSprite,
     Vector,
-    PolarVector
+    PolarVector,
+    Behavior,centerPosition,
+    DefaultSprite,WallBounceBehavior, BounceBehavior
 } from "gamelib";
 
-
-
-function createWall(position: Point, size: Size, isVertical: boolean): Sprite {
-    const wall = {
-        name: 'wall',
-        position,
-        size,
-        isAlive: true,
-        canCollide: false,
-        vector: new Vector(0, 0),
-        paint: function (_location: Point, ctx: CanvasRenderingContext2D, timeSinceLastAnimation: number): void {
-            ctx.fillStyle = "	rgb(50,50,50)";
-            ctx.fillRect(position.x, position.y, size.width, size.height);
-        },
-        handleCollision(otherSprite: Sprite): void {
-            const polar = otherSprite.vector.toPolar();
-            if (isVertical) {
-                if (otherSprite.vector.x > 0)
-                    otherSprite.position.x = this.position.x - otherSprite.size.width;
-                else
-                    otherSprite.position.x = this.position.x + this.size.width;
-                otherSprite.position.y = otherSprite.priorPosition!.y;
-                otherSprite.vector = polar.withAngle(Math.PI - polar.angle + (Math.random() - .5) * .2).toVector();
-            } else {
-                if (otherSprite.vector.y > 0)
-                    otherSprite.position.y = this.position.y - otherSprite.size.height;
-                else
-                    otherSprite.position.y = this.position.y + this.size.height;
-                otherSprite.position.x = otherSprite.priorPosition!.x;
-                otherSprite.vector =  polar.withAngle(-1.0 * polar.angle + (Math.random() - .5) * .2).toVector();
-            }
-        }
-    };
-    return wall;
+class Wall extends DefaultSprite {
+    constructor(position: Point, size: Size, isVertical: boolean) {
+        super('wall', position, size);
+        this.isAlive = true;
+        this.canCollide = false;
+        this.vector = new Vector(0, 0);
+        this.isFixedPosition = true;
+        this.addBehavior(new WallBounceBehavior());
+    }
+    paint(_location: Point, ctx: CanvasRenderingContext2D, _timeSinceLastAnimation: number): void {
+        ctx.fillStyle = "rgb(50,50,50)";
+        ctx.fillRect(this.position.x, this.position.y, this.size.width, this.size.height);
+    }
 }
 
 export class BouncingBall implements GameInitializer{
@@ -76,26 +57,38 @@ export class BouncingBall implements GameInitializer{
         const sz = scene.size;
         const wallSize = 4;
         //create walls
-        scene.addSprite(createWall({ x: 0, y: 0 }, { width: sz.width - wallSize, height: wallSize }, false));
-        scene.addSprite(createWall({ x: 0, y: sz.height - wallSize }, { width: sz.width, height: wallSize }, false));
-        scene.addSprite(createWall({ x: 0, y: 0 }, { width: wallSize, height: sz.height - wallSize }, true));
-        scene.addSprite(createWall({ x: sz.width - wallSize, y: 0 }, { width: wallSize, height: sz.height - wallSize }, true));
+        scene.addSprite(new Wall({ x: 0, y: 0 }, { width: sz.width - wallSize, height: wallSize }, false));
+        scene.addSprite(new Wall({ x: 0, y: sz.height - wallSize }, { width: sz.width, height: wallSize }, false));
+        scene.addSprite(new Wall({ x: 0, y: 0 }, { width: wallSize, height: sz.height - wallSize }, true));
+        scene.addSprite(new Wall({ x: sz.width - wallSize, y: 0 }, { width: wallSize, height: sz.height - wallSize }, true));
 
         const rand = (min: number, max: number) => Math.random() * (max - min) + min;
         const randPosition = (r: number) => ({ x: rand(sz.width - (r + wallSize) * 2, r + wallSize), y: rand(sz.height - (r + wallSize) * 2, r + wallSize) });
-        for (let x = 0; x < 30; x++) {
+        const nBalls = 300;
+        for (let x = 0; x < nBalls; x++) {
             const ball = new AnimatedSprite(scene, 'ball');
             const radius = ball.size.width / 2;
-            ball.position = randPosition(radius);
+            //ball.position = randPosition(radius);
+            ball.position = { x: randPosition(radius).x, y:sz.height/2 };
             ball.isAlive = true;
-            const polar = new PolarVector(Math.random() * 250 + 100, Math.random() * Math.PI * 2);
+            //const polar = new PolarVector(Math.random() * 250 + 100, Math.random() * Math.PI * 2);
+            const polar = new PolarVector(70,  Math.PI  * (  (x==0) ? 2 : -2 ) * Math.random() );
             ball.vector = polar.toVector();
             ball.zOrder = Math.random() * 10 - 5;
             ball.canCollide = true;
-            ball.size = { width: ball.size.width - 2, height: ball.size.height - 2 };
+            if(x< nBalls-10){
+                ball.size = { width: 20, height: 20 };
+                ball.mass = 2
+            }else{
+                ball.size = { width: 60, height: 60 };
+                ball.mass = 18;
+            }
+           
+            ball.circularCollision = true;
+            ball.addBehavior(new BounceBehavior(['ball']));
             scene.addSprite(ball);
         }
-        const countdown = new CountdownSprite(15000);
+        const countdown = new CountdownSprite(20000);
         countdown.position = randPosition(countdown.size.width);
         const polar = new PolarVector(100, Math.random() * Math.PI * 2);
         countdown.vector = polar.toVector();

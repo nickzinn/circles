@@ -3,7 +3,7 @@ import { DefaultSprite } from "./sprites/DefaultSprite.js";
 import { Point, pointAsInt } from "./types/Point.js";
 import { Sprite } from "./sprites/Sprite.js";
 import { Size } from "./types/Size.js";
-import { union, Rectangle, intersects, pointInRect } from "./types/Rectangle.js";
+import { union, Rectangle, intersects, pointInRect, centerPosition } from "./types/Rectangle.js";
 import { TileMap } from "./tiles/TileMap.js";
 
 function insert<T>(array:T[], value:T, comparator: (a:T, b:T)=>number){
@@ -121,12 +121,19 @@ export default class Scene extends DefaultSprite{
 				let newPosition = {x:sprite.position.x + sprite.vector.x * dx * this.sceneSpeed,
 								   y:sprite.position.y + sprite.vector.y * dx * this.sceneSpeed};
 				let wrapped = this._handleWrap(newPosition, sprite.size);
-				sprite.priorPosition = oldRect.position;
-				sprite.position = newPosition;
+				
 				// check collisions
 				newRect = {position: pointAsInt(sprite.position), size: sprite.size};
 				if (!wrapped)
 					newRect = union(oldRect, newRect);
+				if(sprite.canCollide){
+					this._handleCollision(newRect, sprite);
+				}
+
+				sprite.priorPosition = oldRect.position;
+				sprite.position = {x:sprite.position.x + sprite.vector.x * dx * this.sceneSpeed,
+								   y:sprite.position.y + sprite.vector.y * dx * this.sceneSpeed};
+				this._handleWrap(sprite.position, sprite.size);
 				
 				if (sprite.acceleration) {
 					let polarVector = sprite.vector.toPolar();
@@ -141,11 +148,7 @@ export default class Scene extends DefaultSprite{
 				}
 			}
 
-			if(sprite.canCollide){
-				if(!newRect)
-					newRect = sprite;
-				this._handleCollision(newRect, sprite);
-			}
+			
 			if(sprite.updateModel)
 				sprite.updateModel(timeSinceLastUpdate);
 			const error = this._validateSprite(sprite);
@@ -164,7 +167,7 @@ export default class Scene extends DefaultSprite{
 			for(let i =0; i< this.sprites.length;i++){
 				const otherSprite = this.sprites[i];
 				if (sprite !== otherSprite && otherSprite.canCollide) {
-					if (intersects(newRect, otherSprite)) {
+					if (Scene._checkIntersects(newRect, otherSprite)) {
 						sprite.handleCollision(otherSprite);
 						collisionSprite = otherSprite;
 						break;
@@ -178,7 +181,7 @@ export default class Scene extends DefaultSprite{
 		for(let i =0; i< this.collisionListeners.length;i++){
 			const otherSprite = this.collisionListeners[i];
 			if (sprite !== otherSprite) {
-				if (intersects(newRect, otherSprite)) {
+				if (Scene._checkIntersects(newRect, otherSprite)) {
 					otherSprite.handleCollision!(sprite);
 					collisionSprite = otherSprite;
 					break;
@@ -293,5 +296,16 @@ export default class Scene extends DefaultSprite{
 		}	
 		return wrapped;
 	}
+	static _checkIntersects(newRect:Rectangle, otherSprite:Sprite):boolean{
+		if(otherSprite.circularCollision){
+			const p1 =centerPosition(newRect);
+			const p2 = centerPosition(otherSprite);
+			const distance = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+			const radius = (newRect.size.width + newRect.size.height + otherSprite.size.width + otherSprite.size.height) / 4;
+			return (distance < radius);
+		}
+		return intersects(newRect, otherSprite);
+	}
+
 
 }
