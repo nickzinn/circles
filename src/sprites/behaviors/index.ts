@@ -8,3 +8,5 @@ export { SpriteSheetBehavior } from "./SpriteSheetBehavior.js";
 export { TrailingEffectBehavior } from "./TrailingEffectBehavior.js";
 export { Behavior } from "./Behavior.js";
 export { TimedBehavior } from "./TimedBehavior.js";
+export { BounceBehavior } from "./BounceBehavior.js";
+export { WallBounceBehavior } from "./WallBounceBehavior.js";

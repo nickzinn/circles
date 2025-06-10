@@ -88,6 +88,13 @@ export class Vector {
     toPolar(): PolarVector {
         return new PolarVector(this.magnitude(), Math.atan2(this.y, this.x));
     }
+  
+  rotate(theta:number):Vector {
+    return new Vector(
+        this.x * Math.cos(theta) - this.y * Math.sin(theta), 
+        this.x * Math.sin(theta) + this.y * Math.cos(theta)
+    );
+  }
 
   /**
    * Creates a string representation of the vector

@@ -163,10 +163,10 @@ class SpriteSheetImpl implements SpriteSheet{
         if(this.description.angleOffset)
             angle += this.description.angleOffset;
         if(angle){
-            ctx.translate(x + this.size.width / 2.0, y+ this.size.height / 2.0);
+            ctx.translate(x + dest.size.width / 2.0, y+ dest.size.height / 2.0);
             ctx.rotate(angle);
-            x = 0 - this.size.width / 2.0;
-            y = 0 - this.size.height / 2.0;
+            x = 0 - dest.size.width / 2.0;
+            y = 0 - dest.size.height / 2.0;
         }
 
         const srcX = Math.floor(this.image.width * ((column)/this.columns)) + source.position.x;

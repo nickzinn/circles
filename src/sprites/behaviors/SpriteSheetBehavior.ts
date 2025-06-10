@@ -33,7 +33,7 @@ export class SpriteSheetBehavior implements Behavior{
 		}
 		frame = Math.min(frame, this.spriteSheet.frameCount-1);
 		const angle = this.getAngle(sprite);
-		this.spriteSheet.paint(ctx, frame, angle, {position:{x:0,y:0}, size:sprite.size}, {position:location, size:sprite.size});
+		this.spriteSheet.paint(ctx, frame, angle, {position:{x:0,y:0}, size:this.spriteSheet.size}, {position:location, size:sprite.size});
 
 	}
 	updateModel(sprite:DefaultSprite, timeSinceLastUpdate:number):void{
