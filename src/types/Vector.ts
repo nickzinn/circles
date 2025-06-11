@@ -81,13 +81,17 @@ export class Vector {
     return new Vector(this.x / mag, this.y / mag);
   }
 
-    /**
-     * Converts this vector to a PolarVector representation
-     * @returns A new PolarVector instance
-     */ 
-    toPolar(): PolarVector {
-        return new PolarVector(this.magnitude(), Math.atan2(this.y, this.x));
-    }
+  /**
+   * Converts this vector to a PolarVector representation
+   * @returns A new PolarVector instance
+   */ 
+  toPolar(): PolarVector {
+      return new PolarVector(this.magnitude(), Math.atan2(this.y, this.x));
+  }
+
+  angle(): number {
+      return Math.atan2(this.y, this.x);
+  }
   
   rotate(theta:number):Vector {
     return new Vector(
