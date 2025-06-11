@@ -63,26 +63,25 @@ export class BouncingBall implements GameInitializer{
 
         const rand = (min: number, max: number) => Math.random() * (max - min) + min;
         const randPosition = (r: number) => ({ x: rand(sz.width - (r + wallSize) * 2, r + wallSize), y: rand(sz.height - (r + wallSize) * 2, r + wallSize) });
-        const nBalls = 300;
+        const nBalls =100;
         for (let x = 0; x < nBalls; x++) {
             const ball = new AnimatedSprite(scene, 'ball');
             const radius = ball.width / 2;
-            //ball.position = randPosition(radius);
+            
             ball.x = randPosition(radius).x;
             ball.y = sz.height/2;
             ball.isAlive = true;
-            const polar = new PolarVector(70,  Math.PI  * (  (x==0) ? 2 : -2 ) * Math.random() );
+            const polar = new PolarVector(170+rand(1,50),  Math.PI  * (  (x==0) ? 2 : -2 ) * Math.random() );
             ball.vector = polar.toVector();
             ball.zOrder = Math.random() * 10 - 5;
             ball.canCollide = true;
             if(x< nBalls-10){
-                ball.width = 20; ball.height = 20;
-                ball.mass = 2
+                ball.width = 9; ball.height = 9;
+                ball.mass = 1
             }else{
                 ball.width = 60; ball.height = 60;
                 ball.mass = 18;
             }
-           
             ball.circularCollision = true;
             ball.addBehavior(new BounceBehavior(['ball']));
             scene.addSprite(ball);

@@ -5,6 +5,7 @@ import { Sprite } from "./sprites/Sprite.js";
 import { Size } from "./types/Size.js";
 import { union, Rectangle, intersects, pointInRect, centerPosition } from "./types/Rectangle.js";
 import { TileMap } from "./tiles/TileMap.js";
+import Quadtree from '@timohausmann/quadtree-js';
 
 function insert<T>(array:T[], value:T, comparator: (a:T, b:T)=>number){
 	let low =0;
@@ -44,6 +45,7 @@ export default class Scene extends DefaultSprite{
 	sprites:Sprite[] = [];
 
 	private collisionListeners:Sprite[] = [];
+	private quadtree: Quadtree | null = null;
 	
     constructor(name:string, controller:GameController, modelSize:Size={width:0.0, height:0.0}){
         super(name);
@@ -63,7 +65,7 @@ export default class Scene extends DefaultSprite{
 	}
 	
 	addSprite(sprite:Sprite) {
-		this._handleWrap(sprite,sprite);
+		this._handleWrap(sprite);
 		const error = this._validateSprite(sprite);
 		if(error){
 			console.log(`Sprite position not valid.  Killing spite (${sprite.name}). ${error}`);
@@ -99,39 +101,37 @@ export default class Scene extends DefaultSprite{
     updateModel(timeSinceLastUpdate: number) {
 		super.updateModel(timeSinceLastUpdate);
         
-        // handle movements and check collision
-		this.handleMovement(timeSinceLastUpdate);
+
+		this._updateMovement(timeSinceLastUpdate);
+
+		this._checkForCollisions();
+
+		//update Model
+		const tempArray:Sprite[] = this.sprites.slice();
+		while (tempArray.length) {
+			const sprite:Sprite = tempArray.pop()!;			
+			if(sprite.updateModel)
+				sprite.updateModel(timeSinceLastUpdate);
+			const error = this._validateSprite(sprite);
+			if(error){
+				console.log(`Sprite position not valid.  Killing spite (${sprite.name}). ${error}`);
+				sprite.isAlive=false;
+			}
+			if(!sprite.isAlive)
+				this.removeSprite(sprite);
+		}
 	}
 
-    handleMovement(timeSinceLastUpdate: number) {
+    _updateMovement(timeSinceLastUpdate: number) {
         const dx = timeSinceLastUpdate/1000.0;
-        const tempArray:Sprite[] = this.sprites.slice();
+			
+		const tempArray:Sprite[] = this.sprites.slice();
 		while (tempArray.length) {
 			const sprite:Sprite = tempArray.pop()!;
-			if(!sprite.isAlive){
-				// remove any dead sprites.
-				this.removeSprite(sprite);
-				continue;
-			}
-			let newRect;
 			if (!sprite.isFixedPosition) {
-				const oldRect = {...pointAsInt(sprite), width:sprite.width, height:sprite.height};
-
-				let newPosition = {x:sprite.x + sprite.vector.x * dx * this.sceneSpeed,
-								   y:sprite.y + sprite.vector.y * dx * this.sceneSpeed};
-				let wrapped = this._handleWrap(newPosition, sprite);
-				
-				// check collisions
-				newRect = {...pointAsInt(sprite), width:sprite.width, height:sprite.height};
-				if (!wrapped)
-					newRect = union(oldRect, newRect);
-				if(sprite.canCollide){
-					this._handleCollision(newRect, sprite);
-				}
-
 				sprite.x = sprite.x + sprite.vector.x * dx * this.sceneSpeed;
 				sprite.y = sprite.y + sprite.vector.y * dx * this.sceneSpeed;
-				this._handleWrap(sprite, sprite);
+				this._handleWrap(sprite);
 				
 				if (sprite.acceleration) {
 					let polarVector = sprite.vector.toPolar();
@@ -145,52 +145,51 @@ export default class Scene extends DefaultSprite{
 					sprite.vector = polarVector.toVector();
 				}
 			}
-
-			
-			if(sprite.updateModel)
-				sprite.updateModel(timeSinceLastUpdate);
-			const error = this._validateSprite(sprite);
-			if(error){
-				console.log(`Sprite position not valid.  Killing spite (${sprite.name}). ${error}`);
-				sprite.isAlive=false;
-			}
-			if(!sprite.isAlive)
-				this.removeSprite(sprite);
 		}
 	}
+	
+	_checkForCollisions(){
+		if(!this.quadtree)
+			this.quadtree = new Quadtree({
+			x: 0,
+			y: 0,	
+			width: this.modelSize.width || this.width,
+			height: this.modelSize.height || this.height
+		});
+		this.quadtree.clear();
+		this.sprites.forEach((s) => {
+			if(s.canCollide)
+				this.quadtree!.insert(s);
+		});
 
-	private _handleCollision( newRect:Rectangle, sprite:Sprite) {
-		let collisionSprite;
-		if(sprite.handleCollision){
-			for(let i =0; i< this.sprites.length;i++){
-				const otherSprite = this.sprites[i];
-				if (sprite !== otherSprite && otherSprite.canCollide) {
-					if (Scene._checkIntersects(newRect, otherSprite)) {
+		const tempArray:Sprite[] = this.collisionListeners.slice();
+		while (tempArray.length) {
+			const sprite:Sprite = tempArray.pop()!;
+			if(!sprite.isAlive){
+				this.removeSprite(sprite);
+				continue;
+			}
+			if(!sprite.handleCollision)
+				throw Error("Only collision listeners should be in list\n" + sprite);
+			const nearSprites = this.quadtree!.retrieve(sprite) as Sprite[];
+			for(let i =0; i< nearSprites.length;i++){
+				const otherSprite = nearSprites[i];
+				if (otherSprite && sprite !== otherSprite) {
+					if (Scene._checkIntersects(sprite, otherSprite)) {
 						sprite.handleCollision(otherSprite);
-						collisionSprite = otherSprite;
-						break;
+						if(!otherSprite.isAlive)
+							this.removeSprite(otherSprite);
+						if(!sprite.isAlive){
+							this.removeSprite(sprite);
+							break;
+						}
 					}
 				}
 			}
 		}
-		if(!collisionSprite)
-			collisionSprite = sprite;
-		
-		for(let i =0; i< this.collisionListeners.length;i++){
-			const otherSprite = this.collisionListeners[i];
-			if (sprite !== otherSprite) {
-				if (Scene._checkIntersects(newRect, otherSprite)) {
-					otherSprite.handleCollision!(sprite);
-					collisionSprite = otherSprite;
-					break;
-				}
-			}
-		}
-		
-		if (!collisionSprite.isAlive) {
-			this.removeSprite(collisionSprite);
-		}
 	}
+
+
 	count =0;
 	totalTime =0;
 	paint(location:Point, ctx: CanvasRenderingContext2D, timeSinceLastAnimation: number):void {
@@ -267,7 +266,7 @@ export default class Scene extends DefaultSprite{
 			return `X speed(${sprite.vector.x}) and y speed(${sprite.vector.y}) need to be both defined.`;
 		return undefined;
 	}
-	_handleWrap(position:Point, size:Size):boolean{
+	_handleWrap(sprite:Sprite):boolean{
 		// handle wrap around
 		let wrapped = false;
 		if (this.wrapAround) {
@@ -277,32 +276,32 @@ export default class Scene extends DefaultSprite{
 				width= this.modelSize.width;
 				height = this.modelSize.height;
 			}
-			if (position.x + size.width < 0) {
-				position.x = width - size.width;
+			if (sprite.x + sprite.width < 0) {
+				sprite.x = width - sprite.width;
 				wrapped = true;
-			} else if (position.x > width) {
-				position.x = 0;
+			} else if (sprite.x > width) {
+				sprite.x = 0;
 				wrapped = true;
 			}
-			if (position.y + size.height < 0) {
-				position.y = height - size.height;
+			if (sprite.y + sprite.height < 0) {
+				sprite.y = height - sprite.height;
 				wrapped = true;
-			} else if (position.y  > height) {
-				position.y = 0;
+			} else if (sprite.y  > height) {
+				sprite.y = 0;
 				wrapped = true;
 			}
 		}	
 		return wrapped;
 	}
-	static _checkIntersects(newRect:Rectangle, otherSprite:Sprite):boolean{
-		if(otherSprite.circularCollision){
-			const p1 =centerPosition(newRect);
-			const p2 = centerPosition(otherSprite);
+	static _checkIntersects(sprite1:Sprite, sprite2:Sprite):boolean{
+		if(sprite1.circularCollision && sprite2.circularCollision){
+			const p1 =centerPosition(sprite1);
+			const p2 = centerPosition(sprite2);
 			const distance = Math.hypot(p1.x - p2.x, p1.y - p2.y);
-			const radius = (newRect.width + newRect.height + otherSprite.width + otherSprite.height) / 4;
+			const radius = (sprite1.width + sprite1.height + sprite2.width + sprite2.height) / 4;
 			return (distance < radius);
 		}
-		return intersects(newRect, otherSprite);
+		return intersects(sprite1, sprite2);
 	}
 
 
