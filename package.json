@@ -29,6 +29,7 @@
     "vitest-canvas-mock": "^0.3.3"
   },
   "dependencies": {
+    "@timohausmann/quadtree-js": "^1.2.6",
     "howler": "^2.2.4",
     "typeface-electrolize": "^1.1.13"
   }

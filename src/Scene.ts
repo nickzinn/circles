@@ -5,6 +5,7 @@ import { Sprite } from "./sprites/Sprite.js";
 import { Size } from "./types/Size.js";
 import { union, Rectangle, intersects, pointInRect, centerPosition } from "./types/Rectangle.js";
 import { TileMap } from "./tiles/TileMap.js";
+import Quadtree from '@timohausmann/quadtree-js';
 
 function insert<T>(array:T[], value:T, comparator: (a:T, b:T)=>number){
 	let low =0;
@@ -44,6 +45,7 @@ export default class Scene extends DefaultSprite{
 	sprites:Sprite[] = [];
 
 	private collisionListeners:Sprite[] = [];
+	private quadtree: Quadtree | null = null;
 	
     constructor(name:string, controller:GameController, modelSize:Size={width:0.0, height:0.0}){
         super(name);
@@ -106,6 +108,16 @@ export default class Scene extends DefaultSprite{
     handleMovement(timeSinceLastUpdate: number) {
         const dx = timeSinceLastUpdate/1000.0;
         const tempArray:Sprite[] = this.sprites.slice();
+		if(!this.quadtree)
+			this.quadtree = new Quadtree({
+			x: 0,
+			y: 0,	
+			width: this.modelSize.width || this.width,
+			height: this.modelSize.height || this.height
+		});
+		this.quadtree.clear();
+		this.sprites.forEach((s) => {this.quadtree!.insert(s)});
+
 		while (tempArray.length) {
 			const sprite:Sprite = tempArray.pop()!;
 			if(!sprite.isAlive){
@@ -161,9 +173,11 @@ export default class Scene extends DefaultSprite{
 
 	private _handleCollision( newRect:Rectangle, sprite:Sprite) {
 		let collisionSprite;
+		const nearSprites = this.quadtree!.retrieve(newRect) as Sprite[];
 		if(sprite.handleCollision){
-			for(let i =0; i< this.sprites.length;i++){
-				const otherSprite = this.sprites[i];
+			
+			for(let i =0; i< nearSprites.length;i++){
+				const otherSprite = nearSprites[i];
 				if (sprite !== otherSprite && otherSprite.canCollide) {
 					if (Scene._checkIntersects(newRect, otherSprite)) {
 						sprite.handleCollision(otherSprite);
@@ -176,9 +190,9 @@ export default class Scene extends DefaultSprite{
 		if(!collisionSprite)
 			collisionSprite = sprite;
 		
-		for(let i =0; i< this.collisionListeners.length;i++){
-			const otherSprite = this.collisionListeners[i];
-			if (sprite !== otherSprite) {
+		for(let i =0; i< nearSprites.length;i++){
+			const otherSprite = nearSprites[i];
+			if (sprite !== otherSprite && otherSprite.handleCollision) {
 				if (Scene._checkIntersects(newRect, otherSprite)) {
 					otherSprite.handleCollision!(sprite);
 					collisionSprite = otherSprite;
