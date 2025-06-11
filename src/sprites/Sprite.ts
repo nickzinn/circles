@@ -1,17 +1,17 @@
 import { Point } from "../types/Point.js";
-import { Size } from "../types/Size.js";
 import { Vector } from "../types/Vector.js";
 import { Rectangle } from "../types/Rectangle.js";
 
 export interface Sprite extends Rectangle{
     name:string;
-    position:Point;
-    size:Size;
+    x:number;
+    y:number; 
+    width:number;
+    height:number;
     isAlive:boolean;
     vector:Vector;
     acceleration?: number;
     mass?: number; // mass of the sprite, used for physics calculations
-    priorPosition?:Point;
     zOrder?:number
 
 

@@ -1,13 +1,14 @@
 import { Point } from "../types/Point.js";
 import { Sprite } from "./Sprite.js";
-import { Size } from "../types/Size.js";
 import { Behavior } from "./behaviors/Behavior.js";
 import { Vector } from "../types/Vector.js";
 
 export class DefaultSprite implements Sprite{
     name:string;
-    position:Point;
-    size:Size;
+    x:number;
+    y:number; 
+    width:number;
+    height:number;
     isAlive:boolean = true;	
     vector:Vector = new Vector(0.0, 0.0);
     acceleration:number = 0.0;
@@ -19,13 +20,13 @@ export class DefaultSprite implements Sprite{
 	private behaviors:Behavior[] = [];
     private collisionBehaviors:Behavior[] = [];
 	
-	constructor(name:string,position:Point={x:0.0,y:0.0}, size:Size={width:0.0, height:0.0}){
+	constructor(name:string, x:number = 0.0, y:number = 0.0, width:number = 0.0, height:number = 0.0){
         this.name = name;
-        this.position = position;
-        this.size = size;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
 	}
-
-	
 
     handleCollision?(otherSprite:Sprite):void;
 

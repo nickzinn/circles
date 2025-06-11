@@ -13,7 +13,8 @@ export class CountdownSprite extends DefaultSprite{
         super("CountdownTimer");
         this.timeInMillis = timeInMillis;
         this.fontStyle = fontStyle;
-        this.size = {width: fontHeight*Math.floor(timeInMillis/2500).toString().length, height:fontHeight};
+        this.width = fontHeight*Math.floor(timeInMillis/2500).toString().length;
+        this.height = fontHeight;
         this.color = color;
         this.fontHeight = fontHeight;
 	}
@@ -26,7 +27,7 @@ export class CountdownSprite extends DefaultSprite{
         ctx.fillStyle = this.color;
         ctx.font = this.fontStyle;
         
-        ctx.fillText(displayTime, location.x, location.y+this.size.height);
+        ctx.fillText(displayTime, location.x, location.y+this.height);
         
         
         

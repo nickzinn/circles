@@ -63,7 +63,7 @@ export default class Scene extends DefaultSprite{
 	}
 	
 	addSprite(sprite:Sprite) {
-		this._handleWrap(sprite.position,sprite.size);
+		this._handleWrap(sprite,sprite);
 		const error = this._validateSprite(sprite);
 		if(error){
 			console.log(`Sprite position not valid.  Killing spite (${sprite.name}). ${error}`);
@@ -72,7 +72,6 @@ export default class Scene extends DefaultSprite{
 		if(!sprite.zOrder)
 			sprite.zOrder = 0;
 		insert(this.sprites, sprite, (a,b) => a.zOrder! - b.zOrder!);
-		sprite.priorPosition = sprite.position;
 		if (sprite.handleCollision)
 			this.collisionListeners.push(sprite);
 	}
@@ -80,7 +79,7 @@ export default class Scene extends DefaultSprite{
 	removeSprite(sprite:Sprite) {
 		sprite.handleKill?.();
         if(this.debug)
-            console.log(`Remove sprite(${sprite.name}) (${sprite.position.x}, ${sprite.position.y})`);
+            console.log(`Remove sprite(${sprite.name}) (${sprite.x}, ${sprite.y})`);
         remove(this.sprites, sprite);
         remove(this.collisionListeners, sprite);
 	}
@@ -116,24 +115,23 @@ export default class Scene extends DefaultSprite{
 			}
 			let newRect;
 			if (!sprite.isFixedPosition) {
-				const oldRect = {position:pointAsInt(sprite.position), size:sprite.size};
+				const oldRect = {...pointAsInt(sprite), width:sprite.width, height:sprite.height};
 
-				let newPosition = {x:sprite.position.x + sprite.vector.x * dx * this.sceneSpeed,
-								   y:sprite.position.y + sprite.vector.y * dx * this.sceneSpeed};
-				let wrapped = this._handleWrap(newPosition, sprite.size);
+				let newPosition = {x:sprite.x + sprite.vector.x * dx * this.sceneSpeed,
+								   y:sprite.y + sprite.vector.y * dx * this.sceneSpeed};
+				let wrapped = this._handleWrap(newPosition, sprite);
 				
 				// check collisions
-				newRect = {position: pointAsInt(sprite.position), size: sprite.size};
+				newRect = {...pointAsInt(sprite), width:sprite.width, height:sprite.height};
 				if (!wrapped)
 					newRect = union(oldRect, newRect);
 				if(sprite.canCollide){
 					this._handleCollision(newRect, sprite);
 				}
 
-				sprite.priorPosition = oldRect.position;
-				sprite.position = {x:sprite.position.x + sprite.vector.x * dx * this.sceneSpeed,
-								   y:sprite.position.y + sprite.vector.y * dx * this.sceneSpeed};
-				this._handleWrap(sprite.position, sprite.size);
+				sprite.x = sprite.x + sprite.vector.x * dx * this.sceneSpeed;
+				sprite.y = sprite.y + sprite.vector.y * dx * this.sceneSpeed;
+				this._handleWrap(sprite, sprite);
 				
 				if (sprite.acceleration) {
 					let polarVector = sprite.vector.toPolar();
@@ -200,19 +198,19 @@ export default class Scene extends DefaultSprite{
 		location = {x: location.x + this.viewPort.x, y:location.y+this.viewPort.y}; 
 		this.paintBackground(ctx);
 		if(this.tileMap){
-			this.tileMap.paint({position:location, size:this.size},  ctx, timeSinceLastAnimation);
+			this.tileMap.paint({position:location, size:this},  ctx, timeSinceLastAnimation);
 		}
 		let displayedSprites =0
 		for(let sprite of this.sprites){
 			if(!sprite.isAlive)
 				throw Error("No Dead Sprites Should Make it to render step.\n" + sprite);
-			let pos = pointAsInt(sprite.position);
+			let pos = pointAsInt(sprite);
 				if(!sprite.isFixedPosition){
 					pos = {x: pos.x - location.x, y: pos.y - location.y}
 				}
-			if(pos.x > this.size.width || pos.y > this.size.height 
-				|| (sprite.size.width + pos.x < 0)
-				|| (sprite.size.height + pos.y < 0)){
+			if(pos.x > this.width || pos.y > this.height 
+				|| (sprite.width + pos.x < 0)
+				|| (sprite.height + pos.y < 0)){
 				continue;
 			}
 			sprite.paint(pos, ctx, timeSinceLastAnimation);
@@ -236,13 +234,13 @@ export default class Scene extends DefaultSprite{
 		if(this.debug){
 			ctx.fillStyle = "red"
 			ctx.font ="8px Electrolize";
-			ctx.fillText(`FPS: ${stats.fps} Alive: ${stats.spriteCount} On Screen: ${stats.displayedSpriteCount} Collision Handlers: ${stats.collisionHandlers}` , 10, this.size.height -10);
+			ctx.fillText(`FPS: ${stats.fps} Alive: ${stats.spriteCount} On Screen: ${stats.displayedSpriteCount} Collision Handlers: ${stats.collisionHandlers}` , 10, this.height -10);
 		}
 	}
 
 	paintBackground(ctx: CanvasRenderingContext2D):void {
 			ctx.fillStyle = 'black';
-			ctx.fillRect(0, 0, this.size.width, this.size.height);
+			ctx.fillRect(0, 0, this.width, this.height);
 	}
 
 	addSprites(sprites:Sprite[] ) {
@@ -255,16 +253,16 @@ export default class Scene extends DefaultSprite{
 	}
 
 	_validateSprite(sprite:Sprite):string|undefined{
-		if(sprite.position.x + sprite.size.width < 0 || sprite.position.y + sprite.size.height < 0 )
-			return `Sprite position less 0 (${sprite.position.x}, ${sprite.position.y})`;
+		if(sprite.x + sprite.width < 0 || sprite.y + sprite.height < 0 )
+			return `Sprite position less 0 (${sprite.x}, ${sprite.y})`;
 		if(this.modelSize.width !==0){
-			if(sprite.position.x >= this.modelSize.width || sprite.position.y >= this.modelSize.height)
-				return `Sprite position(${sprite.position.x}, ${sprite.position.y}) > model(${this.modelSize.width},${this.modelSize.height})`;
-		}else if(sprite.position.x >= this.size.width || sprite.position.y >= this.size.height) {
-			return `Sprite position(${sprite.position.x}, ${sprite.position.y})  > screen(${this.size.width},${this.size.height})`;
+			if(sprite.x >= this.modelSize.width || sprite.y >= this.modelSize.height)
+				return `Sprite position(${sprite.x}, ${sprite.y}) > model(${this.modelSize.width},${this.modelSize.height})`;
+		}else if(sprite.x >= this.width || sprite.y >= this.height) {
+			return `Sprite position(${sprite.x}, ${sprite.y})  > screen(${this.width},${this.height})`;
 		}
-		if(sprite.size.width <=0 || sprite.size.height <= 0)
-			return `Sprite size too small (${sprite.size.width}, ${sprite.size.height})`;
+		if(sprite.width <=0 || sprite.height <= 0)
+			return `Sprite size too small (${sprite.width}, ${sprite.height})`;
 		if( sprite.vector.x === undefined || sprite.vector.y === undefined)
 			return `X speed(${sprite.vector.x}) and y speed(${sprite.vector.y}) need to be both defined.`;
 		return undefined;
@@ -273,8 +271,8 @@ export default class Scene extends DefaultSprite{
 		// handle wrap around
 		let wrapped = false;
 		if (this.wrapAround) {
-			let width = this.size.width;
-			let height = this.size.height;
+			let width = this.width;
+			let height = this.height;
 			if(this.modelSize.width !==0){
 				width= this.modelSize.width;
 				height = this.modelSize.height;
@@ -301,7 +299,7 @@ export default class Scene extends DefaultSprite{
 			const p1 =centerPosition(newRect);
 			const p2 = centerPosition(otherSprite);
 			const distance = Math.hypot(p1.x - p2.x, p1.y - p2.y);
-			const radius = (newRect.size.width + newRect.size.height + otherSprite.size.width + otherSprite.size.height) / 4;
+			const radius = (newRect.width + newRect.height + otherSprite.width + otherSprite.height) / 4;
 			return (distance < radius);
 		}
 		return intersects(newRect, otherSprite);

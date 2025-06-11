@@ -135,7 +135,7 @@ export class TileMap{
                 for(let layer = 0; layer<this.logicGrid.length; layer++){
                     const tile = this.getTilesAt(row, column, layer);
                     if(tile){
-                        tile.paint(ctx, frameCount60FPS, 0, {position:{x:srcX, y:srcY}, size: {width:w, height:h}}, {position:{x:x1, y:y1}, size: {width:w, height:h}} );
+                        tile.paint(ctx, frameCount60FPS, 0, {x:srcX, y:srcY, width:w, height:h}, {x:x1, y:y1, width:w, height:h} );
                     }
                 }
             }

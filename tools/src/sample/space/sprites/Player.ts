@@ -20,9 +20,9 @@ export class Player extends Ship {
 	updateModel(timeSinceLastUpdate: number): void {
 		super.updateModel(timeSinceLastUpdate);
 		const viewport = this.scene.viewPort;
-		const size = this.scene.size;
+		const size = this.scene;
 		const margin = { x: size.width / 3, y: size.height / 3 };
-		const position = pointAsInt(this.position);
+		const position = pointAsInt(this);
 		if (position.x < viewport.x + margin.x)
 			viewport.x = position.x - margin.x;
 		else if (position.x > viewport.x + size.width - margin.x)

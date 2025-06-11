@@ -10,7 +10,7 @@ export class Missle extends AnimatedSprite{
 	mainGameScene:MainGameScene;
 	constructor(position:Point,angle:number, speed:number,
 			owner:Sprite, scene:MainGameScene, expiration:number) {
-		super(scene,NAME, position);
+		super(scene,NAME, position.x, position.y);;
 		this.mainGameScene = scene;
 		this.owner = owner;
 		this.vector = new PolarVector(speed, angle).toVector();

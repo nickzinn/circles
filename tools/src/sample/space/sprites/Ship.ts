@@ -11,7 +11,7 @@ export class Ship extends AnimatedSprite {
 	lastMissleFired?: Missle;
 
 	constructor(scene: MainGameScene, position: Point, name: string) {
-		super(scene, name, position);
+		super(scene, name, position.x, position.y);;
 		this.shipAngle = 0;
 		this.acceleration = -.1;
 		this.canCollide = true;

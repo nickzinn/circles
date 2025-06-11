@@ -32,7 +32,7 @@ export class MainGameScene extends Scene {
 		this.level = level;
 		this.score = score;
 		controller.scene = this;
-		this.modelSize = { width: this.size.width * 3, height: this.size.height * 3 };
+		this.modelSize = { width: this.width * 3, height: this.height * 3 };
 		const area = this.modelSize.width * this.modelSize.height;
 		this.wrapAround = true;
 
@@ -41,7 +41,7 @@ export class MainGameScene extends Scene {
 		this.addSprite(new Radar(this));
 
 		const center = { x: this.modelSize.width / 2, y: this.modelSize.height / 2 };
-		this.viewPort = { x: center.x - this.size.width / 2, y: center.y - this.size.height / 2 };
+		this.viewPort = { x: center.x - this.width / 2, y: center.y - this.height / 2 };
 
 		this.player = new Player(this, center);
 		this.player.addBehavior(new FadeInBehavior(500));
@@ -58,8 +58,8 @@ export class MainGameScene extends Scene {
 		}
 		const center = centerPosition(ship);
 		const pos = {
-			x: center.x + Math.cos(ship.shipAngle) * ship.size.width,
-			y: center.y + Math.sin(ship.shipAngle) * ship.size.height
+			x: center.x + Math.cos(ship.shipAngle) * ship.width,
+			y: center.y + Math.sin(ship.shipAngle) * ship.height
 		};
 		let expiration: number;
 		if (this.player === ship) {
@@ -179,8 +179,8 @@ export class MainGameScene extends Scene {
 	handleTouch(x: number, y: number) {
 		if (this.pause)
 			return;
-		const xDist = this.player.position.x - x - this.viewPort.x;
-		const yDist = this.player.position.y - y - this.viewPort.y;
+		const xDist = this.player.x - x - this.viewPort.x;
+		const yDist = this.player.y - y - this.viewPort.y;
 		const distance = Math.hypot(xDist, yDist);
 		const requiredHeading = Math.atan2(yDist, xDist);
 		const crossproduct = Math.sin(requiredHeading - this.player.shipAngle);

@@ -2,6 +2,7 @@ import { Behavior } from "./Behavior.js";
 import { Point } from "../../types/Point.js";
 import { SpriteSheet } from "../../util/SpriteSheet.js";
 import { DefaultSprite } from "../DefaultSprite.js";
+import { Size } from "../../types/Size.js";
 
 export class SpriteSheetBehavior implements Behavior{
     spriteSheet:SpriteSheet;
@@ -15,7 +16,8 @@ export class SpriteSheetBehavior implements Behavior{
 	}
 
 	init(sprite:DefaultSprite){
-		sprite.size = this.spriteSheet.size;
+		sprite.height = this.spriteSheet.size.height;
+		sprite.width = this.spriteSheet.size.width;
 	}
 
     paint(sprite:DefaultSprite, location:Point, ctx: CanvasRenderingContext2D, timeSinceLastAnimation: number):void{
@@ -33,7 +35,8 @@ export class SpriteSheetBehavior implements Behavior{
 		}
 		frame = Math.min(frame, this.spriteSheet.frameCount-1);
 		const angle = this.getAngle(sprite);
-		this.spriteSheet.paint(ctx, frame, angle, {position:{x:0,y:0}, size:this.spriteSheet.size}, {position:location, size:sprite.size});
+		this.spriteSheet.paint(ctx, frame, angle, {x:0,y:0, ...this.spriteSheet.size}, 
+			{...location, width:sprite.width, height:sprite.height});
 
 	}
 	updateModel(sprite:DefaultSprite, timeSinceLastUpdate:number):void{

@@ -8,8 +8,8 @@ export class AnimatedSprite extends DefaultSprite{
     scene:Scene;
     spriteSheetBehavior:SpriteSheetBehavior;
 
-    constructor(scene:Scene, name:string,position:Point ={x:0,y:0},animateOnce:boolean =false){
-        super(name, position);
+    constructor(scene:Scene, name:string,x:number = 0.0, y:number = 0.0,animateOnce:boolean =false){
+        super(name, x, y);
         this.scene = scene;
         const spriteSheet = scene.controller.imagePreloader.getSpriteSheetFromCache(name)
         this.spriteSheetBehavior =   new SpriteSheetBehavior(spriteSheet, animateOnce);
