@@ -76,7 +76,8 @@ export class GameController{
             console.log(`SetScene: ${scene.name}`);
         scene.debug = this.debug;
         const canvas = this.canvas;
-        scene.size = {width:canvas!.width, height:canvas!.height};
+        scene.width = canvas!.width;
+        scene.height = canvas!.height;
         this._scene = scene;
         this.touchEvent = undefined;
     }

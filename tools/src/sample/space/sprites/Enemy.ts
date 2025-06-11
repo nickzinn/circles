@@ -17,8 +17,8 @@ export class Enemy extends Ship {
 
     updateModel(timeSinceLastUpdate: number):void{
         super.updateModel(timeSinceLastUpdate);
-        const xDist = this.position.x - this.mainGameScene.player.position.x;
-        const yDist = this.position.y - this.mainGameScene.player.position.y;
+        const xDist = this.x - this.mainGameScene.player.x;
+        const yDist = this.y - this.mainGameScene.player.y;
         const distance = Math.hypot(xDist, yDist);
         if (distance > 1500)
             return;

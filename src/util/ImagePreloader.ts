@@ -157,22 +157,22 @@ class SpriteSheetImpl implements SpriteSheet{
             row = Math.floor( frame/this.columns );        
         }
 
-        let x = dest.position.x, y= dest.position.y;
+        let x = dest.x, y= dest.y;
         if(row<0 || row >= this.rows || column < 0 || column >= this.columns)
             throw Error(`Row and columns of sprite need to be in bounds (${row},${column})`);
         if(this.description.angleOffset)
             angle += this.description.angleOffset;
         if(angle){
-            ctx.translate(x + dest.size.width / 2.0, y+ dest.size.height / 2.0);
+            ctx.translate(x + dest.width / 2.0, y+ dest.height / 2.0);
             ctx.rotate(angle);
-            x = 0 - dest.size.width / 2.0;
-            y = 0 - dest.size.height / 2.0;
+            x = 0 - dest.width / 2.0;
+            y = 0 - dest.height / 2.0;
         }
 
-        const srcX = Math.floor(this.image.width * ((column)/this.columns)) + source.position.x;
-        const srcY = Math.floor(this.image.height * ((row)/this.rows)) + source.position.y;
-            ctx.drawImage(this.image, srcX, srcY, source.size.width, source.size.height,
-                 x, y, dest.size.width, dest.size.height);
+        const srcX = Math.floor(this.image.width * ((column)/this.columns)) + source.x;
+        const srcY = Math.floor(this.image.height * ((row)/this.rows)) + source.y;
+            ctx.drawImage(this.image, srcX, srcY, source.width, source.height,
+                 x, y, dest.width, dest.height);
         if(angle){
             ctx.setTransform(1, 0, 0, 1, 0, 0);    
         }

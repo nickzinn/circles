@@ -43,14 +43,14 @@ export class BlendImageBehavior extends TimedBehavior{
             throw Error('Sprite must be defined.');
         }
         //place secondary image in the center of primary.
-        const center = centerPosition({position:location, size:sprite.size});
+        const center = centerPosition({...location, height:sprite.height, width:sprite.width});
         const w2 = this.spriteSheet.size.width, h2 = this.spriteSheet.size.height;
         const location2 = {x: Math.floor(center.x - w2/2), y: Math.floor(center.y - h2/2)  }
         ctx.save();
         ctx.globalAlpha = this.blendAmount;
         ctx.globalCompositeOperation = this.compositeOperation;
         const size = this.spriteSheet.size;
-        this.spriteSheet.paint(ctx, 0, 0, {position:{x:0,y:0}, size}, {position:location2, size});
+        this.spriteSheet.paint(ctx, 0, 0, {x:0,y:0, ...size}, {...location2, ...size});
         ctx.restore();
     }
 }
