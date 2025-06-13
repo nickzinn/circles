@@ -19,6 +19,7 @@ export interface Sprite extends Rectangle{
 	canCollide?: boolean;
 	isFixedPosition?: boolean;
 	circularCollision?: boolean; // if true, collision detection will be circular instead of rectangular
+    lastPosition?: Point; // used for collision detection
 
     paint(location:Point, ctx: CanvasRenderingContext2D, timeSinceLastAnimation: number): void;
 

@@ -129,9 +129,13 @@ export default class Scene extends DefaultSprite{
 		while (tempArray.length) {
 			const sprite:Sprite = tempArray.pop()!;
 			if (!sprite.isFixedPosition) {
+
+				sprite.lastPosition = {x: sprite.x, y: sprite.y};
+
 				sprite.x = sprite.x + sprite.vector.x * dx * this.sceneSpeed;
 				sprite.y = sprite.y + sprite.vector.y * dx * this.sceneSpeed;
-				this._handleWrap(sprite);
+				if(this._handleWrap(sprite))
+					sprite.lastPosition = {x: sprite.x, y: sprite.y};
 				
 				if (sprite.acceleration) {
 					let polarVector = sprite.vector.toPolar();
@@ -174,15 +178,24 @@ export default class Scene extends DefaultSprite{
 			const nearSprites = this.quadtree!.retrieve(sprite) as Sprite[];
 			for(let i =0; i< nearSprites.length;i++){
 				const otherSprite = nearSprites[i];
-				if (otherSprite && sprite !== otherSprite) {
-					if (Scene._checkIntersects(sprite, otherSprite)) {
+				if (otherSprite && sprite !== otherSprite && 
+					!(sprite.isFixedPosition && otherSprite.isFixedPosition)
+				) {
+					if(sprite.isFixedPosition && otherSprite.lastPosition){
+						const newrect = union({x: otherSprite.lastPosition.x, y: otherSprite.lastPosition.y,
+							width:otherSprite.width, height: otherSprite.height}, otherSprite);
+						if(intersects(sprite, newrect)){
+							sprite.handleCollision(otherSprite);
+							otherSprite.x = otherSprite.lastPosition!.x;
+							otherSprite.y = otherSprite.lastPosition!.y;						}
+					}else if (Scene._checkIntersects(sprite, otherSprite)) {
 						sprite.handleCollision(otherSprite);
-						if(!otherSprite.isAlive)
-							this.removeSprite(otherSprite);
-						if(!sprite.isAlive){
-							this.removeSprite(sprite);
-							break;
-						}
+					}
+					if(!otherSprite.isAlive)
+						this.removeSprite(otherSprite);
+					if(!sprite.isAlive){
+						this.removeSprite(sprite);
+						break;
 					}
 				}
 			}
