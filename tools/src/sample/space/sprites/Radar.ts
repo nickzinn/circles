@@ -14,7 +14,7 @@ export class Radar extends DefaultSprite {
 		const y = Math.floor(width / scene.modelSize.width * scene.modelSize.height);
 		this.x = x - 3
 		this.y = margin + 50;
-		this.width = y;
+		this.width = width;
 		this.height = y;
 		this.isFixedPosition = true;
 		this.zOrder = 100;
